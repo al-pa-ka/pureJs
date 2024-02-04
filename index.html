@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="./main.js" defer></script>
+    <div class="main-container">
+      <div class="panels">
+        <div class="first-panel">
+          <div class="control">
+            <span class="icon"></span>
+            <p>Войти</p>
+          </div>
+        </div>
+        <div class="second-panel">
+          <div class="tab" id="interface_tab"><p>Интерфейс</p></div>
+          <div class="tab" id="social_tab">
+            <p>Соц. сети</p>
+            <p></p>
+          </div>
+          <div class="tab" id="journals_tab"><p>Журналы</p></div>
+          <div class="tab" id="import_tab"><p>Импорт</p></div>
+          <div class="tab" id="export_tab"><p>Экспорт</p></div>
+          <div class="tab" id="users_tab"><p>Пользователи</p></div>
+          <div class="tab" id="emails_tab"><p>Email ящики</p></div>
+          <div class="tab"><p>Ключи.Пароли</p></div>
+          <div class="tab"><p>Разное</p></div>
+        </div>
+        <div class="tabs-active journals">
+          <div class="tab">
+            <span class="icon"></span>
+            <p>объявления</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>вакансии</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>соискатели</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>email рассылка</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>отклики</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>фио</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>учебные заведения</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>адреса</p>
+          </div>
+          <div class="tab">
+            <span class="icon"></span>
+            <p>компании</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- <section class="content ads">
+        <div class="content-wrapper">
+          <div class="control-panel">
+            <div class="control-panel__segment">
+              <p>ДАТА ОТ <span class="green">12.05.2023</span></p>
+            </div>
+            <div class="control-panel__segment">
+              <p>ДАТА ДО <span class="green">12.05.2023</span></p>
+            </div>
+            <div class="control-panel__segment">
+              <span class="icon deselect"></span>
+              <p>DESELECT</p>
+            </div>
+            <div class="control-panel__segment">
+              <span class="icon"></span>
+              <p>IN TOTAL: <span class="green">12424</span></p>
+            </div>
+            <div class="control-panel__segment">
+              <span class="icon"></span>
+              <p>IMPORT XML</p>
+            </div>
+            <div class="control-panel__segment">
+              <span class="icon"></span>
+              <p>DELETE EVERYTHING</p>
+            </div>
+          </div>
+
+          <div class="pagination">
+            <div class="pagination__specify-page">
+              <p>Укажите страницу</p>
+              <input type="text" />
+            </div>
+            <div class="pagination__pages-control">
+              <div class="pagination__page-number"><p>1</p></div>
+              <div class="pagination__page-number"><p>2</p></div>
+              <div class="pagination__page-number"><p>3</p></div>
+              <div class="pagination__page-number"><p>Next</p></div>
+            </div>
+          </div>
+
+          <div class="ads-table table">
+            <div class="table__row-item title"><p>№</p></div>
+            <div class="table__row-item title"><p>ID</p></div>
+            <div class="table__row-item title"><p>ВАКАНСИЯ</p></div>
+            <div class="table__row-item title"><p>ОПИСАНИЕ/ТЕЛЕФОНЫ</p></div>
+            <div class="table__row-item title"><p>СТАТУС</p></div>
+            <div class="table__row-item title"><p>RUBR_ATRYB</p></div>
+            <div class="table__row-item title">
+              <p>
+                PUBLON/ <br />
+                PUBLOFF/ <br />
+                ИНН и название<br />
+                Контаргента
+              </p>
+            </div>
+            <div class="table__row-item title">
+              <p>Файл/Ссылка на сайт</p>
+            </div>
+            <div class="table__row-item title">
+              <p>Префикс/ счет/ дата счета</p>
+            </div>
+
+            <div class="table__row-item"></div>
+            <div class="table__row-item"></div>
+            <div class="table__row-item">
+              <span class="icon"></span><input type="text" />
+            </div>
+            <div class="table__row-item">
+              <span class="icon"></span><input type="text" />
+            </div>
+            <div class="table__row-item select">
+              <div class="select-status">
+                <div class="select-state">
+                  <p>Активное + Еще не опубликованное</p>
+                  <input type="checkbox" name="" id="checkbox1" />
+                  <label for="checkbox1"></label>
+                </div>
+                <div class="select-state">
+                  <p>Активное</p>
+                  <input type="checkbox" name="" id="checkbox2" />
+                  <label for="checkbox2"></label>
+                </div>
+                <div class="select-state">
+                  <p>Активное обновленное</p>
+                  <input type="checkbox" name="" id="checkbox3" />
+                  <label for="checkbox3"></label>
+                </div>
+                <div class="select-state">
+                  <p>Завершенное</p>
+                  <input type="checkbox" name="" id="checkbox4" />
+                  <label for="checkbox4"></label>
+                </div>
+                <div class="select-state">
+                  <p>Завершенное <span>(принудительное)</span></p>
+                  <input type="checkbox" name="" id="checkbox5" />
+                  <label for="checkbox5"></label>
+                </div>
+                <div class="select-state">
+                  <p>
+                    Завершенное + <br />
+                    Вынужденная депубликация
+                  </p>
+                  <input type="checkbox" name="" id="checkbox6" />
+                  <label for="checkbox6"></label>
+                </div>
+                <div class="select-state">
+                  <p>Еще не опубликованное</p>
+                  <input type="checkbox" name="" id="checkbox7" />
+                  <label for="checkbox7"></label>
+                </div>
+                <div class="select-state">
+                  <p>Просроченное</p>
+                  <input type="checkbox" name="" id="checkbox8" />
+                  <label for="checkbox8"></label>
+                </div>
+                <div class="select-state">
+                  <p>
+                    По всем<span>
+                      (все объявления<br />
+                      строятся в алфавитном порядке)</span
+                    >
+                  </p>
+                  <input type="checkbox" name="" id="checkbox9" />
+                  <label for="checkbox9"></label>
+                </div>
+                <div class="select-state">
+                  <p>На модерации</p>
+                  <input type="checkbox" name="" id="checkbox10" />
+                  <label for="checkbox10"></label>
+                </div>
+              </div>
+            </div>
+            <div class="table__row-item"></div>
+            <div class="table__row-item">
+              <span class="icon"></span><input type="text" />
+            </div>
+            <div class="table__row-item"></div>
+            <div class="table__row-item"></div>
+          </div>
+        </div>
+      </section> -->
+
+      <section class="content">
+        <div class="control-panel">
+          <div class="control-panel__segment"><p>+ ADD A NEW ONE</p></div>
+          <div
+            
+            class="control-panel__segment"
+          >
+            <span class="icon deselect"></span>
+            <p>DESELECT</p>
+          </div>
+          <div class="control-panel__segment">
+            <span class="icon"></span>
+            <p>IN TOTAL: <span class="green">12424</span></p>
+          </div>
+          <div class="control-panel__segment">
+            <span class="icon"></span>
+            <p>IMPORT</p>
+          </div>
+          <div class="control-panel__segment">
+            <span class="icon"></span>
+            <p>EXPORT</p>
+          </div>
+          <div class="control-panel__segment">
+            <span class="icon"></span>
+            <p>DELETE EVERYTHING</p>
+          </div>
+          <div class="control-panel__segment">
+            <span class="icon"></span>
+            <p>MS EXCEL</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
