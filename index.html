@@ -7,7 +7,11 @@
     <title>Document</title>
   </head>
   <body>
+    <script src="./filter_query.js" defer></script>
+    <script src="./paginator.js" defer></script>
+    <script src="./vacancies_table.js" defer></script>
     <script src="./main.js" defer></script>
+
     <div class="main-container">
       <div class="panels">
         <div class="first-panel">
@@ -212,35 +216,133 @@
         </div>
       </section> -->
 
-      <section class="content">
-        <div class="control-panel">
-          <div class="control-panel__segment"><p>+ ADD A NEW ONE</p></div>
-          <div
-            
-            class="control-panel__segment"
-          >
-            <span class="icon deselect"></span>
-            <p>DESELECT</p>
+      <section class="content vacancies">
+        <div class="content-wrapper">
+          <div class="control-panel">
+            <div
+              tooltip="добавить новую вакансию"
+              class="control-panel__segment"
+            >
+              <p>+ ADD A NEW ONE</p>
+            </div>
+            <div
+              tooltip="ОЧИСТИТЬ ВСЕ ПОЛЯ БЫСТРОГО ПОИСКА"
+              class="control-panel__segment"
+            >
+              <span class="icon deselect"></span>
+              <p>DESELECT</p>
+            </div>
+            <div
+              tooltip="количество найденных вакансий"
+              class="control-panel__segment in-total"
+            >
+              <span class="icon"></span>
+              <p>IN TOTAL: <span class="green">12424</span></p>
+            </div>
+            <div
+              tooltip="импорт вакансий из xlsx"
+              class="control-panel__segment"
+            >
+              <span class="icon"></span>
+              <p>IMPORT</p>
+            </div>
+            <div
+              tooltip="Экспорт вакансий в xlsx"
+              class="control-panel__segment"
+            >
+              <span class="icon"></span>
+              <p>EXPORT</p>
+            </div>
+            <div tooltip="удалить вакансии в бд" class="control-panel__segment">
+              <span class="icon"></span>
+              <p>DELETE EVERYTHING</p>
+            </div>
           </div>
-          <div class="control-panel__segment">
-            <span class="icon"></span>
-            <p>IN TOTAL: <span class="green">12424</span></p>
+
+          <div class="pagination">
+            <div class="pagination__specify-page">
+              <p>Укажите страницу</p>
+              <input type="text" />
+              <div class="pagination__go-button inactive">Go</div>
+            </div>
+            <div class="pagination__pages-control">
+              <div class="pagination__page-number page-control-element">
+                <span class="icon"></span>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <p>First</p>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <p>Next</p>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <span class="icon"></span>
+              </div>
+            </div>
           </div>
-          <div class="control-panel__segment">
-            <span class="icon"></span>
-            <p>IMPORT</p>
+
+          <div class="title-wrapper">
+            <h3 class="table-title medium">Журнал вакансий</h3>
           </div>
-          <div class="control-panel__segment">
-            <span class="icon"></span>
-            <p>EXPORT</p>
+
+          <div class="table vacancies">
+            <div class="table__row-item title"><p class="medium">№</p></div>
+            <div class="table__row-item title center">
+              <p class="medium">ID</p>
+            </div>
+            <div class="table__row-item title">
+              <p class="medium">Название вакансии</p>
+            </div>
+            <div class="table__row-item title center">
+              <p class="medium">edit</p>
+            </div>
+            <div class="table__row-item title center">
+              <p class="medium">del</p>
+            </div>
+            <div class="table__row-item title">
+              <p class="medium">источник добавления</p>
+            </div>
+            <div class="table__row-item title center">
+              <p class="medium">дата</p>
+            </div>
+
+            <div class="table__row-item title"></div>
+            <div class="table__row-item title id">
+              <span class="icon"></span><input type="text" name="" id="" />
+            </div>
+            <div class="table__row-item title vacancy-name">
+              <span class="icon"></span><input type="text" name="" id="" />
+            </div>
+            <div class="table__row-item title"></div>
+            <div class="table__row-item title"></div>
+            <div class="table__row-item title source">
+              <span class="icon"></span><input type="text" name="" id="" />
+            </div>
+            <div class="table__row-item title"></div>
+
+            <!-- <div class="table__row title"><p>ID</p></div> -->
           </div>
-          <div class="control-panel__segment">
-            <span class="icon"></span>
-            <p>DELETE EVERYTHING</p>
-          </div>
-          <div class="control-panel__segment">
-            <span class="icon"></span>
-            <p>MS EXCEL</p>
+
+          <div class="pagination">
+            <div class="pagination__specify-page">
+              <p>Укажите страницу</p>
+              <input type="text" />
+              <div class="pagination__go-button inactive">Go</div>
+            </div>
+            <div class="pagination__pages-control">
+              <div class="pagination__page-number page-control-element">
+                <span class="icon"></span>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <p>First</p>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <p>Next</p>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <span class="icon"></span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
