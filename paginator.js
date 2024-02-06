@@ -163,7 +163,7 @@ class Paginator {
       const page = itemsArray.slice(i, i + itemsInPage);
       pages.push(page);
     }
-    this.currentPage = 1;
+    this.currentPage = pages.length > 0 ? 1 : 0;
     this.numberOfPages = pages.length;
     console.log(pages);
     return pages;

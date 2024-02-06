@@ -51,8 +51,17 @@ document
     });
   });
 
+const eventBus = new EventBus()
+eventBus.addEvent('deleteEverything')
+eventBus.addEvent('addVacancy')
+eventBus.addEvent('vacancyNameInput')
+const popupFactory = new PopupFactory();
+const controlPanel = new ControlPanel(popupFactory, eventBus);
+controlPanel.setup()
+
 const filterQuery = new FilterQuery();
 const paginator = new Paginator();
-const table = new VacanciesTable({}, paginator, filterQuery);
+const table = new VacanciesTable({}, paginator, filterQuery, popupFactory, eventBus);
 table.setup();
 table.render();
+table.setupEventBusCallbacks();

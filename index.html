@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="popup_styles.css" />
     <title>Document</title>
   </head>
   <body>
+    <script src="event_bus.js"></script>
+    <script src="popup_factory.js"></script>
+    <script src="delete_everything_popup.js"></script>
+    <script src="add_vacancy.js"></script>
+    <script src="control_panel.js"></script>
     <script src="./filter_query.js" defer></script>
     <script src="./paginator.js" defer></script>
     <script src="./vacancies_table.js" defer></script>
@@ -221,7 +227,7 @@
           <div class="control-panel">
             <div
               tooltip="добавить новую вакансию"
-              class="control-panel__segment"
+              class="control-panel__segment add-a-new-one"
             >
               <p>+ ADD A NEW ONE</p>
             </div>
@@ -241,19 +247,22 @@
             </div>
             <div
               tooltip="импорт вакансий из xlsx"
-              class="control-panel__segment"
+              class="control-panel__segment import-button"
             >
               <span class="icon"></span>
               <p>IMPORT</p>
             </div>
             <div
               tooltip="Экспорт вакансий в xlsx"
-              class="control-panel__segment"
+              class="control-panel__segment export-button"
             >
               <span class="icon"></span>
               <p>EXPORT</p>
             </div>
-            <div tooltip="удалить вакансии в бд" class="control-panel__segment">
+            <div
+              tooltip="удалить вакансии в бд"
+              class="control-panel__segment delete-everything"
+            >
               <span class="icon"></span>
               <p>DELETE EVERYTHING</p>
             </div>

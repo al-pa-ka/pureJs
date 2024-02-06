@@ -1,5 +1,5 @@
 class VacanciesTable {
-  constructor(data, paginator, filterQuery) {
+  constructor(data, paginator, filterQuery, popupFactory, eventBus) {
     this.paginator = paginator;
     this.dataTable = document.querySelector(".table.vacancies");
     this.data = [
@@ -5952,10 +5952,59 @@ class VacanciesTable {
     this.filteredContent = [];
     this.paginatedContent = [];
     this.filterQuery = filterQuery;
+    this.popupFactory = popupFactory;
+    this.eventBus = eventBus;
   }
 
   filteredVacancies() {
     return this.data;
+  }
+
+  setupRowsControl() {
+    document.querySelectorAll('.row-wrapper').forEach((row) => {
+      row.querySelector('.control-edit.edit').onclick = () => {
+        this.popupFactory.build('EDIT_ROW')
+      }
+    })
+  }
+
+  setupEventBusCallbacks() {
+    this.eventBus.addSubscriber((event) => {
+      console.log("deleted");
+      this.data = [];
+      this.paginatedContent = this.paginator.paginateContent(this.data);
+      this.render();
+      this.paginator.redrawControlPanel(this.paginatedContent.length);
+    }, "deleteEverything");
+
+    this.eventBus.addSubscriber((event) => {
+      console.log("added");
+      event.id =
+        this.data.reduce(
+          (prev, curr) => {
+            return prev.id > curr.id ? prev : curr;
+          },
+          { id: 0 }
+        ).id + 1;
+      this.data.push(event);
+      this.filteredContent = this.filterQuery.filterVacancies(this.data);
+      this.paginatedContent = this.paginator.paginateContent(
+        this.filteredContent
+      );
+      this.render();
+      this.paginator.redrawControlPanel(this.paginatedContent.length);
+    }, "addVacancy");
+
+    this.eventBus.addSubscriber((event) => {
+      console.log(event.data);
+      if (
+        this.data.find((el) => {
+          return el.vacancyName == event.data;
+        }) != undefined
+      ) {
+        event.callback();
+      }
+    }, "vacancyNameInput");
   }
 
   setup() {
@@ -5985,13 +6034,15 @@ class VacanciesTable {
     });
   }
 
-  render(vacanciesArray) {
+  render() {
     this.clear();
     const inTotalMarkup = document.querySelector(
       ".control-panel__segment.in-total>p>span"
     );
     inTotalMarkup.textContent = this.paginatedContent.flat(1).length;
-
+    if (this.paginatedContent.length < 1) {
+      return;
+    }
     let number = 1;
     for (const vacancy of this.paginatedContent[
       this.paginator.currentPage - 1
