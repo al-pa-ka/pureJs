@@ -1,0 +1,7 @@
+
+
+class Hint{
+    constructor() {
+        
+    }
+}
