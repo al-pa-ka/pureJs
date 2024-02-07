@@ -14,18 +14,22 @@
           <span class="icon cross"></span>
         </div>
         <div class="popup__title">
-          <p class="popup__title-text">Добавить название вакансии</p>
+          <p class="popup__title-text">Изменить название вакансии</p>
         </div>
         <div class="popup__content">
           <div class="popup__content-wrapper">
-            <p class="popup__content-wrapper-text">
-              Название вакансии
-            </p>
-            <input class="popup__content-input" type="text">
+            <p class="popup__content-wrapper-text">Название вакансии</p>
+            <label class="pseudo-input"
+              ><span class="icon" style="color: gray; font-size: 20px"></span>
+              <p class="placeholder">Выберите файл</p>
+              <p class="filename"></p>
+              <input accept=".xlsx" style="display: none" type="file"
+            /></label>
           </div>
+          <p class="error-output"><span class="icon error-output"></span></p>
         </div>
         <div class="popup__footer">
-          <button class="btn accept blue">Добавить</button>
+          <button class="btn accept blue">Загрузить</button>
           <button class="btn cancel gray">Отмена</button>
         </div>
         <span class="icon cross"></span>

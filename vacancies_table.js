@@ -5960,21 +5960,66 @@ class VacanciesTable {
     return this.data;
   }
 
+  update() {
+    this.filteredContent = this.filterQuery.filterVacancies(this.data);
+    this.paginatedContent = this.paginator.paginateContent(
+      this.filteredContent
+    );
+    this.paginator.redrawControlPanel(this.paginatedContent.length);
+    this.render();
+    this.setupRowsControl();
+  }
+
   setupRowsControl() {
-    document.querySelectorAll('.row-wrapper').forEach((row) => {
-      row.querySelector('.control-edit.edit').onclick = () => {
-        this.popupFactory.build('EDIT_ROW')
-      }
-    })
+    console.log("setupRows");
+    document.querySelectorAll(".row-wrapper").forEach((row) => {
+      row.querySelector(".control-edit.edit").onclick = async () => {
+        const vacancyId = Number(row.querySelector(".id>p").textContent);
+        const vacancy = this.data.find((vacancy) => {
+          return vacancy.id == vacancyId;
+        });
+        const vacancyIdInData = this.data.findIndex(vacancy => {
+          return vacancy.id == vacancyId
+        })
+        const editVacancyPopup = this.popupFactory.build(
+          this.popupFactory.EDIT
+        );
+        editVacancyPopup.setEventBus(this.eventBus);
+        editVacancyPopup.setContext(vacancy);
+        if ((await editVacancyPopup.open()) == editVacancyPopup.CANCEL) {
+          return;
+        }
+        this.data[vacancyIdInData] = editVacancyPopup.result;
+        this.update();
+      };
+      
+      row.querySelector(".control-edit.delete").onclick = async () => {
+        const vacancyId = Number(row.querySelector(".id>p").textContent);
+        const vacancy = this.data.find((vacancy) => {
+          return vacancy.id == vacancyId;
+        });
+        const vacancyIdInData = this.data.findIndex(vacancy => {
+          return vacancy.id == vacancyId
+        })
+        const deleteVacancyPopup = this.popupFactory.build(
+          this.popupFactory.DELETE
+        );
+        deleteVacancyPopup.setContext(vacancy);
+        if ((await deleteVacancyPopup.open()) == deleteVacancyPopup.CANCEL) {
+          return;
+        }
+        console.log('delete')
+        this.data.splice(vacancyIdInData, 1);
+        this.update();
+      };
+    });
   }
 
   setupEventBusCallbacks() {
     this.eventBus.addSubscriber((event) => {
       console.log("deleted");
       this.data = [];
-      this.paginatedContent = this.paginator.paginateContent(this.data);
-      this.render();
-      this.paginator.redrawControlPanel(this.paginatedContent.length);
+      this.update();
     }, "deleteEverything");
 
     this.eventBus.addSubscriber((event) => {
@@ -5987,22 +6032,16 @@ class VacanciesTable {
           { id: 0 }
         ).id + 1;
       this.data.push(event);
-      this.filteredContent = this.filterQuery.filterVacancies(this.data);
-      this.paginatedContent = this.paginator.paginateContent(
-        this.filteredContent
-      );
-      this.render();
-      this.paginator.redrawControlPanel(this.paginatedContent.length);
+      this.update();
     }, "addVacancy");
 
     this.eventBus.addSubscriber((event) => {
       console.log(event.data);
-      if (
-        this.data.find((el) => {
-          return el.vacancyName == event.data;
-        }) != undefined
-      ) {
-        event.callback();
+      const searchResult = this.data.find((el) => {
+        return el.vacancyName == event.data;
+      });
+      if (searchResult != undefined) {
+        event.callback(searchResult);
       }
     }, "vacancyNameInput");
   }
@@ -6015,13 +6054,9 @@ class VacanciesTable {
     });
     this.filterQuery.setup();
     this.filterQuery.setCallback(() => {
-      this.filteredContent = this.filterQuery.filterVacancies(this.data);
-      this.paginatedContent = this.paginator.paginateContent(
-        this.filteredContent
-      );
-      this.paginator.redrawControlPanel(this.paginatedContent.length);
-      this.render();
+      this.update();
     });
+    this.setupRowsControl();
   }
 
   setCurrentPage(pageNumber) {
@@ -6051,17 +6086,17 @@ class VacanciesTable {
                                     <p>${number}</p>
                             </div>`;
 
-      const idHTML = `<div class="table__row-item center selectable">
+      const idHTML = `<div class="table__row-item center selectable id">
                             <p>${vacancy.id}</p>
                     </div>`;
       const vacancyName = `<div class="table__row-item selectable">
                                     <p>${vacancy.vacancyName}</p>
                             </div>`;
       const edit = `<div class="table__row-item title selectable">
-                            <span class="icon control-edit"></span>
+                            <span class="icon control-edit edit"></span>
                         </div>
                         <div class="table__row-item title selectable">
-                            <span class="icon control-edit"></span>
+                            <span class="icon control-edit delete"></span>
                         </div>`;
       const source = `<div class="table__row-item">
                             <p class="source ${
@@ -6079,5 +6114,6 @@ class VacanciesTable {
       );
       number++;
     }
+    this.setupRowsControl();
   }
 }

@@ -15,15 +15,14 @@ class EditVacancy extends DeleteEverythingPopup {
     this.eventBus = eventBus;
   }
 
+  setContext(context){
+    this.context = context
+  }
+
   formResult() {
-    const jsDate = new Date();
-    const date = jsDate
-      .toLocaleString()
-      .split(",")[0]
-      .replace(new RegExp(/\./, "g"), "/");
     const vacancyName = this.popup.querySelector(".popup__content-input").value;
-    const source = "Published";
-    return { date, vacancyName, source };
+    this.context['vacancyName'] = vacancyName
+    return this.context;
   }
 
   insert() {
@@ -56,6 +55,7 @@ class EditVacancy extends DeleteEverythingPopup {
       </div>
         `
     );
+    document.querySelector('.popup__content-input').value = this.context.vacancyName
   }
 
   setContext(context) {
@@ -89,12 +89,12 @@ class EditVacancy extends DeleteEverythingPopup {
       this.eventBus.notice(
         {
           data: this.popup.querySelector(".popup__content-input").value,
-          callback: () => {
+          callback: (context) => {
             this.popup
               .querySelector(".error-output")
               .insertAdjacentHTML(
                 "beforeend",
-                `<span class="icon" style="color: red;"></span> Уже есть в БД вакансия с таким названием`
+                `<span class="icon" style="color: red;"></span> Уже есть в БД id${context.id}, поэтому нельзя изменить`
               );
             this.popup.querySelector(".accept").classList.add("inactive");
           },

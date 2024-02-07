@@ -30,5 +30,15 @@ class ControlPanel {
         this.eventBus.notice(addNewVacancy.result, "addVacancy");
       }
     };
+
+    this.importButton.onclick = async () => {
+      const importVacancies = this.popupFactory.build(this.popupFactory.IMPORT)
+      await importVacancies.open()
+    }
+
+    this.exportButton.onclick = async () => {
+      const exportVacancies = this.popupFactory.build(this.popupFactory.EXPORT)
+      await exportVacancies.open()
+    }
   }
 }

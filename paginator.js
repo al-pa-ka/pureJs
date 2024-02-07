@@ -92,7 +92,11 @@ class Paginator {
 
       specifyPageInput.oninput = () => {
         const convertedUserInput = Number(specifyPageInput.value);
-        if (!isNaN(convertedUserInput) && convertedUserInput >= 1 && convertedUserInput <= this.numberOfPages) {
+        if (
+          !isNaN(convertedUserInput) &&
+          convertedUserInput >= 1 &&
+          convertedUserInput <= this.numberOfPages
+        ) {
           specifyPageGoButton.classList.remove("inactive");
         } else {
           specifyPageGoButton.classList.add("inactive");
@@ -163,15 +167,15 @@ class Paginator {
       const page = itemsArray.slice(i, i + itemsInPage);
       pages.push(page);
     }
-    this.currentPage = pages.length > 0 ? 1 : 0;
+    if (pages.length == 0) {
+      this.currentPage = 0;
+
+    } else if (pages.length == 1){
+      this.currentPage = 1
+    } else {
+      this.currentPage = pages.length > this.currentPage ? this.currentPage : pages.length;
+    }
     this.numberOfPages = pages.length;
-    console.log(pages);
     return pages;
   }
 }
-
-//  {
-//     numberOfPages: number,
-//     paginatedContent: array[array, array],
-//
-//  }

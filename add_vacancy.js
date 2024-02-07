@@ -84,12 +84,12 @@ class AddVacancy extends DeleteEverythingPopup {
       this.eventBus.notice(
         {
           data: this.popup.querySelector(".popup__content-input").value,
-          callback: () => {
+          callback: (context) => {
             this.popup
               .querySelector(".error-output")
               .insertAdjacentHTML(
                 "beforeend",
-                `<span class="icon" style="color: red;"></span> Уже есть в БД вакансия с таким названием`
+                `<span class="icon" style="color: red;"></span> Уже есть в БД id ${context.id}, поэтому нельзя добавить в БД`
               );
             this.popup.querySelector('.accept').classList.add('inactive')
           },
