@@ -1,15 +1,27 @@
 class FilterQuery {
-  constructor() {
+  constructor(data, eventBus) {
+    this.data = data;
     this.idInput = this.getIdFilterInput();
     this.vacancyNameInput = this.getVacancyNameInput();
     this.sourceInput = this.getSourceInput();
     this.callback = () => {};
+    this.currentHint = null;
+    this.eventBus = eventBus;
   }
   setCallback(callable) {
     this.callback = callable;
   }
   onInput() {
     this.callback();
+    if (
+      this.vacancyNameInput.value ||
+      this.idInput.value ||
+      this.sourceInput.value
+    ) {
+      this.eventBus.notice({}, "fieldNotEmpty");
+    } else {
+      this.eventBus.notice({}, "fieldEmpty");
+    }
   }
   getIdFilterInput() {
     return document.querySelector(".table__row-item.title.id>input");
@@ -20,15 +32,90 @@ class FilterQuery {
   getSourceInput() {
     return document.querySelector(".table__row-item.title.source>input");
   }
-  setup() {
-    this.idInput.oninput = () => {
+  setupEventBus() {
+    this.eventBus.addSubscriber(() => {
+      this.vacancyNameInput.value = "";
+      this.idInput.value = "";
+      this.sourceInput.value = "";
       this.onInput();
+    }, "clearSearch");
+  }
+  setup() {
+    this.setupEventBus();
+    this.idInput.oninput = (event) => {
+      this.onInput();
+      this.currentHint?.update(event.target.value);
     };
+
+    this.idInput.onfocus = async (event) => {
+      if (this.currentHint) {
+        try {
+          this.currentHint.close();
+          this.currentHint = null;
+        } catch {}
+      }
+      const container = document.querySelector(".table__row-item.title.id");
+      this.currentHint = new Hint(
+        this.data.map((vacancy) => String(vacancy.id)),
+        container
+      );
+      this.currentHint.setInitial(event.target.value);
+      const result = await this.currentHint.open();
+      if (result) {
+        this.getIdFilterInput().value = result;
+        this.callback();
+      }
+    };
+
     this.vacancyNameInput.oninput = () => {
       this.onInput();
+      this.currentHint?.update(event.target.value);
     };
+    this.vacancyNameInput.onfocus = async () => {
+      if (this.currentHint) {
+        try {
+          this.currentHint.close();
+          this.currentHint = null;
+        } catch {}
+      }
+      const container = document.querySelector(
+        ".table__row-item.title.vacancy-name"
+      );
+      this.currentHint = new Hint(
+        this.data.map((vacancy) => String(vacancy.vacancyName)),
+        container
+      );
+      this.currentHint.setInitial(event.target.value);
+      const result = await this.currentHint.open();
+      if (result) {
+        this.getVacancyNameInput().value = result;
+        this.callback();
+      }
+    };
+
+    this.sourceInput.onfocus = async () => {
+      if (this.currentHint) {
+        try {
+          this.currentHint.close();
+          this.currentHint = null;
+        } catch {}
+      }
+      const container = document.querySelector(".table__row-item.title.source");
+      this.currentHint = new Hint(
+        this.data.map((vacancy) => String(vacancy.source)),
+        container
+      );
+      this.currentHint.setInitial(event.target.value);
+      const result = await this.currentHint.open();
+      if (result) {
+        this.sourceInput.value = result;
+        this.callback();
+      }
+    };
+
     this.sourceInput.oninput = () => {
       this.onInput();
+      this.currentHint?.update(event.target.value);
     };
   }
   filterVacancies(vacancies) {

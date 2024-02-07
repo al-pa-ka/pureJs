@@ -33,6 +33,10 @@
   .tab > p {
     font-size: 17px;
   }
+  .pagination__page-number{
+    width: 40px;
+    height: 40px;
+  }
   .third-panel__tab-text {
     font-size: 17px;
   }
@@ -53,7 +57,8 @@
   }
   .pagination__pages-control {
     width: 100%;
-    justify-content: space-between;
+    gap: 10px;
+    justify-content: end;
   }
   .pagination__specify-page-text {
     display: none;

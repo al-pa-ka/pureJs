@@ -15,7 +15,7 @@ class ControlPanel {
         this.popupFactory.DELETE_EVERYTHING
       );
       const result = await deleteEverythingPopup.open();
-      console.log(result)
+      console.log(result);
       if (result == deleteEverythingPopup.DELETE) {
         console.log("noticed");
         this.eventBus.notice({}, "deleteEverything");
@@ -24,7 +24,7 @@ class ControlPanel {
 
     this.addNewOneButton.onclick = async () => {
       const addNewVacancy = this.popupFactory.build(this.popupFactory.ADD_NEW);
-      addNewVacancy.setEventBus(this.eventBus)
+      addNewVacancy.setEventBus(this.eventBus);
       const result = await addNewVacancy.open();
       if (result == addNewVacancy.ADD) {
         this.eventBus.notice(addNewVacancy.result, "addVacancy");
@@ -32,13 +32,24 @@ class ControlPanel {
     };
 
     this.importButton.onclick = async () => {
-      const importVacancies = this.popupFactory.build(this.popupFactory.IMPORT)
-      await importVacancies.open()
-    }
+      const importVacancies = this.popupFactory.build(this.popupFactory.IMPORT);
+      await importVacancies.open();
+    };
 
     this.exportButton.onclick = async () => {
-      const exportVacancies = this.popupFactory.build(this.popupFactory.EXPORT)
-      await exportVacancies.open()
-    }
+      const exportVacancies = this.popupFactory.build(this.popupFactory.EXPORT);
+      await exportVacancies.open();
+    };
+
+    this.deselectButton.parentElement.onclick = () => {
+      this.eventBus.notice({}, "clearSearch");
+      console.log("cleared");
+    };
+    this.eventBus.addSubscriber(() => {
+      this.deselectButton.classList.remove('icon-red')
+    }, 'fieldEmpty')
+    this.eventBus.addSubscriber(() => {
+      this.deselectButton.classList.add('icon-red')
+    }, 'fieldNotEmpty')
   }
 }
