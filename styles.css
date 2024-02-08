@@ -369,6 +369,17 @@ input[type="text"] {
 .icon-red{
   color: red !important;
 }
+
+.mobile-wrapper-table{
+  display: contents;
+}
+.mobile-wrapper__row{
+  display: contents;
+}
+.mobile-wrapper__row-extra-content{
+  display: none;
+}
+
 .pagination__page-number {
   box-sizing: border-box;
   width: 50px;

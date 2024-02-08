@@ -2,7 +2,7 @@ class VacanciesTable {
   constructor(data, paginator, filterQuery, popupFactory, eventBus) {
     this.paginator = paginator;
     this.dataTable = document.querySelector(".table.vacancies");
-    this.data = data
+    this.data = data;
     this.filteredContent = [];
     this.paginatedContent = [];
     this.filterQuery = filterQuery;
@@ -136,30 +136,52 @@ class VacanciesTable {
     for (const vacancy of this.paginatedContent[
       this.paginator.currentPage - 1
     ]) {
-      const itemNumberHTML = `<div class="table__row-item center selectable">
-                                    <p>${number}</p>
-                            </div>`;
+      const itemNumberHTML = `<div class='mobile-wrapper__row mobile-wrapper__row-number'>
+                                    <p class="mobile-wrapper__row-extra-content caption">№</p>
+                                    <div class="table__row-item center selectable">
+                                      <p>${number}</p>
+                                    </div>
+                              </div>`;
 
-      const idHTML = `<div class="table__row-item center selectable id">
+      const idHTML = `<div class='mobile-wrapper__row mobile-wrapper__row-id'>
+                        <p class="mobile-wrapper__row-extra-content caption">ID</p>
+                        <div class="table__row-item center selectable id">
                             <p>${vacancy.id}</p>
+                        </div>
                     </div>`;
-      const vacancyName = `<div class="table__row-item selectable">
-                                    <p>${vacancy.vacancyName}</p>
+
+      const vacancyName = `<div class='mobile-wrapper__row mobile-wrapper__row-vacancy-name'>
+                              <div class="table__row-item selectable">
+                                    <p class="table__row-item-vacancy-name">${vacancy.vacancyName}</p>
+                              </div>
                             </div>`;
-      const edit = `<div class="table__row-item title selectable">
+      const edit = `
+                      <div class="mobile-wrapper__row mobile-wrapper__row-edit">
+                        <div class="table__row-item title selectable">
                             <span class="icon control-edit edit"></span>
                         </div>
                         <div class="table__row-item title selectable">
                             <span class="icon control-edit delete"></span>
-                        </div>`;
-      const source = `<div class="table__row-item">
+                        </div>
+                      </div>
+                        `;
+      const source = `
+                        <div class="mobile-wrapper__row mobile-wrapper__row-source"> 
+                          <p class="mobile-wrapper__row-extra-content caption">Источник добавления</p>
+                          <div class="table__row-item">
                             <p class="source ${
                               vacancy.source == "Published" ? "published" : ""
                             }">${vacancy.source}</p>
+                          </div>
                         </div>`;
-      const date = `<div class="table__row-item">
+      const date = `
+                  <div class="mobile-wrapper__row mobile-wrapper__row-date"> 
+                  <p class="mobile-wrapper__row-extra-content caption">Дата</p>
+                    <div class="table__row-item">
                         <p class="date">${vacancy.date}</p>
-                    </div>`;
+                    </div>
+                  </div>
+                  `;
       this.dataTable.insertAdjacentHTML(
         "beforeend",
         `<div class="row-wrapper">${
