@@ -25,12 +25,33 @@
     <script src="./vacancies_table.js" defer></script>
     <script src="./main.js" defer></script>
 
+
+
+    <div class="mobile-control-wrapper__grid">
+      <div class="mobile-control-wrapper__grid-down">
+        <div class="mobile-control-wrapper__grid-control">
+           <div class="mobile-control-wrapper__grid-control-wrapper"><span class="icon"></span><p>Интерфейс</p></div>
+           <div class="mobile-control-wrapper__grid-control-wrapper"><span class="icon"></span><p>Соц. сети</p></div>
+           <div class="mobile-control-wrapper__grid-control-wrapper"><span class="icon"></span><p>Журнал</p></div>
+           <div class="mobile-control-wrapper__grid-control-wrapper"><span class="icon"></span><p>Импорт</p></div>
+           <div class="mobile-control-wrapper__grid-control-wrapper"><span class="icon"></span><p>Еще</p></div>
+
+        </div>
+      </div>
+    </div>
+
     <div class="main-container">
       <div class="mobile-wrapper">
         <div class="panels">
           <div class="mobile-tab">
-            <p>Меню</p>
-            <span class="icon burger"></span>
+            <div class="mobile-control control">
+              <span class="icon"></span>
+              <p>Войти</p>
+            </div>
+            <div class="mobile-control__menu-button">
+              <p>Меню</p>
+              <span class="icon burger"></span>
+            </div>
           </div>
           <div class="first-panel panels__panel">
             <div class="control">
@@ -38,72 +59,73 @@
               <p>Войти</p>
             </div>
           </div>
-          <div class="second-panel panels__panel">
-            <div class="tab second-panel__tab" id="interface_tab">
-              <p>Интерфейс</p>
-            </div>
-            <div class="tab second-panel__tab" id="social_tab">
-              <p>Соц. сети</p>
-              <p></p>
-            </div>
-            <div class="tab second-panel__tab" id="journals_tab">
-              <p>Журналы</p>
-            </div>
-            <div class="tab second-panel__tab" id="import_tab">
-              <p>Импорт</p>
-            </div>
-            <div class="tab second-panel__tab" id="export_tab">
-              <p>Экспорт</p>
-            </div>
-            <div class="will-removed">
-              <div class="tab second-panel__tab" id="users_tab">
-                <p>Пользователи</p>
+          <div id="mobile-menu-wrapper" style="display: contents">
+            <div class="second-panel panels__panel">
+              <div class="tab second-panel__tab" id="interface_tab">
+                <p>Интерфейс</p>
               </div>
-              <div class="tab second-panel__tab" id="emails_tab">
-                <p>Email ящики</p>
+              <div class="tab second-panel__tab" id="social_tab">
+                <p>Соц. сети</p>
               </div>
-              <div class="tab second-panel__tab"><p>Ключи.Пароли</p></div>
-              <div class="tab second-panel__tab"><p>Разное</p></div>
-            </div>
-          </div>
-          <div class="third-panel journals panels__panel">
-            <div class="third-panel__content-wrapper">
-              <div class="third-panel__tab">
-                <span class="third-panel__tab-icon icon"></span>
-                <p class="third-panel__tab-text">объявления</p>
+              <div class="tab second-panel__tab" id="journals_tab">
+                <p>Журналы</p>
               </div>
-              <div class="third-panel__tab">
-                <span class="third-panel__tab-icon icon"></span>
-                <p class="third-panel__tab-text">вакансии</p>
+              <div class="tab second-panel__tab" id="import_tab">
+                <p>Импорт</p>
               </div>
-              <div class="third-panel__tab">
-                <span class="third-panel__tab-icon icon"></span>
-                <p class="third-panel__tab-text">соискатели</p>
-              </div>
-              <div class="third-panel__tab">
-                <span class="third-panel__tab-icon icon"></span>
-                <p class="third-panel__tab-text">email рассылка</p>
-              </div>
-              <div class="third-panel__tab">
-                <span class="third-panel__tab-icon icon"></span>
-                <p class="third-panel__tab-text">отклики</p>
+              <div class="tab second-panel__tab" id="export_tab">
+                <p>Экспорт</p>
               </div>
               <div class="will-removed">
+                <div class="tab second-panel__tab" id="users_tab">
+                  <p>Пользователи</p>
+                </div>
+                <div class="tab second-panel__tab" id="emails_tab">
+                  <p>Email ящики</p>
+                </div>
+                <div class="tab second-panel__tab"><p>Ключи.Пароли</p></div>
+                <div class="tab second-panel__tab"><p>Разное</p></div>
+              </div>
+            </div>
+            <div class="third-panel journals panels__panel">
+              <div class="third-panel__content-wrapper">
                 <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">фио</p>
+                  <span class="third-panel__tab-icon icon"></span>
+                  <p class="third-panel__tab-text">объявления</p>
                 </div>
                 <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">учебные заведения</p>
+                  <span class="third-panel__tab-icon icon"></span>
+                  <p class="third-panel__tab-text">вакансии</p>
                 </div>
                 <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">адреса</p>
+                  <span class="third-panel__tab-icon icon"></span>
+                  <p class="third-panel__tab-text">соискатели</p>
                 </div>
                 <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">компании</p>
+                  <span class="third-panel__tab-icon icon"></span>
+                  <p class="third-panel__tab-text">email рассылка</p>
+                </div>
+                <div class="third-panel__tab">
+                  <span class="third-panel__tab-icon icon"></span>
+                  <p class="third-panel__tab-text">отклики</p>
+                </div>
+                <div class="will-removed">
+                  <div class="third-panel__tab">
+                    <span class="third-panel__tab-icon icon"></span>
+                    <p class="third-panel__tab-text">фио</p>
+                  </div>
+                  <div class="third-panel__tab">
+                    <span class="third-panel__tab-icon icon"></span>
+                    <p class="third-panel__tab-text">учебные заведения</p>
+                  </div>
+                  <div class="third-panel__tab">
+                    <span class="third-panel__tab-icon icon"></span>
+                    <p class="third-panel__tab-text">адреса</p>
+                  </div>
+                  <div class="third-panel__tab">
+                    <span class="third-panel__tab-icon icon"></span>
+                    <p class="third-panel__tab-text">компании</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -193,7 +215,8 @@
           </div>
 
           <div class="mobile-wrapper__input-vacancy-name">
-            <span style="color: gray;" class="icon"></span><input type="text" name="" id="">
+            <span style="color: gray" class="icon"></span
+            ><input type="text" name="" id="" />
           </div>
 
           <div class="table-wrapper">
@@ -224,7 +247,8 @@
                   <span class="icon"></span><input type="text" name="" id="" />
                 </div>
                 <div class="table__row-item title vacancy-name">
-                  <span class="icon"></span><input type="text" name="" id="vacancy-name" />
+                  <span class="icon"></span
+                  ><input type="text" name="" id="vacancy-name" />
                 </div>
                 <div class="table__row-item title"></div>
                 <div class="table__row-item title"></div>

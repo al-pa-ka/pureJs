@@ -27,6 +27,24 @@
   }
 }
 @media (width <= 680px) {
+  div.control-panel {
+    margin-top: 10;
+  }
+  div.mobile-tab {
+    margin-top: 10px;
+    background-color: white;
+  }
+
+  .third-panel__content-wrapper {
+    background-color: white;
+  }
+  .mobile-control.control > * {
+    font-size: 22px;
+    color: #414f51;
+  }
+  .will-removed {
+    display: contents;
+  }
   div.title-wrapper {
     display: none;
   }
@@ -85,8 +103,9 @@
   .table__row-item {
     height: 100%;
     border: none;
+    overflow: hidden;
   }
-  .table__row-item:not(.non-border){
+  .table__row-item:not(.non-border) {
     border-left: 1px solid lightgray;
   }
 
@@ -152,25 +171,24 @@
       "edit edit";
   }
   .tab > p {
-    font-size: 17px;
+    font-size: 20px;
   }
   .pagination__page-number {
     width: 40px;
     height: 40px;
   }
-  .third-panel__tab-text {
-    font-size: 17px;
+  p.third-panel__tab-text {
+    font-size: 20px;
+    color: #414141 !important;
   }
   .control-panel {
-    max-width: 380px;
+    width: 100%;
   }
   .pagination {
     display: contents;
   }
   .pagination__specify-page {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+    display: none;
   }
   .pagination__specify-page > input {
     width: 50px;
@@ -178,8 +196,7 @@
   }
   .pagination__pages-control {
     width: 100%;
-    gap: 10px;
-    justify-content: end;
+    justify-content: space-between;
   }
   .pagination__specify-page-text {
     display: none;
@@ -191,10 +208,10 @@
   .row {
     width: 100%;
     justify-content: space-between;
-    align-items: end;
     display: flex;
     flex-wrap: wrap;
     row-gap: 20px;
+    height: auto;
   }
   #second_specifier {
     display: none;
@@ -202,16 +219,10 @@
   *[tooltip]:hover::after {
     width: 110px;
   }
-}
-
-@media (width <= 500px) {
-  .tab > p {
-    font-size: 14px;
-  }
   .panels {
     display: grid;
     grid-template-areas:
-      "first-panel first-panel"
+      "exit first-panel"
       "mobile-tab mobile-tab"
       "second-panel third-panel";
   }
@@ -233,23 +244,37 @@
   .first-panel {
     grid-area: first-panel;
   }
-  .second-panel > .tab {
+  .second-panel__tab {
+    display: flex;
     align-items: start;
+    justify-content: center;
     width: 100%;
-    height: 32px;
-    text-align: left;
     flex: 1;
     color: white;
   }
+  .tab_active {
+    background-color: initial;
+  }
+  .second-panel__tab:hover {
+    background-color: initial !important;
+  }
+  .second-panel__tab > p {
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+    color: #414141;
+  }
   .second-panel {
+    padding-top: 10px;
     display: flex;
     grid-area: second-panel;
     flex-direction: column;
-    height: 160px;
-    background-color: var(--blue);
+    height: 100%;
+    background-color: transparent;
   }
   .third-panel {
-    background-color: #67d6ef;
+    padding-top: 10px;
+    background-color: transparent;
     grid-area: third-panel;
     height: 100%;
   }
@@ -263,5 +288,80 @@
   }
   .third-panel__content-wrapper {
     align-items: end;
+  }
+  .control,
+  .first-panel {
+    display: none;
+  }
+  .mobile-control.control {
+    grid-area: exit;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+  }
+}
+
+@media (width <= 450px) {
+  #mobile-menu-wrapper{
+    display: none !important;
+  }
+  .mobile-control.control{
+    display: none;
+  }
+  .mobile-tab{
+    display: none;
+  }
+  .panels{
+    display: flex;
+  }
+  .first-panel{
+    display: flex;
+  }
+  div.control, div.first-panel{
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;  
+  }
+
+  div.mobile-control-wrapper__grid{
+    display: flex;
+    height: 100dvh;
+    width: 100dvw;
+    position: fixed;
+    flex-direction: column;
+    justify-content: end;
+  }
+  .mobile-control-wrapper__grid-control{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    filter: drop-shadow(black 0px -2px 10px);
+  }
+  .mobile-control-wrapper__grid-control-wrapper{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+  .mobile-control-wrapper__grid-control-wrapper>p{
+    font-size: 12px;
+    text-align: center;
+  }
+  .mobile-control-wrapper__grid-control-wrapper>span{
+    color: #333333;
+  }
+}
+
+@media (width <= 390px) {
+  .table__row-item > p {
+    font-size: 14px;
+  }
+
+  .mobile-wrapper__row-extra-content {
+    font-size: 14px;
   }
 }
