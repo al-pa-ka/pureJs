@@ -23,8 +23,8 @@ class FilterQuery {
       this.vacancyNameInput.value ||
       this.idInput.value ||
       this.sourceInput.value ||
-      this.dateInput ||
-      this.mobileInput
+      this.dateInput.value ||
+      this.mobileInput.value
     ) {
       this.eventBus.notice({}, "fieldNotEmpty");
     } else {

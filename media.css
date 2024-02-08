@@ -125,7 +125,7 @@
     color: rgb(66, 66, 216);
   }
   .mobile-wrapper__row-edit > div {
-    flex: 0;
+    flex: 1;
   }
   .mobile-wrapper__row-vacancy-name {
     grid-area: vacancy-name;
