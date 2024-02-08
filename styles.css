@@ -38,6 +38,12 @@ body {
   display: none;
 }
 
+.mobile-control-wrapper__grid-nav-wrapper{
+  display: none;
+}
+.mobile-control-wrapper__grid-control{
+  display: none;
+}
 .main-container{
   padding-bottom: 50px;
   overflow-x: hidden;
