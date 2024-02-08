@@ -621,53 +621,7 @@ p.date {
 .table__row-item.date:not(.title){
   cursor: pointer;
 }
-/*
 
-.table__row-item.select {
-  position: relative;
-}
-.select-status {
-  position: absolute;
-  width: 100%;
-  margin-left: -2px;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  top: 32px;
-  left: 0;
-  border: 2px solid var(--blue);
-  background-color: white;
-}
-.select-state {
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 6px;
-  padding-right: 6px;
-}
-.select-state > p {
-  font-size: 14px;
-}
-.select-state > input {
-  display: none;
-}
-.select-state > label::before {
-  content: "";
-  font-family: Icons;
-}
-input:checked + label::before {
-  content: "";
-  font-family: "Icons";
-}
-.select-state > label {
-  color: var(--blue);
-}
-.select-state > p > span {
-  color: gray;
-  font-size: 12px;
-} */
 .title{
   position: relative;
 }
