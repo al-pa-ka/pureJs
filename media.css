@@ -1,6 +1,6 @@
 @media (width <= 1560px) {
   .third-panel__tab {
-    flex: 0;
+    flex: 1;
     text-align: center;
   }
 }
