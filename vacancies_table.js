@@ -66,7 +66,17 @@ class VacanciesTable {
         this.data.splice(vacancyIdInData, 1);
         this.update();
       };
+
+      const date = row.querySelector('.table__row-item.date')
+      date.onclick = () => {
+        console.log('clicked')
+        const dateContent = date.textContent.trim()
+        console.log(dateContent)
+        this.eventBus.notice({date: dateContent}, 'dateSetted') 
+      }
     });
+
+
   }
 
   setupEventBusCallbacks() {
@@ -151,16 +161,16 @@ class VacanciesTable {
                     </div>`;
 
       const vacancyName = `<div class='mobile-wrapper__row mobile-wrapper__row-vacancy-name'>
-                              <div class="table__row-item selectable">
+                              <div class="table__row-item selectable non-border">
                                     <p class="table__row-item-vacancy-name">${vacancy.vacancyName}</p>
                               </div>
                             </div>`;
       const edit = `
                       <div class="mobile-wrapper__row mobile-wrapper__row-edit">
-                        <div class="table__row-item title selectable">
+                        <div class="table__row-item title selectable non-border">
                             <span class="icon control-edit edit"></span>
                         </div>
-                        <div class="table__row-item title selectable">
+                        <div class="table__row-item title selectable non-border">
                             <span class="icon control-edit delete"></span>
                         </div>
                       </div>
@@ -177,7 +187,7 @@ class VacanciesTable {
       const date = `
                   <div class="mobile-wrapper__row mobile-wrapper__row-date"> 
                   <p class="mobile-wrapper__row-extra-content caption">Дата</p>
-                    <div class="table__row-item">
+                    <div class="table__row-item date">
                         <p class="date">${vacancy.date}</p>
                     </div>
                   </div>

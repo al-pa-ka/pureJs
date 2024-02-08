@@ -27,13 +27,24 @@
   }
 }
 @media (width <= 680px) {
+  div.title-wrapper {
+    display: none;
+  }
+  .mobile-wrapper__input-vacancy-name {
+    display: flex;
+    margin-top: 20px;
+  }
+  p.date {
+    background-color: rgb(245, 245, 245);
+    padding: 10px 15px 10px 15px;
+  }
   .table-wrapper {
     padding-left: 20px;
     padding-right: 20px;
     width: 100%;
     box-sizing: border-box;
   }
-  .caption{
+  .caption {
     color: gray;
   }
   .mobile-wrapper-table {
@@ -41,35 +52,75 @@
   }
   .mobile-wrapper__row {
     display: inherit;
+    display: flex;
+    align-items: center;
+    min-height: 50px;
   }
+  .mobile-wrapper__row-extra-content {
+    padding-left: 5px;
+  }
+  .mobile-wrapper__row:not(.mobile-wrapper__row-vacancy-name):not(
+      .mobile-wrapper__row-edit
+    ) {
+    border-bottom: 1px solid lightgray;
+  }
+
+  /* .mobile-wrapper__row:not(.mobile-wrapper__row-vacancy-name):not(
+      .mobile-wrapper__row-edit
+    )::after {
+    content: "";
+    height: 1px;
+    background-color: lightgray;
+    width: 90%;
+    display: flex;
+  } */
   .mobile-wrapper__row-extra-content {
     display: inherit;
   }
   .table.vacancies {
     display: flex;
     flex-direction: column;
+    row-gap: 20px;
   }
   .table__row-item {
+    height: 100%;
     border: none;
+  }
+  .table__row-item:not(.non-border){
+    border-left: 1px solid lightgray;
   }
 
   .mobile-wrapper__row-edit {
-    display: flex;
+    display: flex !important;
     flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+  }
+  .row-wrapper:hover > div > div.selectable {
+    background-color: initial;
+  }
+  .row-wrapper:hover > div > div > span.control-edit {
+    color: var(--light-blue);
+  }
+  .icon.control-edit.delete:hover {
+    color: rgb(66, 66, 216);
+  }
+  .mobile-wrapper__row-edit > div {
+    flex: 0;
   }
   .mobile-wrapper__row-vacancy-name {
     grid-area: vacancy-name;
-    background-color: #67D6EF;
+    background-color: #67d6ef;
     min-height: 50px;
   }
-  p.table__row-item-vacancy-name{
+  p.table__row-item-vacancy-name {
     color: white;
   }
-  p.source{
+  p.source {
     box-sizing: border-box;
-    font-size: 14px;
-    padding-left: 5px;
-    padding-right: 5px;
+    font-size: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .mobile-wrapper__row-number {
     grid-area: number;
@@ -81,14 +132,14 @@
     display: grid;
     grid-template-columns: 1fr 2fr;
   }
-  .mobile-wrapper__row-edit{
+  .mobile-wrapper__row-edit {
     grid-area: edit;
   }
-  .mobile-wrapper__row-source{
+  .mobile-wrapper__row-source {
     grid-area: source;
   }
-  .mobile-wrapper__row-date{
-    grid-area: date
+  .mobile-wrapper__row-date {
+    grid-area: date;
   }
   .row-wrapper {
     display: grid;
@@ -96,10 +147,9 @@
       "vacancy-name vacancy-name"
       "number number"
       "id id"
-      'source source'
-      'date date'
-      'edit edit';
-    row-gap: 10px;
+      "source source"
+      "date date"
+      "edit edit";
   }
   .tab > p {
     font-size: 17px;

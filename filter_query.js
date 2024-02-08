@@ -4,6 +4,12 @@ class FilterQuery {
     this.idInput = this.getIdFilterInput();
     this.vacancyNameInput = this.getVacancyNameInput();
     this.sourceInput = this.getSourceInput();
+    this.dateInput = document.querySelector(
+      ".table__row-item.title.date>input"
+    );
+    this.mobileInput = document.querySelector(
+      ".mobile-wrapper__input-vacancy-name>input"
+    );
     this.callback = () => {};
     this.currentHint = null;
     this.eventBus = eventBus;
@@ -16,7 +22,9 @@ class FilterQuery {
     if (
       this.vacancyNameInput.value ||
       this.idInput.value ||
-      this.sourceInput.value
+      this.sourceInput.value ||
+      this.dateInput ||
+      this.mobileInput
     ) {
       this.eventBus.notice({}, "fieldNotEmpty");
     } else {
@@ -37,8 +45,14 @@ class FilterQuery {
       this.vacancyNameInput.value = "";
       this.idInput.value = "";
       this.sourceInput.value = "";
+      this.dateInput.value = "";
+      this.mobileInput.value = "";
       this.onInput();
     }, "clearSearch");
+    this.eventBus.addSubscriber((event) => {
+      this.dateInput.value = event.date;
+      this.onInput();
+    }, "dateSetted");
   }
   setup() {
     this.setupEventBus();
@@ -113,7 +127,56 @@ class FilterQuery {
       }
     };
 
-    this.sourceInput.oninput = () => {
+    this.sourceInput.oninput = (event) => {
+      this.onInput();
+      this.currentHint?.update(event.target.value);
+    };
+
+    this.dateInput.oninput = (event) => {
+      this.onInput();
+      this.currentHint?.update(event.target.value);
+    };
+
+    this.dateInput.onfocus = async (event) => {
+      if (this.currentHint) {
+        try {
+          this.currentHint.close();
+          this.currentHint = null;
+        } catch {}
+      }
+      const container = document.querySelector(".table__row-item.title.date");
+      this.currentHint = new Hint(
+        this.data.map((vacancy) => String(vacancy.date)),
+        container
+      );
+      this.currentHint.setInitial(event.target.value);
+      const result = await this.currentHint.open();
+      if (result) {
+        this.dateInput.value = result;
+        this.callback();
+      }
+    };
+
+    this.mobileInput.onfocus = async (event) => {
+      if (this.currentHint) {
+        try {
+          this.currentHint.close();
+          this.currentHint = null;
+        } catch {}
+      }
+      const container = document.querySelector(".mobile-wrapper__input-vacancy-name");
+      this.currentHint = new Hint(
+        this.data.map((vacancy) => String(vacancy.vacancyName)),
+        container
+      );
+      this.currentHint.setInitial(event.target.value);
+      const result = await this.currentHint.open();
+      if (result) {
+        this.mobileInput.value = result;
+        this.callback();
+      }
+    };
+    this.mobileInput.oninput = (event) => {
       this.onInput();
       this.currentHint?.update(event.target.value);
     };
@@ -122,7 +185,9 @@ class FilterQuery {
     const filterQuery = [
       ["id", this.idInput.value],
       ["vacancyName", this.vacancyNameInput.value],
+      ["vacancyName", this.mobileInput.value],
       ["source", this.sourceInput.value],
+      ["date", this.dateInput.value],
     ];
     const filterQueryWithoutEmptyValues = filterQuery.filter((el) => {
       return Boolean(el[1]);
@@ -135,7 +200,7 @@ class FilterQuery {
           return String(el[filter[0]])
             .toLowerCase()
             .replace(/[^А-я0-9]/, "")
-            .startsWith(filter[1].toLowerCase());
+            .startsWith(filter[1].replace(/[^А-я0-9]/, "").toLowerCase());
         } else {
           return String(el[filter[0]])
             .toLowerCase()
