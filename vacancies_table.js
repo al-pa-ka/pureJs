@@ -1,12 +1,14 @@
 class VacanciesTable {
-  constructor(data, paginator, filterQuery, popupFactory, eventBus) {
+  constructor(data, paginator, filterQuery, popupFactory, sortQuery, eventBus) {
     this.paginator = paginator;
     this.dataTable = document.querySelector(".table.vacancies");
     this.data = data;
     this.filteredContent = [];
     this.paginatedContent = [];
+    this.sortedContent = [];
     this.filterQuery = filterQuery;
     this.popupFactory = popupFactory;
+    this.sortQuery = sortQuery;
     this.eventBus = eventBus;
   }
 
@@ -16,9 +18,9 @@ class VacanciesTable {
 
   update() {
     this.filteredContent = this.filterQuery.filterVacancies(this.data);
-    this.paginatedContent = this.paginator.paginateContent(
-      this.filteredContent
-    );
+    this.sortedContent = this.sortQuery.sort(this.filteredContent);
+    this.paginatedContent = this.paginator.paginateContent(this.sortedContent);
+
     this.paginator.redrawControlPanel(this.paginatedContent.length);
     this.render();
     this.setupRowsControl();
@@ -100,6 +102,11 @@ class VacanciesTable {
         event.callback(searchResult);
       }
     }, "vacancyNameInput");
+
+    this.eventBus.addSubscriber(() => {
+      console.log("changed");
+      this.update();
+    }, "filtersChanged");
   }
 
   setup() {

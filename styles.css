@@ -46,8 +46,19 @@ div{
   align-items: center;
   justify-content: center;
   padding-right: 10px;
-  color: gray !important;
+  color: rgb(133, 133, 133) !important;
   font-size: 20px;
+  z-index: 5;
+}
+
+.sort{
+  cursor: pointer;
+}
+
+.litle-cross:hover{
+  color: rgb(65, 65, 65) !important;
+
+  position: absolute;
 }
 
 body {

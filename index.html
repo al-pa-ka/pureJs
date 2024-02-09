@@ -10,6 +10,7 @@
   </head>
   <body>
     <script src="cross.js"></script>
+    <script src="sort_query.js"></script>
     <script src="date_to_format.js"></script>
     <script src="plug_data.js"></script>
     <script src="hint.js"></script>
@@ -139,7 +140,7 @@
                 tooltip="ОЧИСТИТЬ ВСЕ ПОЛЯ БЫСТРОГО ПОИСКА"
                 class="control-panel__segment deselect"
               >
-                <span class="icon  control-panel__segment-icon"></span>
+                <span class="icon control-panel__segment-icon"></span>
                 <p class="control-panel__segment-text">DESELECT</p>
               </div>
               <div
@@ -170,7 +171,9 @@
                 class="control-panel__segment delete-everything active"
               >
                 <span class="icon control-panel__segment-icon"></span>
-                <p class="control-panel__segment-text active">DELETE EVERYTHING</p>
+                <p class="control-panel__segment-text active">
+                  DELETE EVERYTHING
+                </p>
               </div>
             </div>
 
@@ -210,10 +213,10 @@
             <div class="table vacancies">
               <div class="mobile-wrapper-table">
                 <div class="table__row-item title"><p class="medium">№</p></div>
-                <div class="table__row-item title center">
+                <div class="table__row-item title center id-sort sort">
                   <p class="medium">ID</p>
                 </div>
-                <div class="table__row-item title center">
+                <div class="table__row-item title center vacancy-name-sort sort">
                   <p class="medium">Название вакансии</p>
                 </div>
                 <div class="table__row-item title center">
@@ -222,10 +225,10 @@
                 <div class="table__row-item title center">
                   <p class="medium">del</p>
                 </div>
-                <div class="table__row-item title center">
+                <div class="table__row-item title center source-sort sort">
                   <p class="medium">источник добавления</p>
                 </div>
-                <div class="table__row-item title center">
+                <div class="table__row-item title center date-sort sort">
                   <p class="medium">дата</p>
                 </div>
 

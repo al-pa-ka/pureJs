@@ -63,9 +63,13 @@ eventBus.addEvent("clearSearch");
 eventBus.addEvent("fieldNotEmpty");
 eventBus.addEvent("fieldEmpty");
 eventBus.addEvent("dateSetted");
+eventBus.addEvent("filtersChanged")
 
 const popupFactory = new PopupFactory();
 const controlPanel = new ControlPanel(popupFactory, eventBus);
+const sortQuery = new SortQuery(eventBus)
+
+sortQuery.setupControl()
 controlPanel.setup();
 
 const data = plugData.map((vacancy) => {
@@ -82,6 +86,7 @@ const table = new VacanciesTable(
   paginator,
   filterQuery,
   popupFactory,
+  sortQuery,
   eventBus
 );
 table.setup();
