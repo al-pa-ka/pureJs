@@ -64,7 +64,7 @@ class FilterQuery {
     this.idInput.onfocus = async (event) => {
       if (this.currentHint) {
         try {
-          this.currentHint.close();
+          // this.currentHint.close();
           this.currentHint = null;
         } catch {}
       }
@@ -88,7 +88,7 @@ class FilterQuery {
     this.vacancyNameInput.onfocus = async () => {
       if (this.currentHint) {
         try {
-          this.currentHint.close();
+          // this.currentHint.close();
           this.currentHint = null;
         } catch {}
       }
@@ -110,7 +110,7 @@ class FilterQuery {
     this.sourceInput.onfocus = async () => {
       if (this.currentHint) {
         try {
-          this.currentHint.close();
+          // this.currentHint.close();
           this.currentHint = null;
         } catch {}
       }
@@ -127,10 +127,10 @@ class FilterQuery {
       }
     };
 
-    this.sourceInput.oninput = (event) => {
-      this.onInput();
-      this.currentHint?.update(event.target.value);
-    };
+    // this.sourceInput.oninput = (event) => {
+    //   this.onInput();
+    //   this.currentHint?.update(event.target.value);
+    // };
 
     // this.dateInput.oninput = (event) => {
     //   this.onInput();
@@ -140,7 +140,7 @@ class FilterQuery {
     this.dateInput.onfocus = async (event) => {
       if (this.currentHint) {
         try {
-          this.currentHint.close();
+          // this.currentHint.close();
           this.currentHint = null;
         } catch {}
       }
@@ -160,7 +160,7 @@ class FilterQuery {
     this.mobileInput.onfocus = async (event) => {
       if (this.currentHint) {
         try {
-          this.currentHint.close();
+          // this.currentHint.close();
           this.currentHint = null;
         } catch {}
       }
@@ -190,7 +190,6 @@ class FilterQuery {
     //     );
     //     cross.setup();
     //   } else {
-    //     console.log("close");
     //     this.mobileInput.parentElement.querySelector(".litle-cross")?.remove();
     //   }
     //   this.currentHint?.update(event.target.value);
@@ -214,7 +213,6 @@ class FilterQuery {
           );
           cross.setup();
         } else if (!input.value) {
-          console.log("close");
           input.parentElement
             .querySelector(".litle-cross")
             ?.remove();
@@ -236,7 +234,6 @@ class FilterQuery {
     });
     let filteredVacancies = vacancies;
     for (let filter of filterQueryWithoutEmptyValues) {
-      console.log(filter);
       filteredVacancies = filteredVacancies.filter((el) => {
         if (filter[0] == "vacancyName") {
           return String(el[filter[0]])

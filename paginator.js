@@ -63,7 +63,6 @@ class Paginator {
       .querySelectorAll(".pagination")
       .forEach((el) => {
         for (let index of Array.from(Array(numberOfPages).keys()).reverse()) {
-          console.log(index);
           el.querySelectorAll(
             ".pagination__page-number.page-control-element"
           )[1].insertAdjacentHTML(
@@ -158,7 +157,6 @@ class Paginator {
       pageNumbers.forEach((pageNumber) => {
         pageNumber.onclick = (event) => {
           this.currentPage = Number(event.target.textContent);
-          console.log(this.currentPage);
           this.onCurrentPageChanged();
         };
       });
@@ -170,7 +168,6 @@ class Paginator {
   setClassToCurrentPage(pageNumber) {
     document.querySelectorAll(".pagination__page-number").forEach((el) => {
       if (Number(el.textContent) == pageNumber) {
-        console.log("=");
         el.classList.add("active");
       } else {
         el.classList.remove("active");

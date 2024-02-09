@@ -35,9 +35,7 @@ document.querySelectorAll(".third-panel__tab").forEach((el, index) => {
 });
 
 document.querySelector(".mobile-control__menu-button").onclick = () => {
-  console.log("cl");
   const menu = document.querySelector("#mobile-menu-wrapper");
-  console.log(menu);
   if (menu.style.display == "contents") {
     menu.style.setProperty("display", "none");
   } else {
@@ -76,7 +74,6 @@ const data = plugData.map((vacancy) => {
   return vacancy
 })
 
-console.log(data)
 
 const filterQuery = new FilterQuery(plugData, eventBus);
 const paginator = new Paginator();

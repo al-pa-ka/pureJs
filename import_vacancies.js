@@ -78,7 +78,6 @@ class ImportVacancies extends DeleteEverythingPopup {
     };
     const fileInput = document.querySelector(".pseudo-input>input");
     fileInput.onchange = () => {
-        console.log(fileInput.files[0])
       document.querySelector(".placeholder").textContent = "";
       document.querySelector(".filename").textContent =
         fileInput.files[0].name;

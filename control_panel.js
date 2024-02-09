@@ -15,9 +15,7 @@ class ControlPanel {
         this.popupFactory.DELETE_EVERYTHING
       );
       const result = await deleteEverythingPopup.open();
-      console.log(result);
       if (result == deleteEverythingPopup.DELETE) {
-        console.log("noticed");
         this.eventBus.notice({}, "deleteEverything");
       }
     };
@@ -43,7 +41,6 @@ class ControlPanel {
 
     this.deselectButton.parentElement.onclick = () => {
       this.eventBus.notice({}, "clearSearch");
-      console.log("cleared");
     };
     this.eventBus.addSubscriber(() => {
       this.deselectButton.classList.remove("icon-red");

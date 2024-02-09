@@ -25,7 +25,6 @@ class VacanciesTable {
   }
 
   setupRowsControl() {
-    console.log("setupRows");
     document.querySelectorAll(".row-wrapper").forEach((row) => {
       row.querySelector(".control-edit.edit").onclick = async () => {
         const vacancyId = Number(row.querySelector(".id>p").textContent);
@@ -62,32 +61,26 @@ class VacanciesTable {
         if ((await deleteVacancyPopup.open()) == deleteVacancyPopup.CANCEL) {
           return;
         }
-        console.log("delete");
+
         this.data.splice(vacancyIdInData, 1);
         this.update();
       };
 
-      const date = row.querySelector('.table__row-item.date')
+      const date = row.querySelector(".table__row-item.date");
       date.onclick = () => {
-        console.log('clicked')
-        const dateContent = date.textContent.trim()
-        console.log(dateContent)
-        this.eventBus.notice({date: dateContent}, 'dateSetted') 
-      }
+        const dateContent = date.textContent.trim();
+        this.eventBus.notice({ date: dateContent }, "dateSetted");
+      };
     });
-
-
   }
 
   setupEventBusCallbacks() {
     this.eventBus.addSubscriber((event) => {
-      console.log("deleted");
       this.data.length = 0;
       this.update();
     }, "deleteEverything");
 
     this.eventBus.addSubscriber((event) => {
-      console.log("added");
       event.id =
         this.data.reduce(
           (prev, curr) => {
@@ -100,7 +93,6 @@ class VacanciesTable {
     }, "addVacancy");
 
     this.eventBus.addSubscriber((event) => {
-      console.log(event.data);
       const searchResult = this.data.find((el) => {
         return el.vacancyName == event.data;
       });

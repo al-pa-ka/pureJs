@@ -10,8 +10,6 @@ class EditVacancy extends DeleteEverythingPopup {
   }
 
   setEventBus(eventBus) {
-    console.log("eventBusSetted");
-    console.log(eventBus);
     this.eventBus = eventBus;
   }
 

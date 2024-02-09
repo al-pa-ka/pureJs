@@ -37,7 +37,6 @@ class DeleteEverythingPopup {
     </div>
       `
     );
-    console.log("inserted");
   }
   close() {
     this.popup.remove();

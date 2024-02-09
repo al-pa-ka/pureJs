@@ -10,7 +10,6 @@ class Cross {
     this.cross = document.createElement("span");
     this.cross.classList.add("litle-cross", "icon");
     this.cross.textContent = "";
-    console.log('inserted')
     this.container.insertAdjacentElement('beforeend',this.cross);
   }
   setup() {

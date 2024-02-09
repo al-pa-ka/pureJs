@@ -15,15 +15,16 @@ class Hint {
   }
 
   setup() {
-    console.log("setup");
     const hint = document.querySelector(".hint");
-    const rows = hint.querySelectorAll(".hint__row");
+    const rows = hint?.querySelectorAll(".hint__row");
 
-    this.dimmer.onclick = () => {
-      this.close();
-    };
+    if (this.dimmer) {
+      this.dimmer.onclick = () => {
+        this.close();
+      };
+    }
 
-    rows.forEach((row) => {
+    rows?.forEach((row) => {
       row.onclick = () => {
         this.resolve(row.textContent);
         this.close();
@@ -54,7 +55,6 @@ class Hint {
     const hint = document.querySelector(".hint");
     hint?.remove();
     this.dimmer?.remove();
-    this.resolve(null);
   }
 
   redraw() {
@@ -84,12 +84,10 @@ class Hint {
       this.filterData().forEach((row) => {
         const match = this.search.toLowerCase();
 
-        markup += `<p class='hint__row'><span style="color: #40C4E2;">${match.charAt(0).toUpperCase() + match.slice(1)}</span>${row.toLowerCase().replace(
-          match,
-          ""
-        )}</p>`;
+        markup += `<p class='hint__row'><span style="color: #40C4E2;">${
+          match.charAt(0).toUpperCase() + match.slice(1)
+        }</span>${row.toLowerCase().replace(match, "")}</p>`;
       });
-      console.log(markup);
       hint.insertAdjacentHTML("beforeend", markup);
       this.container.insertAdjacentElement("beforeend", hint);
     }

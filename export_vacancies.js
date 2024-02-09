@@ -52,7 +52,6 @@ class ExportVacancies extends DeleteEverythingPopup {
     const pseudoInput = document.querySelector(".placeholder");
     pseudoInput.onfocus = () => {
       const defaultValue = "Введите название файла";
-      console.log("focused");
       pseudoInput.textContent =
         pseudoInput.textContent == defaultValue ? "" : pseudoInput.textContent;
       pseudoInput.classList.remove("placeholder");
