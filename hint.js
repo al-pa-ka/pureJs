@@ -1,6 +1,7 @@
 class Hint {
   constructor(data, container, eventBus) {
     this.data = data;
+    this.dimmer = null;
     this.search = "";
     this.eventBus = eventBus;
     this.container = container;
@@ -14,73 +15,91 @@ class Hint {
   }
 
   setup() {
-    console.log('setup')
+    console.log("setup");
     const hint = document.querySelector(".hint");
     const rows = hint.querySelectorAll(".hint__row");
+
+    this.dimmer.onclick = () => {
+      this.close();
+    };
+
     rows.forEach((row) => {
       row.onclick = () => {
-        this.resolve(row.textContent)
-        this.close()
+        this.resolve(row.textContent);
+        this.close();
       };
     });
     document.body.onclick = (event) => {
-        if (this.firstClick){
-            this.firstClick = false
-            return
-        }
-        if (!hint.contains(event.target)){
-            this.resolve(null)
-            this.close()
-        }
-    }
+      if (this.firstClick) {
+        this.firstClick = false;
+        return;
+      }
+      if (!hint.contains(event.target)) {
+        this.resolve(null);
+        this.close();
+      }
+    };
   }
 
-  setInitial(searchString){
-    this.search = searchString
+  setInitial(searchString) {
+    this.search = searchString;
   }
 
   clear() {
-    document.querySelector(".hint").remove();
+    this.dimmer?.remove();
+    document.querySelector(".hint")?.remove();
   }
 
   close() {
     const hint = document.querySelector(".hint");
     hint?.remove();
-    this.resolve(null)
+    this.dimmer?.remove();
+    this.resolve(null);
   }
 
   redraw() {
     this.clear();
-    this.insert(this.container);
+    this.insert();
   }
 
   filterData() {
     return [
       ...new Set(
         this.data.filter((row) => {
-          return row.startsWith(this.search);
+          return row.toLowerCase().startsWith(this.search.toLowerCase());
         })
       ),
     ].slice(0, 14);
   }
 
   insert() {
-    const hint = document.createElement("div");
-    hint.classList.add("hint");
-    let markup = "";
-    this.filterData().forEach((row) => {
-      markup += `<p class='hint__row'>${row}</p>`;
-    });
-    console.log(markup);
-    hint.insertAdjacentHTML("beforeend", markup);
-    this.container.insertAdjacentElement("beforeend", hint);
+    if (this.search != "") {
+      this.dimmer = document.createElement("div");
+      this.dimmer.classList.add("dimmer");
+      document.body.insertAdjacentElement("beforebegin", this.dimmer);
+
+      const hint = document.createElement("div");
+      hint.classList.add("hint");
+      let markup = "";
+      this.filterData().forEach((row) => {
+        const match = this.search.toLowerCase();
+
+        markup += `<p class='hint__row'><span style="color: #40C4E2;">${match.charAt(0).toUpperCase() + match.slice(1)}</span>${row.toLowerCase().replace(
+          match,
+          ""
+        )}</p>`;
+      });
+      console.log(markup);
+      hint.insertAdjacentHTML("beforeend", markup);
+      this.container.insertAdjacentElement("beforeend", hint);
+    }
   }
 
   async open() {
     this.insert();
     this.setup();
     return new Promise((resolve) => {
-        this.resolve = resolve
-    })
+      this.resolve = resolve;
+    });
   }
 }

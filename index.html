@@ -9,6 +9,7 @@
     <title>Document</title>
   </head>
   <body>
+    <script src="cross.js"></script>
     <script src="plug_data.js"></script>
     <script src="hint.js"></script>
     <script src="event_bus.js"></script>
@@ -135,9 +136,9 @@
               </div>
               <div
                 tooltip="ОЧИСТИТЬ ВСЕ ПОЛЯ БЫСТРОГО ПОИСКА"
-                class="control-panel__segment"
+                class="control-panel__segment deselect"
               >
-                <span class="icon deselect control-panel__segment-icon"></span>
+                <span class="icon  control-panel__segment-icon"></span>
                 <p class="control-panel__segment-text">DESELECT</p>
               </div>
               <div
@@ -165,10 +166,10 @@
               </div>
               <div
                 tooltip="удалить вакансии в бд"
-                class="control-panel__segment delete-everything"
+                class="control-panel__segment delete-everything active"
               >
                 <span class="icon control-panel__segment-icon"></span>
-                <p class="control-panel__segment-text">DELETE EVERYTHING</p>
+                <p class="control-panel__segment-text active">DELETE EVERYTHING</p>
               </div>
             </div>
 

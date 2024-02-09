@@ -79,7 +79,16 @@ class Paginator {
     this.deleteLastPages();
     this.setStateToControl(numberOfPages);
     this.drawPages(numberOfPages);
+    this.redrawPageInput();
     this.setupControl();
+  }
+
+  redrawPageInput() {
+    const specifyPage = document.querySelectorAll(".pagination__specify-page");
+    specifyPage.forEach((el) => {
+      const specifyPageInput = el.querySelector("input");
+      specifyPageInput.dispatchEvent(new Event("input", {}));
+    });
   }
 
   setupPageInput() {

@@ -33,15 +33,16 @@ class ExportVacancies extends DeleteEverythingPopup {
                           <p class="popup__content-wrapper-text">Название файла</p>
                           <label class="pseudo-input" >
                                   <span class="icon" style="color: gray; font-size: 20px"></span>
-                                  <p style="width: 100%; height: 100%; outline: none; border: none; padding: 0; padding-left: 10px;"
+                                  <p style="width: 100%; outline: none; border: none; padding: 0; padding-left: 10px;"
                                    contenteditable="true" class="placeholder ">Введите название файла</p>
                           </label>
                           </div>
                           <p class="error-output"><span class="icon error-output"></span></p>
                       </div>
                       <div class="popup__footer">
-                          <a class="download" href="./test.xlsx"><button class="btn accept blue">Выгрузить</button></a>
+                          <button class="btn accept blue inactive">Выгрузить</button>
                           <button class="btn cancel gray">Отмена</button>
+                          <a class="download" href="./test.xlsx"></a>
                       </div>
                       <span class="icon cross"></span>
                   </div>
@@ -65,6 +66,14 @@ class ExportVacancies extends DeleteEverythingPopup {
       }
       document.querySelector('.download').setAttribute('download', pseudoInput.textContent)
     };
+    pseudoInput.oninput = () => {
+      const button = document.querySelector('.btn.accept.blue')
+      if (pseudoInput.textContent){
+        button.classList.remove('inactive')
+      } else {
+        button.classList.add('inactive')
+      }
+    }
   }
 
   setContext(context) {
@@ -87,6 +96,7 @@ class ExportVacancies extends DeleteEverythingPopup {
       if (this.popup.querySelector(".accept").classList.contains("inactive")) {
         return;
       }
+      document.querySelector('.download').click()
       this.close();
       this.resolve(this.IMPORT);
     };

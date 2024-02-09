@@ -56,10 +56,10 @@ class FilterQuery {
   }
   setup() {
     this.setupEventBus();
-    this.idInput.oninput = (event) => {
-      this.onInput();
-      this.currentHint?.update(event.target.value);
-    };
+    // this.idInput.oninput = (event) => {
+    //   this.onInput();
+    //   this.currentHint?.update(event.target.value);
+    // };
 
     this.idInput.onfocus = async (event) => {
       if (this.currentHint) {
@@ -81,10 +81,10 @@ class FilterQuery {
       }
     };
 
-    this.vacancyNameInput.oninput = () => {
-      this.onInput();
-      this.currentHint?.update(event.target.value);
-    };
+    // this.vacancyNameInput.oninput = () => {
+    //   this.onInput();
+    //   this.currentHint?.update(event.target.value);
+    // };
     this.vacancyNameInput.onfocus = async () => {
       if (this.currentHint) {
         try {
@@ -132,10 +132,10 @@ class FilterQuery {
       this.currentHint?.update(event.target.value);
     };
 
-    this.dateInput.oninput = (event) => {
-      this.onInput();
-      this.currentHint?.update(event.target.value);
-    };
+    // this.dateInput.oninput = (event) => {
+    //   this.onInput();
+    //   this.currentHint?.update(event.target.value);
+    // };
 
     this.dateInput.onfocus = async (event) => {
       if (this.currentHint) {
@@ -164,7 +164,9 @@ class FilterQuery {
           this.currentHint = null;
         } catch {}
       }
-      const container = document.querySelector(".mobile-wrapper__input-vacancy-name");
+      const container = document.querySelector(
+        ".mobile-wrapper__input-vacancy-name"
+      );
       this.currentHint = new Hint(
         this.data.map((vacancy) => String(vacancy.vacancyName)),
         container
@@ -176,10 +178,50 @@ class FilterQuery {
         this.callback();
       }
     };
-    this.mobileInput.oninput = (event) => {
-      this.onInput();
-      this.currentHint?.update(event.target.value);
-    };
+    // this.mobileInput.oninput = (event) => {
+    //   this.onInput();
+    //   if (
+    //     this.mobileInput.value &&
+    //     !this.mobileInput.parentElement.querySelector(".litle-cross")
+    //   ) {
+    //     const cross = new Cross(
+    //       this.mobileInput.parentElement,
+    //       this.mobileInput
+    //     );
+    //     cross.setup();
+    //   } else {
+    //     console.log("close");
+    //     this.mobileInput.parentElement.querySelector(".litle-cross")?.remove();
+    //   }
+    //   this.currentHint?.update(event.target.value);
+    // };
+    [
+      this.mobileInput,
+      this.idInput,
+      this.vacancyNameInput,
+      this.dateInput,
+      this.sourceInput,
+    ].forEach((input) => {
+      input.oninput = (event) => {
+        this.onInput();
+        if (
+          input.value &&
+          !input.parentElement.querySelector(".litle-cross")
+        ) {
+          const cross = new Cross(
+            input.parentElement,
+            input
+          );
+          cross.setup();
+        } else if (!input.value) {
+          console.log("close");
+          input.parentElement
+            .querySelector(".litle-cross")
+            ?.remove();
+        }
+        this.currentHint?.update(event.target.value);
+      };
+    });
   }
   filterVacancies(vacancies) {
     const filterQuery = [

@@ -167,10 +167,10 @@ class VacanciesTable {
                             </div>`;
       const edit = `
                       <div class="mobile-wrapper__row mobile-wrapper__row-edit">
-                        <div class="table__row-item title selectable non-border">
+                        <div tooltip="редактировать вакансию" class="table__row-item title selectable non-border edit">
                             <span class="icon control-edit edit"></span>
                         </div>
-                        <div class="table__row-item title selectable non-border">
+                        <div tooltip="удалить вакансию" class="table__row-item title selectable non-border edit">
                             <span class="icon control-edit delete"></span>
                         </div>
                       </div>

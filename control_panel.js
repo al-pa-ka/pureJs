@@ -46,10 +46,17 @@ class ControlPanel {
       console.log("cleared");
     };
     this.eventBus.addSubscriber(() => {
-      this.deselectButton.classList.remove('icon-red')
-    }, 'fieldEmpty')
+      this.deselectButton.classList.remove("icon-red");
+    }, "fieldEmpty");
     this.eventBus.addSubscriber(() => {
-      this.deselectButton.classList.add('icon-red')
-    }, 'fieldNotEmpty')
+      this.deselectButton.classList.add("icon-red");
+    }, "fieldNotEmpty");
+
+    this.eventBus.addSubscriber(() => {
+      this.deleteEverythingButton.classList.add("active");
+    }, "addVacancy");
+    this.eventBus.addSubscriber(() => {
+      this.deleteEverythingButton.classList.remove("active");
+    }, "deleteEverything");
   }
 }

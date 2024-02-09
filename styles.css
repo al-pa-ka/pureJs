@@ -23,6 +23,30 @@ div{
   font-family: "Inter-Medium";
 }
 
+.dimmer{
+  position: fixed;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,0.2);
+}
+
+.litle-cross{
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  vertical-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-right: 10px;
+  color: gray !important;
+  z-index: 2;
+  font-size: 20px;
+}
+
 body {
   --dark-gray: #414f51;
   --blue: #00b0d9;
@@ -64,15 +88,7 @@ body {
   width: 100%;
 }
 
-[data-title]::after {
-  top: 50px;
-  left: -50px;
-  position: relative;
-  content: attr(data-title); /* Выводим текст из атрибута data-title */
-  background: #d9d9d9;
-  color: gray;
-  width: 283px;
-}
+
 
 .green {
   color: var(--green);
@@ -101,16 +117,17 @@ body {
   position: relative;
 }
 *[tooltip]:hover::before {
+  z-index: 3;
   content: '';
   position: absolute;
-  /* bottom: 0; */
   transform: translateY(20px);
   border: 20px solid transparent;
   border-bottom: 20px solid #D9D9D9;
 }
 *[tooltip]:hover::after {
-  font-size: 14px;
-  width: 100%;
+  z-index: 3;
+  font-size: 18px;
+  width: fit-content;
   box-sizing: border-box;
   bottom: 0;
   transform: translateY(calc(100% + 15px));
@@ -125,7 +142,6 @@ body {
   color: gray;
   font-family: Inter;
 }
-
 span.icon {
   font-family: Icons;
   color: white;
@@ -134,7 +150,13 @@ span.icon {
 input[type="text"] {
   font-family: Inter;
 }
+.edit:hover > *{
+  color: var(--blue) !important;
 
+}
+.edit:hover{
+  cursor: pointer;
+}
 .panels{
   width: 100%;
   display: flex;
@@ -315,6 +337,15 @@ input[type="text"] {
   background-color: white;
 }
 
+p{
+  color: inherit;
+}
+
+.delete-everything:hover{
+  background-color: red;
+  color: white;
+}
+
 .control-panel__segment-icon{
   font-size: 20px;
 }
@@ -323,6 +354,7 @@ input[type="text"] {
   color: red;
 }
 .control-panel__segment {
+  color: gray;
   cursor: pointer;
   align-items: center;
   display: flex;
@@ -340,11 +372,11 @@ input[type="text"] {
 }
 
 .control-panel__segment > p {
-  color: gray;
+  color: inherit;
   font-size: 18px;
 }
 .control-panel__segment > span.icon {
-  color: gray;
+  color: inherit;
 }
 
 .content {
@@ -396,7 +428,7 @@ input[type="text"] {
   flex-direction: row;
   gap: 10px;
 }
-.icon-red{
+.icon-red:hover{
   color: red !important;
 }
 
@@ -529,9 +561,6 @@ input[type="text"] {
 .control-edit {
   cursor: pointer;
 }
-.row-wrapper:hover > div > div > span.control-edit {
-  color: var(--blue);
-}
 .table.vacancies {
   margin-top: 27px;
   grid-template-columns: 50px 1fr 7fr 1fr 1fr 6fr 1fr;
@@ -628,6 +657,7 @@ p.date {
   position: relative;
 }
 .hint{
+  overflow: hidden;
   position: absolute;
   top: 0;
   background-color: white;
@@ -635,9 +665,10 @@ p.date {
   display: flex;
   flex-direction: column;
   transform: translateY(32px) translateX(-5px);
-  border: 3px solid var(--blue);
+  border: 1px solid lightgray;
   box-sizing: border-box;
   row-gap: 5px;
+  z-index: 3;
 }
 .hint__row{
   padding-left: 10px;
