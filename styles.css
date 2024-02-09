@@ -31,6 +31,10 @@ div{
   background-color: rgba(0,0,0,0.2);
 }
 
+.mobile-menu-mini{
+  display: none;
+}
+
 .litle-cross{
   position: absolute;
   top: 0;
@@ -43,7 +47,6 @@ div{
   justify-content: center;
   padding-right: 10px;
   color: gray !important;
-  z-index: 2;
   font-size: 20px;
 }
 

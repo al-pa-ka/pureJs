@@ -46,7 +46,7 @@ document.querySelector(".mobile-control__menu-button").onclick = () => {
 document.querySelector(
   ".mobile-control-wrapper__grid-control-wrapper.more"
 ).onclick = () => {
-  const mobileMenu = document.querySelector(".mobile-menu");
+  const mobileMenu = document.querySelector(".mobile-menu-mini");
   if (mobileMenu.style.display == "flex") {
     mobileMenu.style.setProperty("display", "none");
   } else {
