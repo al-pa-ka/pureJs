@@ -55,19 +55,25 @@ class Paginator {
     });
   }
   drawPages(numberOfPages) {
-    document.querySelectorAll(".pagination").forEach((el) => {
-      for (let index of Array.from(Array(numberOfPages).keys()).reverse()) {
-        console.log(index);
-        el.querySelectorAll(
-          ".pagination__page-number.page-control-element"
-        )[1].insertAdjacentHTML(
-          "afterend",
-          `<div class="pagination__page-number"><p>${
-            Number(index) + 1
-          }</p></div>`
-        );
-      }
-    });
+    const pagesControlContainer = document.querySelector(
+      ".pagination__pages-control"
+    );
+    const containerWidth = pagesControlContainer;
+    const numberOfPagesToDraw = document
+      .querySelectorAll(".pagination")
+      .forEach((el) => {
+        for (let index of Array.from(Array(numberOfPages).keys()).reverse()) {
+          console.log(index);
+          el.querySelectorAll(
+            ".pagination__page-number.page-control-element"
+          )[1].insertAdjacentHTML(
+            "afterend",
+            `<div class="pagination__page-number"><p>${
+              Number(index) + 1
+            }</p></div>`
+          );
+        }
+      });
   }
   redrawControlPanel(numberOfPages) {
     this.deleteLastPages();
@@ -132,8 +138,10 @@ class Paginator {
         }
       };
       controlElements[last].onclick = () => {
-        this.currentPage = this.numberOfPages;
-        this.onCurrentPageChanged();
+        if (this.currentPage + 1 <= this.numberOfPages) {
+          this.currentPage++;
+          this.onCurrentPageChanged();
+        }
       };
       const pageNumbers = paginationElement.querySelectorAll(
         ".pagination__page-number:not(.page-control-element)"
@@ -167,11 +175,12 @@ class Paginator {
       const page = itemsArray.slice(i, i + itemsInPage);
       pages.push(page);
     }
-    if (pages.length == 0){
-      pages.push([])
+    if (pages.length == 0) {
+      pages.push([]);
     }
-      this.currentPage = pages.length > this.currentPage ? this.currentPage : pages.length;
-    
+    this.currentPage =
+      pages.length > this.currentPage ? this.currentPage : pages.length;
+
     this.numberOfPages = pages.length;
     return pages;
   }

@@ -439,7 +439,7 @@ input[type="text"] {
 }
 .pagination__page-number.active {
   background-color: var(--blue);
-  color: white;
+  color: var(--yellow);
 }
 .pagination__page-number > * {
   cursor: pointer;
@@ -485,7 +485,7 @@ input[type="text"] {
   transition: 0.5s;
 }
 .pagination__go-button {
-  border-radius: 10px;
+  box-sizing: border-box;
   border: 2px solid var(--blue);
   color: var(--blue);
   width: 76px;
@@ -534,7 +534,7 @@ input[type="text"] {
 }
 .table.vacancies {
   margin-top: 27px;
-  grid-template-columns: 50px 2fr 7fr 1fr 1fr 6fr 1fr;
+  grid-template-columns: 50px 1fr 7fr 1fr 1fr 6fr 1fr;
 }
 
 .table__row {
@@ -614,6 +614,8 @@ p.date {
   text-decoration: #5098c8 dashed underline;
   color: #5098c8;
   text-underline-offset: 3px;
+  text-align: right;
+  width: 100%;
 }
 .selectable:hover + .selectable {
   background-color: #dcf4ff;
