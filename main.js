@@ -70,10 +70,18 @@ const popupFactory = new PopupFactory();
 const controlPanel = new ControlPanel(popupFactory, eventBus);
 controlPanel.setup();
 
+const data = plugData.map((vacancy) => {
+  const date = dateToFormat(vacancy.date)
+  vacancy.date = date
+  return vacancy
+})
+
+console.log(data)
+
 const filterQuery = new FilterQuery(plugData, eventBus);
 const paginator = new Paginator();
 const table = new VacanciesTable(
-  plugData,
+  data,
   paginator,
   filterQuery,
   popupFactory,
