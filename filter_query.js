@@ -53,6 +53,11 @@ class FilterQuery {
       this.dateInput.value = event.date;
       this.onInput();
     }, "dateSetted");
+    this.eventBus.addSubscriber(() => {
+      document.querySelectorAll('.litle-cross')?.forEach((cross) => {
+        cross.remove()
+      })
+    }, 'clearSearch')
   }
   setup() {
     this.setupEventBus();
