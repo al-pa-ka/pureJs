@@ -73,6 +73,13 @@ class VacanciesTable {
         const dateContent = date.textContent.trim();
         this.eventBus.notice({ date: dateContent }, "dateSetted");
       };
+
+      const source = row.querySelector('.table__row-item.source') 
+      source.onclick = () => {
+        const sourceContent = source.textContent.trim();
+        this.eventBus.notice({source: sourceContent}, "sourceSetted")
+
+      }
     });
   }
 
@@ -104,7 +111,6 @@ class VacanciesTable {
     }, "vacancyNameInput");
 
     this.eventBus.addSubscriber(() => {
-      console.log("changed");
       this.update();
     }, "filtersChanged");
   }
@@ -177,7 +183,7 @@ class VacanciesTable {
       const source = `
                         <div class="mobile-wrapper__row mobile-wrapper__row-source"> 
                           <p class="mobile-wrapper__row-extra-content caption">Источник добавления</p>
-                          <div class="table__row-item">
+                          <div class="table__row-item source">
                             <p class="source ${
                               vacancy.source == "Published" ? "published" : ""
                             }">${vacancy.source}</p>

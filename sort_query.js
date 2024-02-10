@@ -73,19 +73,10 @@ class SortQuery {
 
   sort(data) {
     for (const sortItem of this.sortQuery) {
-      //   data.sort((a, b) => {
-      //     return sortItem.reversed
-      //       ? Number(a[sortItem.name] > b[sortItem.name])
-      //       : Number(a[sortItem.name] < b[sortItem.name]);
-      //   });
       data.sort((a, b) => {
-        if (a[sortItem.name] > b[sortItem.name]) {
-          return sortItem.reversed ? -1 : 1;
-        } else if (a[sortItem.name] < b[sortItem.name]) {
-            return sortItem.reversed ? 1 : -1;
-        } else {
-          return 0;
-        }
+        return sortItem.reversed
+          ? -String(a[sortItem.name]).localeCompare(String(b[sortItem.name]))
+          : String(a[sortItem.name]).localeCompare(String(b[sortItem.name]));
       });
     }
     return data;

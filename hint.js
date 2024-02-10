@@ -25,21 +25,13 @@ class Hint {
     }
 
     rows?.forEach((row) => {
-      row.onclick = () => {
+      row.onmousedown = (event) => {
+        event.preventDefault()
+        console.log("clicked row");
         this.resolve(row.textContent);
         this.close();
       };
     });
-    document.body.onclick = (event) => {
-      if (this.firstClick) {
-        this.firstClick = false;
-        return;
-      }
-      if (!hint.contains(event.target)) {
-        this.resolve(null);
-        this.close();
-      }
-    };
   }
 
   setInitial(searchString) {
@@ -49,12 +41,11 @@ class Hint {
   clear() {
     this.dimmer?.remove();
     document.querySelector(".hint")?.remove();
+    this.container.classList.remove('search_active')
   }
 
   close() {
-    const hint = document.querySelector(".hint");
-    hint?.remove();
-    this.dimmer?.remove();
+    this.clear()
   }
 
   redraw() {
@@ -73,7 +64,7 @@ class Hint {
   }
 
   insert() {
-    if (this.search != "") {
+    if (this.search && this.filterData().length) {
       this.dimmer = document.createElement("div");
       this.dimmer.classList.add("dimmer");
       document.body.insertAdjacentElement("beforebegin", this.dimmer);
@@ -90,10 +81,14 @@ class Hint {
       });
       hint.insertAdjacentHTML("beforeend", markup);
       this.container.insertAdjacentElement("beforeend", hint);
+      this.container.classList.add("search_active");
     }
   }
 
   async open() {
+    console.log('opened')
+    console.log('search - ', this.search)
+    console.log('filterData.length - ', this.filterData().length)
     this.insert();
     this.setup();
     return new Promise((resolve) => {
