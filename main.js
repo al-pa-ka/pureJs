@@ -34,25 +34,8 @@ document.querySelectorAll(".third-panel__tab").forEach((el, index) => {
   }
 });
 
-document.querySelector(".mobile-control__menu-button").onclick = () => {
-  const menu = document.querySelector("#mobile-menu-wrapper");
-  if (menu.style.display == "contents") {
-    menu.style.setProperty("display", "none");
-  } else {
-    menu.style.setProperty("display", "contents");
-  }
-};
-
-document.querySelector(
-  ".mobile-control-wrapper__grid-control-wrapper.more"
-).onclick = () => {
-  const mobileMenu = document.querySelector(".mobile-menu-mini");
-  if (mobileMenu.style.display == "flex") {
-    mobileMenu.style.setProperty("display", "none");
-  } else {
-    mobileMenu.style.setProperty("display", "flex");
-  }
-};
+const mobileControl = new MobileControlMini()
+mobileControl.setup()
 
 const eventBus = new EventBus();
 

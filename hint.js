@@ -65,6 +65,8 @@ class Hint {
 
   insert() {
     if (this.search && this.filterData().length) {
+      console.log('insert')
+      console.log(this.filterData())
       this.dimmer = document.createElement("div");
       this.dimmer.classList.add("dimmer");
       document.body.insertAdjacentElement("beforebegin", this.dimmer);

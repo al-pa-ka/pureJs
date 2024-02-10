@@ -74,12 +74,11 @@ class VacanciesTable {
         this.eventBus.notice({ date: dateContent }, "dateSetted");
       };
 
-      const source = row.querySelector('.table__row-item.source') 
+      const source = row.querySelector(".table__row-item.source");
       source.onclick = () => {
         const sourceContent = source.textContent.trim();
-        this.eventBus.notice({source: sourceContent}, "sourceSetted")
-
-      }
+        this.eventBus.notice({ source: sourceContent }, "sourceSetted");
+      };
     });
   }
 
@@ -125,6 +124,7 @@ class VacanciesTable {
     this.filterQuery.setCallback(() => {
       this.update();
     });
+    this.filterQuery.restoreState();
     this.setupRowsControl();
   }
 
@@ -165,9 +165,9 @@ class VacanciesTable {
                         </div>
                     </div>`;
 
-      const vacancyName = `<div class='mobile-wrapper__row mobile-wrapper__row-vacancy-name'>
-                              <div class="table__row-item selectable non-border">
-                                    <p class="table__row-item-vacancy-name">${vacancy.vacancyName}</p>
+      const vacancyName = `<div class='mobile-wrapper__row mobile-wrapper__row-vacancy-name '>
+                              <div class="table__row-item selectable non-border table__row-item-vacancy-name">
+                                    <p class="table__row-item-vacancy-name-text">${vacancy.vacancyName}</p>
                               </div>
                             </div>`;
       const edit = `

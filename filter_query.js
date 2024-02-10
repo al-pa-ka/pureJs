@@ -13,8 +13,17 @@ class FilterQuery {
     this.callback = () => {};
     this.currentHint = null;
     this.eventBus = eventBus;
+
+    this.inputFieldMapping = new Map();
+
+    this.inputFieldMapping.set(this.mobileInput, "vacancyName");
+    this.inputFieldMapping.set(this.idInput, "id");
+    this.inputFieldMapping.set(this.vacancyNameInput, "vacancyName");
+    this.inputFieldMapping.set(this.dateInput, "date");
+    this.inputFieldMapping.set(this.sourceInput, "source");
   }
   setCallback(callable) {
+    console.log("settedCallback");
     this.callback = callable;
   }
   onInput() {
@@ -30,6 +39,16 @@ class FilterQuery {
     } else {
       this.eventBus.notice({}, "fieldEmpty");
     }
+    [
+      this.mobileInput,
+      this.idInput,
+      this.vacancyNameInput,
+      this.dateInput,
+      this.sourceInput,
+    ].forEach((input) => {
+      const fieldName = this.inputFieldMapping.get(input);
+      window.localStorage.setItem(fieldName, input.value);
+    });
   }
   getIdFilterInput() {
     return document.querySelector(".table__row-item.title.id>input");
@@ -51,14 +70,14 @@ class FilterQuery {
     }, "clearSearch");
     this.eventBus.addSubscriber((event) => {
       this.dateInput.value = event.date;
-      this.dateInput.dispatchEvent(new Event('input'))
+      this.dateInput.dispatchEvent(new Event("input"));
       this.onInput();
     }, "dateSetted");
     this.eventBus.addSubscriber((event) => {
-      this.sourceInput.value = event.source
-      this.sourceInput.dispatchEvent(new Event('input'))
-      this.onInput()
-    }, "sourceSetted")
+      this.sourceInput.value = event.source;
+      this.sourceInput.dispatchEvent(new Event("input"));
+      this.onInput();
+    }, "sourceSetted");
     this.eventBus.addSubscriber(() => {
       document.querySelectorAll(".litle-cross")?.forEach((cross) => {
         cross.remove();
@@ -75,17 +94,11 @@ class FilterQuery {
       this.dateInput,
       this.sourceInput,
     ].forEach((input) => {
-
-      const inputFieldMapping = new Map();
-
-      inputFieldMapping.set(this.mobileInput, 'vacancyName')
-      inputFieldMapping.set(this.idInput, 'id')
-      inputFieldMapping.set(this.vacancyNameInput,'vacancyName')
-      inputFieldMapping.set(this.dateInput, 'date')
-      inputFieldMapping.set(this.sourceInput, 'source' )
+      console.log(window.localStorage);
+      const fieldName = this.inputFieldMapping.get(input);
 
       input.onfocus = async (event) => {
-        const fieldName = inputFieldMapping.get(input)
+        const fieldName = this.inputFieldMapping.get(input);
         const container = input.parentElement;
         this.currentHint = new Hint(
           this.data.map((vacancy) => String(vacancy[fieldName])),
@@ -95,6 +108,7 @@ class FilterQuery {
         const result = await this.currentHint.open();
         if (result) {
           input.value = result;
+          input.dispatchEvent(new Event("input"));
           this.callback();
         }
       };
@@ -117,6 +131,37 @@ class FilterQuery {
     });
   }
 
+  restoreState() {
+    [
+      this.mobileInput,
+      this.idInput,
+      this.vacancyNameInput,
+      this.dateInput,
+      this.sourceInput,
+    ].forEach((input) => {
+      if (
+        input == this.mobileInput &&
+        window.getComputedStyle(input.parentElement).display == "none"
+      ) {
+        input.value = null;
+        return;
+      }
+      const fieldName = this.inputFieldMapping.get(input);
+      console.log(window.localStorage.getItem(fieldName));
+      input.value = window.localStorage.getItem(fieldName);
+    });
+
+    [
+      this.mobileInput,
+      this.idInput,
+      this.vacancyNameInput,
+      this.dateInput,
+      this.sourceInput,
+    ].forEach((input) => {
+      input.dispatchEvent(new Event("input"));
+    });
+  }
+
   filterVacancies(vacancies) {
     const filterQuery = [
       ["id", this.idInput.value],
@@ -132,6 +177,7 @@ class FilterQuery {
     for (let filter of filterQueryWithoutEmptyValues) {
       filteredVacancies = filteredVacancies.filter((el) => {
         if (filter[0] == "vacancyName") {
+          
           return String(el[filter[0]])
             .toLowerCase()
             .replace(/[^А-я0-9A-z]/, "")

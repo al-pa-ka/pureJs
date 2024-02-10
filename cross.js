@@ -15,9 +15,10 @@ class Cross {
   setup() {
     this.draw();
     this.cross.onclick = () => {
-      this.input.value = "";
-      this.close()
+      console.log('clicked')
+      this.input.value = null;
       this.input.dispatchEvent(new Event('input', { bubbles: true }))
+      this.close()
     };
   }
   close() {
