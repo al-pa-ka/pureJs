@@ -124,8 +124,8 @@ class Paginator {
     document.querySelectorAll(".pagination").forEach((paginationElement) => {
       const prev = 0,
         first = 1,
-        next = 2,
-        last = 3;
+        last = 2,
+        next = 3;
       const controlElements = paginationElement.querySelectorAll(
         ".pagination__page-number.page-control-element"
       );
@@ -139,13 +139,12 @@ class Paginator {
         this.currentPage = 1;
         this.onCurrentPageChanged();
       };
-      controlElements[next].onclick = () => {
-        if (this.currentPage + 1 <= this.numberOfPages) {
-          this.currentPage++;
-          this.onCurrentPageChanged();
-        }
-      };
       controlElements[last].onclick = () => {
+        console.log(this.numberOfPages)
+        this.currentPage = this.numberOfPages
+        this.onCurrentPageChanged()
+      };
+      controlElements[next].onclick = () => {
         if (this.currentPage + 1 <= this.numberOfPages) {
           this.currentPage++;
           this.onCurrentPageChanged();

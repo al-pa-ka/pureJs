@@ -52,14 +52,14 @@ class FilterQuery {
     this.redrawCrosses();
     this.callback();
     if (
-      this.mobileDateInput ||
-      this.mobileIdInput ||
-      this.mobileSourceInput ||
-      this.mobileVacancyInput ||
-      this.idInput ||
-      this.vacancyNameInput ||
-      this.dateInput ||
-      this.sourceInput
+      this.mobileDateInput.value ||
+      this.mobileIdInput.value  ||
+      this.mobileSourceInput.value  ||
+      this.mobileVacancyInput.value  ||
+      this.idInput.value  ||
+      this.vacancyNameInput.value  ||
+      this.dateInput.value  ||
+      this.sourceInput.value 
     ) {
       this.eventBus.notice({}, "fieldNotEmpty");
     } else {
