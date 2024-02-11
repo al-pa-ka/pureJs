@@ -95,6 +95,9 @@ class FilterQuery {
       this.sourceInput.value = "";
       this.dateInput.value = "";
       this.mobileVacancyInput.value = "";
+      this.mobileIdInput.value = "";
+      this.mobileDateInput.value = "";
+      this.mobileSourceInput.value = "";
       this.onInput();
     }, "clearSearch");
     this.eventBus.addSubscriber((event) => {
