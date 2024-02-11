@@ -18,8 +18,11 @@ class VacanciesTable {
 
   update() {
     this.filteredContent = this.filterQuery.filterVacancies(this.data);
-    this.sortedContent = this.sortQuery.sort(this.filteredContent);
-    this.paginatedContent = this.paginator.paginateContent(this.sortedContent);
+    // this.sortedContent = this.sortQuery.sort(this.filteredContent);
+    this.paginatedContent = this.paginator.paginateContent(
+      this.filteredContent
+    );
+    this.paginatedContent.forEach(pageContent => {this.sortQuery.sort(pageContent)})
 
     this.paginator.redrawControlPanel(this.paginatedContent.length);
     this.render();
@@ -147,7 +150,7 @@ class VacanciesTable {
     if (this.paginatedContent.length < 1) {
       return;
     }
-    let number = 1;
+    let number = 1 + 500 * (this.paginator.currentPage - 1);
     for (const vacancy of this.paginatedContent[
       this.paginator.currentPage - 1
     ]) {

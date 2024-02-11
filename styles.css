@@ -18,7 +18,7 @@ input {
 div {
   cursor: default;
 }
-p{
+p {
   cursor: inherit;
 }
 *.medium {
@@ -31,6 +31,11 @@ p{
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.2);
+}
+
+.first-panel__control-exit{
+  display: flex;
+  flex-direction: row;
 }
 
 .mobile-menu-mini {
@@ -93,6 +98,12 @@ body {
   --orange: #ffe6b8;
   --dark-orange: #eaa217;
   --light-green: #d4f6e5;
+}
+
+.control {
+  background-color: #414f51;
+  height: 40px;
+  width: 100%;
 }
 
 .mobile-control-wrapper__grid {
@@ -198,17 +209,25 @@ input[type="text"] {
   align-items: center;
 }
 .panels__panel {
-  display: flex;
+  padding: 0 20px 0 20px;
+  display: contents;
   flex-direction: row;
   width: 100%;
+}
+.panels__panel > div:first-child {
+  padding-left: 20px;
+}
+.panels__panel > div:last-child {
+  padding-right: 20px;
 }
 
 .first-panel {
   background-color: var(--dark-gray);
-  height: 35px;
   justify-content: center;
   width: 100%;
 }
+
+
 
 .control {
   width: 100%;
@@ -228,27 +247,25 @@ input[type="text"] {
 }
 
 .second-panel {
-  justify-content: space-between;
-  max-width: 1700px;
-  align-items: center;
-  height: 88px;
-  padding-left: 20px;
-  padding-right: 20px;
-  box-sizing: border-box;
+  display: contents;
 }
+
 .second-panel__tab {
   display: flex;
   flex: 1;
   justify-content: center;
-  height: 100%;
+  height: 60px;
   box-sizing: border-box;
+  font-size: 18px;
+}
+
+.second-panel__tab > p {
+  font-size: inherit;
 }
 
 .tab {
   cursor: pointer;
   color: gray;
-  font-size: 20px;
-  flex: 1;
   text-align: center;
 }
 
@@ -277,50 +294,36 @@ input[type="text"] {
 .second-panel .tab:hover > span.icon {
   color: white;
 }
-.mobile-control__menu-button {
-  display: contents;
-}
-.mobile-control__menu-button > * {
-  color: var(--blue) !important;
-  font-size: 22px;
-}
-.third-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  background-color: var(--blue);
-  height: 88px;
-}
-.third-panel__content-wrapper {
-  box-sizing: border-box;
-  padding-left: 20px;
-  padding-right: 20px;
-  max-width: 1700px;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
 
 .third-panel__tab {
-  cursor: pointer;
-  flex: 1;
+  background-color: var(--blue);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: white;
+  font-size: 18px;
 }
 .third-panel__tab-icon {
-  font-size: 35px;
+  color: inherit;
+  font-size: 25px;
+}
+.third-panel__tab-text {
+  color: inherit;
+  font-size: inherit;
+  text-transform: uppercase;
+  text-align: center;
 }
 
-.third-panel__tab-text {
-  font-size: 15px;
-  text-transform: uppercase;
-  color: white;
+.mobile-control__menu-button {
+  display: none;
+}
+#mobile-menu-wrapper {
+  padding: 0 20px 0 20px;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1.5fr;
 }
 
 .row {
@@ -364,12 +367,17 @@ input[type="text"] {
   margin-top: 50px;
   height: 50px;
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
+  min-height: 50px;
+  height: 100%;
   width: 100%;
   max-width: 1700px;
-  justify-content: space-between;
-  border: 1px solid lightgray;
   background-color: white;
+}
+.control-panel > * {
+  min-width: 240px;
+  background-color: white;
+  height: 50px;
 }
 
 p {
@@ -392,6 +400,7 @@ p {
   color: gray;
   cursor: pointer;
   align-items: center;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -480,22 +489,24 @@ p {
 .mobile-wrapper__row-extra-content {
   display: none;
 }
-.mobile-wrapper__input-vacancy-name {
+
+.mobile-wrapper__input{
   display: none;
   gap: 5px;
   align-items: center;
   width: 100%;
   position: relative;
 }
-.mobile-wrapper__input-vacancy-name > span {
+
+.mobile-wrapper__input > span {
   font-size: 20px;
   position: absolute;
   transform: translateX(5px);
 }
-.mobile-wrapper__input-vacancy-name > input {
+.mobile-wrapper__input > input {
   width: 100%;
   border: 1px solid gray;
-  padding-left: 25px;
+  padding-left: 30px;
 }
 .pagination__page-number {
   box-sizing: border-box;
@@ -603,10 +614,9 @@ p {
 .table.vacancies {
   margin-top: 27px;
   width: 100%;
-  grid-template-columns: minmax(40px, 1fr) 1fr 7fr minmax(50px, 1fr) minmax(
-      50px,
-      1fr
-    ) 6fr minmax(95px, 1fr);
+  grid-template-columns:
+    minmax(40px, 1fr) 1fr 7fr minmax(50px, 1fr) minmax(50px, 1fr)
+    6fr minmax(95px, 1fr);
 }
 
 .table__row {
@@ -726,10 +736,12 @@ p.date {
   border: 1px solid lightgray;
   row-gap: 10px;
   z-index: 3;
-  padding: 6px 0 6px 0;
+  padding: 6px 0 12px 0;
 }
 .hint__row {
   padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   color: #414141;
 }
 
@@ -739,15 +751,15 @@ p.date {
 .mobile-control-wrapper__grid-control-wrapper > span.icon {
   color: inherit;
 }
-.mobile-control-wrapper__row{
+.mobile-control-wrapper__row {
   display: flex;
   flex-direction: row;
 }
 
-.mobile-control-wrapper__row.second{
+.mobile-control-wrapper__row.second {
   display: none;
 }
 
-.table__row-item.search{
+.table__row-item.search {
   overflow: visible;
 }

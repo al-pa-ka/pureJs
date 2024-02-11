@@ -34,8 +34,10 @@ document.querySelectorAll(".third-panel__tab").forEach((el, index) => {
   }
 });
 
-const mobileControl = new MobileControlMini()
+const mobileControlMini = new MobileControlMini()
+const mobileControl = new MobileControl()
 mobileControl.setup()
+mobileControlMini.setup()
 
 const eventBus = new EventBus();
 

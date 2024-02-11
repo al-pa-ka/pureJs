@@ -72,8 +72,19 @@ class SortQuery {
   }
 
   sort(data) {
+    const compareNumbers = (a, b) => {
+      if (a > b) return 1
+      if (a < b) return -1
+      return 0
+    }
     for (const sortItem of this.sortQuery) {
       data.sort((a, b) => {
+        if (Number(a[sortItem.name]) && Number(b[sortItem.name])){
+          console.log('numbers!')
+          return sortItem.reversed
+          ? -compareNumbers(Number(a[sortItem.name]),(Number(b[sortItem.name])))
+          : compareNumbers(Number(a[sortItem.name]), (Number(b[sortItem.name])))
+        }
         return sortItem.reversed
           ? -String(a[sortItem.name]).localeCompare(String(b[sortItem.name]))
           : String(a[sortItem.name]).localeCompare(String(b[sortItem.name]));

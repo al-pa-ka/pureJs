@@ -69,12 +69,13 @@ class MobileControlMini {
 
 class MobileControl {
   setup() {
-    document.querySelector(".mobile-control__menu-button").onclick = () => {
+    document.querySelector(".icon.burger").onclick = () => {
       const menu = document.querySelector("#mobile-menu-wrapper");
-      if (menu.style.display == "contents") {
-        menu.style.setProperty("display", "none");
+      console.log(menu.style.display)
+      if (menu.style.display == "none") {
+        menu.style.setProperty("display", "grid");
       } else {
-        menu.style.setProperty("display", "contents");
+        menu.style.setProperty("display", "none");
       }
     };
   }

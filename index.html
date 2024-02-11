@@ -32,23 +32,19 @@
     <div class="main-container">
       <div class="mobile-wrapper">
         <div class="panels">
-          <div class="mobile-tab">
-            <div class="mobile-control control">
-              <span class="icon"></span>
-              <p>Войти</p>
-            </div>
-            <div class="mobile-control__menu-button">
-              <p>Меню</p>
-              <span class="icon burger"></span>
-            </div>
-          </div>
-          <div class="first-panel panels__panel">
+          <div class="first-panel">
             <div class="control">
-              <span class="icon"></span>
-              <p>Войти</p>
+              <div class="first-panel__control-exit">
+                <span class="icon"></span>
+                <p>Войти</p>
+              </div>
             </div>
           </div>
-          <div id="mobile-menu-wrapper" style="display: contents">
+          <div class="mobile-control__menu-button">
+            <p>Меню</p>
+            <span class="icon burger"></span>
+          </div>
+          <div id="mobile-menu-wrapper">
             <div class="second-panel panels__panel">
               <div class="tab second-panel__tab" id="interface_tab">
                 <p>Интерфейс</p>
@@ -65,57 +61,53 @@
               <div class="tab second-panel__tab" id="export_tab">
                 <p>Экспорт</p>
               </div>
-              <div class="will-removed">
-                <div class="tab second-panel__tab" id="users_tab">
-                  <p>Пользователи</p>
-                </div>
-                <div class="tab second-panel__tab" id="emails_tab">
-                  <p>Email ящики</p>
-                </div>
-                <div class="tab second-panel__tab"><p>Ключи.Пароли</p></div>
-                <div class="tab second-panel__tab"><p>Разное</p></div>
+
+              <div class="tab second-panel__tab" id="users_tab">
+                <p>Пользователи</p>
               </div>
+              <div class="tab second-panel__tab" id="emails_tab">
+                <p>Email ящики</p>
+              </div>
+              <div class="tab second-panel__tab"><p>Ключи.Пароли</p></div>
+              <div class="tab second-panel__tab"><p>Разное</p></div>
             </div>
             <div class="third-panel journals panels__panel">
-              <div class="third-panel__content-wrapper">
-                <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">объявления</p>
-                </div>
-                <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">вакансии</p>
-                </div>
-                <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">соискатели</p>
-                </div>
-                <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">email рассылка</p>
-                </div>
-                <div class="third-panel__tab">
-                  <span class="third-panel__tab-icon icon"></span>
-                  <p class="third-panel__tab-text">отклики</p>
-                </div>
-                <div class="will-removed">
-                  <div class="third-panel__tab">
-                    <span class="third-panel__tab-icon icon"></span>
-                    <p class="third-panel__tab-text">фио</p>
-                  </div>
-                  <div class="third-panel__tab">
-                    <span class="third-panel__tab-icon icon"></span>
-                    <p class="third-panel__tab-text">учебные заведения</p>
-                  </div>
-                  <div class="third-panel__tab">
-                    <span class="third-panel__tab-icon icon"></span>
-                    <p class="third-panel__tab-text">адреса</p>
-                  </div>
-                  <div class="third-panel__tab">
-                    <span class="third-panel__tab-icon icon"></span>
-                    <p class="third-panel__tab-text">компании</p>
-                  </div>
-                </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">объявления</p>
+              </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">вакансии</p>
+              </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">соискатели</p>
+              </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">email рассылка</p>
+              </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">отклики</p>
+              </div>
+
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">фио</p>
+              </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">учебные заведения</p>
+              </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">адреса</p>
+              </div>
+              <div class="third-panel__tab">
+                <span class="third-panel__tab-icon icon"></span>
+                <p class="third-panel__tab-text">компании</p>
               </div>
             </div>
           </div>
@@ -124,79 +116,77 @@
 
       <section class="content vacancies">
         <div class="content-wrapper">
-          <div class="row">
-            <div class="control-panel">
-              <div
-                tooltip="добавить новую вакансию"
-                class="control-panel__segment add-a-new-one"
+          <div class="control-panel">
+            <div
+              tooltip="добавить новую вакансию"
+              class="control-panel__segment add-a-new-one"
+            >
+              <span
+                style="font-weight: bold; font-size: 20px; color: gray"
+                class="control-panel__segment-icon plus"
+                >+</span
               >
-                <span
-                  style="font-weight: bold; font-size: 20px; color: gray"
-                  class="control-panel__segment-icon plus"
-                  >+</span
-                >
-                <p class="control-panel__segment-text">ADD A NEW ONE</p>
-              </div>
-              <div
-                tooltip="ОЧИСТИТЬ ВСЕ ПОЛЯ БЫСТРОГО ПОИСКА"
-                class="control-panel__segment deselect"
-              >
-                <span class="icon control-panel__segment-icon"></span>
-                <p class="control-panel__segment-text">DESELECT</p>
-              </div>
-              <div
-                tooltip="количество найденных вакансий"
-                class="control-panel__segment in-total"
-              >
-                <span class="icon control-panel__segment-icon"></span>
-                <p class="control-panel__segment-text">
-                  IN TOTAL: <span class="green">12424</span>
-                </p>
-              </div>
-              <div
-                tooltip="импорт вакансий из xlsx"
-                class="control-panel__segment import-button"
-              >
-                <span class="icon control-panel__segment-icon"></span>
-                <p class="control-panel__segment-text">IMPORT</p>
-              </div>
-              <div
-                tooltip="Экспорт вакансий в xlsx"
-                class="control-panel__segment export-button"
-              >
-                <span class="icon control-panel__segment-icon"></span>
-                <p class="control-panel__segment-text">EXPORT</p>
-              </div>
-              <div
-                tooltip="удалить вакансии в бд"
-                class="control-panel__segment delete-everything active"
-              >
-                <span class="icon control-panel__segment-icon"></span>
-                <p class="control-panel__segment-text active">
-                  DELETE EVERYTHING
-                </p>
-              </div>
+              <p class="control-panel__segment-text">ADD A NEW ONE</p>
             </div>
+            <div
+              tooltip="ОЧИСТИТЬ ВСЕ ПОЛЯ БЫСТРОГО ПОИСКА"
+              class="control-panel__segment deselect"
+            >
+              <span class="icon control-panel__segment-icon"></span>
+              <p class="control-panel__segment-text">DESELECT</p>
+            </div>
+            <div
+              tooltip="количество найденных вакансий"
+              class="control-panel__segment in-total"
+            >
+              <span class="icon control-panel__segment-icon"></span>
+              <p class="control-panel__segment-text">
+                IN TOTAL: <span class="green">12424</span>
+              </p>
+            </div>
+            <div
+              tooltip="импорт вакансий из xlsx"
+              class="control-panel__segment import-button"
+            >
+              <span class="icon control-panel__segment-icon"></span>
+              <p class="control-panel__segment-text">IMPORT</p>
+            </div>
+            <div
+              tooltip="Экспорт вакансий в xlsx"
+              class="control-panel__segment export-button"
+            >
+              <span class="icon control-panel__segment-icon"></span>
+              <p class="control-panel__segment-text">EXPORT</p>
+            </div>
+            <div
+              tooltip="удалить вакансии в бд"
+              class="control-panel__segment delete-everything active"
+            >
+              <span class="icon control-panel__segment-icon"></span>
+              <p class="control-panel__segment-text active">
+                DELETE EVERYTHING
+              </p>
+            </div>
+          </div>
 
-            <div class="pagination">
-              <div class="pagination__specify-page">
-                <p class="pagination__specify-page-text">Укажите страницу</p>
-                <input type="text" />
-                <div class="pagination__go-button inactive">Go</div>
+          <div class="pagination">
+            <div class="pagination__specify-page">
+              <p class="pagination__specify-page-text">Укажите страницу</p>
+              <input type="text" />
+              <div class="pagination__go-button inactive">Go</div>
+            </div>
+            <div class="pagination__pages-control">
+              <div class="pagination__page-number page-control-element">
+                <span class="icon"></span>
               </div>
-              <div class="pagination__pages-control">
-                <div class="pagination__page-number page-control-element">
-                  <span class="icon"></span>
-                </div>
-                <div class="pagination__page-number page-control-element">
-                  <p>First</p>
-                </div>
-                <div class="pagination__page-number page-control-element">
-                  <p>Next</p>
-                </div>
-                <div class="pagination__page-number page-control-element">
-                  <span class="icon"></span>
-                </div>
+              <div class="pagination__page-number page-control-element">
+                <p>First</p>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <p>Next</p>
+              </div>
+              <div class="pagination__page-number page-control-element">
+                <span class="icon"></span>
               </div>
             </div>
           </div>
@@ -205,9 +195,21 @@
             <h3 class="table-title medium">Журнал вакансий</h3>
           </div>
 
-          <div class="mobile-wrapper__input-vacancy-name">
+          <div class="mobile-wrapper__input mobile-wrapper__input-vacancy-name">
             <span style="color: gray" class="icon"></span
-            ><input type="text" name="" id="" />
+            ><input type="text" name="" id="" placeholder="Название вакансии"/>
+          </div>
+          <div class="mobile-wrapper__input mobile-wrapper__input-id">
+            <span style="color: gray" class="icon"></span
+            ><input type="text" name="" id="" placeholder="ID" />
+          </div>
+          <div class="mobile-wrapper__input mobile-wrapper__input-source">
+            <span style="color: gray" class="icon"></span
+            ><input type="text" name="" id="" placeholder="Источник публикации"/>
+          </div>
+          <div class="mobile-wrapper__input mobile-wrapper__input-date">
+            <span style="color: gray" class="icon"></span
+            ><input type="text" name="" id="" placeholder="Дата"/>
           </div>
 
           <div class="table-wrapper">

@@ -26,7 +26,6 @@ class Hint {
 
     rows?.forEach((row) => {
       row.onmousedown = (event) => {
-        event.preventDefault()
         console.log("clicked row");
         this.resolve(row.textContent);
         this.close();
@@ -39,7 +38,9 @@ class Hint {
   }
 
   clear() {
+    console.log('clearing')
     this.dimmer?.remove();
+    console.log(document.querySelector(".hint"))
     document.querySelector(".hint")?.remove();
     this.container.classList.remove('search_active')
   }
@@ -60,7 +61,7 @@ class Hint {
           return row.toLowerCase().startsWith(this.search.toLowerCase());
         })
       ),
-    ].slice(0, 14);
+    ].slice(0, 13);
   }
 
   insert() {
