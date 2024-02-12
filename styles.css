@@ -81,7 +81,7 @@ p {
   justify-content: center;
   padding-right: 10px;
   color: rgb(189, 189, 189) !important;
-  font-size: 20px;
+  font-size: 35px !important;
   z-index: 5;
 }
 
@@ -199,11 +199,12 @@ span.icon {
   font-family: Icons;
   color: white;
   height: fit-content;
-  max-height: 30px;
-  overflow: hidden;
   box-sizing: border-box;
 }
-
+span.icon.in-panel{
+  height: 30px;
+  /* overflow: hidden; */
+}
 input[type="text"] {
   font-family: Inter;
 }
@@ -786,17 +787,18 @@ p.date {
   display: none;
 }
 
-.ads-icon{
-  font-size: 24px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-}
-.vacancies-icon{
+/* .offerors-icon{
+  font-size: 28px;
+} */
+
+/* .ads-icon{
+  font-size: 24px; */
+
+/* } */
+/* .vacancies-icon{
   font-size: 29px;
 }
-.offerors-icon{
-  font-size: 28px;
-}
+
 .email-icon{
   font-size: 28px;
 }
@@ -807,18 +809,14 @@ p.date {
   font-size: 29px;
 }
 .stydies-icon{
-  padding-top: 2px;
-  padding-bottom: 4px;
   font-size: 26px;
 }
 .addresses-icon{
-  padding-top: 1px;
-  padding-bottom: 2px;
-  font-size: 31px;
+  font-size: 35px;
 }
 .companies-icon{
-  font-size: 25px;
-}
+  font-size: 20px;
+} */
 .medium-screen-size__table-name{
   display: none;
 }
