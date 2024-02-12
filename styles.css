@@ -511,6 +511,7 @@ p {
   font-size: 20px;
   position: absolute;
   transform: translateX(5px);
+  padding-top: 10px;
 }
 .mobile-wrapper__input > input {
   width: 100%;
