@@ -70,7 +70,6 @@ p {
 
 .litle-cross {
   cursor: pointer;
-  position: absolute;
   top: 0;
   right: 0;
   height: 100%;
@@ -81,7 +80,7 @@ p {
   justify-content: center;
   padding-right: 10px;
   color: rgb(189, 189, 189) !important;
-  font-size: 35px !important;
+  font-size: 30px !important;
   z-index: 5;
 }
 
@@ -91,8 +90,6 @@ p {
 
 .litle-cross:hover {
   color: rgb(65, 65, 65) !important;
-
-  position: absolute;
 }
 
 body {

@@ -127,6 +127,7 @@ body {
 }
 .accept.inactive {
     background-color: lightblue;
+    cursor: default;
 }
 .popup__content-wrapper {
   width: 100%;
@@ -155,6 +156,7 @@ body {
   border: none;
   font-size: 20px;
   color: white;
+  cursor: pointer;
 }
 
 .red {
