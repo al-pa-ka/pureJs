@@ -46,11 +46,15 @@ class MobileControlMini {
     controls.forEach((control) => {
       control.addEventListener("click", () => {
         controls.forEach((control) => {
-          control.style.color = "#202020";
+          control.classList.remove('mobile-control-wrapper__grid-control-wrapper_active')
         });
-        control.style.color = "#00B0D9";
+        control.classList.add('mobile-control-wrapper__grid-control-wrapper_active')
       });
     });
+
+    document.querySelector('.mobile-cocntrol-wrapper__go-back').onclick = () => {
+      this.openMenu()
+    }
 
     const more = document.querySelector(
       ".mobile-control-wrapper__grid-control-wrapper.more-button"
