@@ -47,6 +47,12 @@
 }
 
 @media (width <= 880px) {
+  .medium-screen-size__table-name{
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 20px;
+  }
   div.control {
     display: flex;
     padding-left: 18px;
@@ -326,6 +332,9 @@
 }
 
 @media (width <= 640px) {
+  .medium-screen-size__table-name{
+    display: none;
+  }
   .table__row-item[tooltip]:hover::before{
     content: none;
     display: none;
@@ -479,7 +488,9 @@
   .mobile-control-wrapper__grid-control-wrapper_active {
     color: var(--blue);
   }
-
+  div.mobile-control-wrapper__grid-control-wrapper:hover{
+    color: var(--blue);
+  }
   .table__row-item-vacancy-name {
     width: 100%;
   }

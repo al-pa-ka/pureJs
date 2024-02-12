@@ -76,11 +76,21 @@ class MobileControl {
     document.querySelector(".icon.burger").onclick = () => {
       const menu = document.querySelector("#mobile-menu-wrapper");
       console.log(menu.style.display)
-      if (menu.style.display == "none") {
-        menu.style.setProperty("display", "grid");
+      if (menu.classList.contains('mobile-menu-wrapper_active')) {
+        menu.classList.remove('mobile-menu-wrapper_active');
       } else {
-        menu.style.setProperty("display", "none");
+        menu.classList.add('mobile-menu-wrapper_active');
       }
     };
+    window.addEventListener('resize', () => {
+      console.log('resize')
+      const menu = document.querySelector("#mobile-menu-wrapper");
+      console.log(window.innerWidth)
+      if (window.innerWidth <= 640) {
+        menu.classList.remove('mobile-menu-wrapper_active');
+      } else if (window.innerWidth >=880){
+        menu.classList.add('mobile-menu-wrapper_active');
+      }
+    })
   }
 }

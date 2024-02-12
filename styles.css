@@ -195,8 +195,13 @@ body {
   font-family: Inter;
 }
 span.icon {
+  display: inline;
   font-family: Icons;
   color: white;
+  height: fit-content;
+  max-height: 30px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 input[type="text"] {
@@ -758,6 +763,7 @@ p.date {
 .mobile-control-wrapper__grid-control-wrapper > span.icon {
   color: inherit;
 }
+
 .mobile-control-wrapper__row {
   display: flex;
   flex-direction: row;
@@ -812,4 +818,10 @@ p.date {
 }
 .companies-icon{
   font-size: 25px;
+}
+.medium-screen-size__table-name{
+  display: none;
+}
+.mobile-menu-wrapper_active{
+  display: grid !important;
 }
