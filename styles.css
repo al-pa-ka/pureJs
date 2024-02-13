@@ -197,6 +197,7 @@ span.icon {
   display: inline;
   font-family: Icons;
   color: white;
+  width: fit-content;
   height: fit-content;
   box-sizing: border-box;
 }
@@ -802,36 +803,6 @@ div.mobile-wrapper__input > div.hint{
   display: none;
 }
 
-/* .offerors-icon{
-  font-size: 28px;
-} */
-
-/* .ads-icon{
-  font-size: 24px; */
-
-/* } */
-/* .vacancies-icon{
-  font-size: 29px;
-}
-
-.email-icon{
-  font-size: 28px;
-}
-.reply-icon{
-  font-size: 30px;
-}
-.fio-icon{
-  font-size: 29px;
-}
-.stydies-icon{
-  font-size: 26px;
-}
-.addresses-icon{
-  font-size: 35px;
-}
-.companies-icon{
-  font-size: 20px;
-} */
 .medium-screen-size__table-name{
   display: none;
 }
@@ -843,4 +814,8 @@ div.mobile-wrapper__input > div.hint{
   display: flex;
   align-items: center;
   position: absolute;
+}
+
+.mobile-control-wrapper__grid-nav_active{
+  color: var(--yellow);
 }

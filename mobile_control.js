@@ -43,18 +43,34 @@ class MobileControlMini {
       ".mobile-control-wrapper__grid-control-wrapper:not(.more-button)"
     );
 
+    const tabs = document.querySelectorAll(".mobile-control-wrapper__grid-nav");
+    tabs.forEach((tab) => {
+      tab.onclick = () => {
+        tabs.forEach((tab) => {
+          tab.classList.remove('mobile-control-wrapper__grid-nav_active')
+        })
+          tab.classList.add('mobile-control-wrapper__grid-nav_active')
+          this.closeMenu()
+      }
+    });
+
     controls.forEach((control) => {
       control.addEventListener("click", () => {
         controls.forEach((control) => {
-          control.classList.remove('mobile-control-wrapper__grid-control-wrapper_active')
+          control.classList.remove(
+            "mobile-control-wrapper__grid-control-wrapper_active"
+          );
         });
-        control.classList.add('mobile-control-wrapper__grid-control-wrapper_active')
+        control.classList.add(
+          "mobile-control-wrapper__grid-control-wrapper_active"
+        );
       });
     });
 
-    document.querySelector('.mobile-cocntrol-wrapper__go-back').onclick = () => {
-      this.openMenu()
-    }
+    document.querySelector(".mobile-cocntrol-wrapper__go-back").onclick =
+      () => {
+        this.openMenu();
+      };
 
     const more = document.querySelector(
       ".mobile-control-wrapper__grid-control-wrapper.more-button"
@@ -75,22 +91,22 @@ class MobileControl {
   setup() {
     document.querySelector(".icon.burger").onclick = () => {
       const menu = document.querySelector("#mobile-menu-wrapper");
-      console.log(menu.style.display)
-      if (menu.classList.contains('mobile-menu-wrapper_active')) {
-        menu.classList.remove('mobile-menu-wrapper_active');
+      console.log(menu.style.display);
+      if (menu.classList.contains("mobile-menu-wrapper_active")) {
+        menu.classList.remove("mobile-menu-wrapper_active");
       } else {
-        menu.classList.add('mobile-menu-wrapper_active');
+        menu.classList.add("mobile-menu-wrapper_active");
       }
     };
-    window.addEventListener('resize', () => {
-      console.log('resize')
+    window.addEventListener("resize", () => {
+      console.log("resize");
       const menu = document.querySelector("#mobile-menu-wrapper");
-      console.log(window.innerWidth)
+      console.log(window.innerWidth);
       if (window.innerWidth <= 640) {
-        menu.classList.remove('mobile-menu-wrapper_active');
-      } else if (window.innerWidth >=880){
-        menu.classList.add('mobile-menu-wrapper_active');
+        menu.classList.remove("mobile-menu-wrapper_active");
+      } else if (window.innerWidth >= 880) {
+        menu.classList.add("mobile-menu-wrapper_active");
       }
-    })
+    });
   }
 }

@@ -47,7 +47,7 @@
 }
 
 @media (width <= 880px) {
-  .medium-screen-size__table-name{
+  .medium-screen-size__table-name {
     display: block;
     width: 100%;
     margin-top: 20px;
@@ -332,10 +332,10 @@
 }
 
 @media (width <= 640px) {
-  .medium-screen-size__table-name{
+  .medium-screen-size__table-name {
     display: none;
   }
-  .table__row-item[tooltip]:hover::before{
+  .table__row-item[tooltip]:hover::before {
     content: none;
     display: none;
     border-bottom: none;
@@ -375,7 +375,12 @@
     display: block;
     color: inherit;
     font-size: 30px;
-    padding-right: 10px;
+    font-weight: 400;
+    padding-left: 4px;
+    padding-right: 15px;
+  }
+  .mobile-control-wrapper__grid-first-panel > p{
+    padding-left: 10px;
   }
   .mobile-menu-mini {
     display: none;
@@ -412,35 +417,40 @@
   }
   .mobile-control-wrapper__grid-nav-wrapper {
     padding: 20px;
+    padding-top: 0;
     display: grid;
     grid-template-columns: 40px 1fr;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
     height: 100%;
     padding-bottom: 50px;
     max-height: 600px;
     box-sizing: border-box;
+  }
+  .icon {
+    justify-self: center;
   }
   .mobile-control-wrapper__grid-nav {
     display: contents;
     flex-direction: row;
     gap: 10px;
     font-size: 20px;
+    color: #414141;
   }
-  .mobile-control-wrapper__grid-nav
-    > span:not(.too-big-icon):not(.too-small-icon) {
-    font-size: 25px;
+  .mobile-control-wrapper__grid-nav_active{
+    color: rgb(241, 241, 1);
   }
-  .too-small-icon {
-    font-size: 30px !important;
+  .mobile-control-wrapper__grid-nav > span {
+    height: auto;
+    width: auto;
+    font-size: 22px;
   }
-  .too-big-icon {
-    font-size: 20px;
+  .mobile-control-wrapper__grid-nav > p {
+    padding-left: 15px;
   }
   .mobile-control-wrapper__grid-nav > * {
     display: block;
     cursor: pointer;
-    color: #414141 !important;
+    color: inherit !important;
     font-size: inherit;
   }
   div.mobile-control-wrapper__grid {
@@ -448,7 +458,7 @@
     display: flex;
     height: 100dvh;
     width: 100dvw;
-    position: fixed;
+    position: absolute;
     flex-direction: column;
     justify-content: end;
   }
@@ -488,7 +498,7 @@
   .mobile-control-wrapper__grid-control-wrapper_active {
     color: var(--blue);
   }
-  div.mobile-control-wrapper__grid-control-wrapper:hover{
+  div.mobile-control-wrapper__grid-control-wrapper:hover {
     color: var(--blue);
   }
   .table__row-item-vacancy-name {
