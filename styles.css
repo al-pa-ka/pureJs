@@ -819,3 +819,10 @@ div.mobile-wrapper__input > div.hint{
 .mobile-control-wrapper__grid-nav_active{
   color: var(--yellow);
 }
+
+.table__row-item.date{
+  align-items: start;
+}
+.table__row-item.date > p{
+  text-align: left;
+}
