@@ -2,6 +2,11 @@ const journalsTab = document.querySelector("#journals_tab");
 
 journalsTab.classList.add("tab_active");
 
+window.addEventListener('load', function(){
+  setTimeout(scrollTo, 0, 0, 1);
+  }, false);
+  
+
 document.querySelectorAll(".second-panel__tab").forEach((el) => {
   el.addEventListener("click", () => {
     el.classList.add("tab_active");
