@@ -2,10 +2,22 @@ const journalsTab = document.querySelector("#journals_tab");
 
 journalsTab.classList.add("tab_active");
 
-window.addEventListener('load', function(){
-  setTimeout(scrollTo, 0, 0, 1);
+window.onload = function () {
+  hideAddressBar();
+  window.addEventListener("orientationchange", function () {
+      hideAddressBar();
   }, false);
-  
+}
+
+function hideAddressBar() {
+  setTimeout(function () {
+      document.body.style.height = window.outerHeight + 'px';
+      setTimeout(function () {
+          window.scrollTo(0, 1);
+      }, 1100);
+  }, 1000);
+  return false;
+}
 
 document.querySelectorAll(".second-panel__tab").forEach((el) => {
   el.addEventListener("click", () => {
