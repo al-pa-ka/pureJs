@@ -1,7 +1,7 @@
 class SortQuery {
   constructor(eventBus) {
     this.eventBus = eventBus;
-    this.sortQuery = [];
+    this.sortQuery = [{name: "vacancyName", reversed: false}];
   }
 
   setupControl() {
