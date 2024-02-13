@@ -77,6 +77,9 @@ class AddVacancy extends DeleteEverythingPopup {
     };
 
     this.popup.querySelector(".popup__content-input").oninput = (event) => {
+      const input = this.popup.querySelector(".popup__content-input")
+      const value = input.value
+      input.value = value.charAt(0).toUpperCase() + value.slice(1)
       this.popup.querySelector(".error-output").textContent = "";
       this.popup.querySelector('.accept').classList.remove('inactive')
       this.eventBus.notice(

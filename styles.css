@@ -511,12 +511,19 @@ p {
   font-size: 20px;
   position: absolute;
   transform: translateX(5px);
+
+}
+.mobile-wrapper__input > span.litle-cross{
   padding-top: 10px;
+}
+.mobile-wrapper__input > span:not(.litle-cross){
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .mobile-wrapper__input > input {
   width: 100%;
   border: 1px solid gray;
-  padding-left: 30px;
+  padding-left: 40px;
 }
 .pagination__page-number {
   box-sizing: border-box;

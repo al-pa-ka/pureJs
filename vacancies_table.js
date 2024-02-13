@@ -18,11 +18,11 @@ class VacanciesTable {
 
   update() {
     this.filteredContent = this.filterQuery.filterVacancies(this.data);
-    // this.sortedContent = this.sortQuery.sort(this.filteredContent);
+    this.sortQuery.sort(this.filteredContent);
     this.paginatedContent = this.paginator.paginateContent(
       this.filteredContent
     );
-    this.paginatedContent.forEach(pageContent => {this.sortQuery.sort(pageContent)})
+    // this.paginatedContent.forEach(pageContent => {this.sortQuery.sort(pageContent)})
 
     this.paginator.redrawControlPanel(this.paginatedContent.length);
     this.render();
