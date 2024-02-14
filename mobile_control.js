@@ -3,12 +3,24 @@ class MobileControlMini {
 
   openMenu() {
     const mobileMenu = document.querySelector(".mobile-menu-mini");
+    const mobileMenuWrapper = document.querySelector(
+      ".mobile-menu-mini-wrapper"
+    );
+    const mainContainer = document.querySelector(".main-container");
+    mobileMenuWrapper.classList.add("mobile-menu-mini-wrapper_active");
     mobileMenu.style.setProperty("display", "flex");
+    mainContainer.style.setProperty("display", "none");
   }
 
   closeMenu() {
     const mobileMenu = document.querySelector(".mobile-menu-mini");
+    const mobileMenuWrapper = document.querySelector(
+      ".mobile-menu-mini-wrapper"
+    );
+    const mainContainer = document.querySelector(".main-container");
+    mobileMenuWrapper.classList.remove("mobile-menu-mini-wrapper_active");
     mobileMenu.style.setProperty("display", "none");
+    mainContainer.style.setProperty("display", "flex");
   }
 
   openSecondRow() {
@@ -47,11 +59,11 @@ class MobileControlMini {
     tabs.forEach((tab) => {
       tab.onclick = () => {
         tabs.forEach((tab) => {
-          tab.classList.remove('mobile-control-wrapper__grid-nav_active')
-        })
-          tab.classList.add('mobile-control-wrapper__grid-nav_active')
-          this.closeMenu()
-      }
+          tab.classList.remove("mobile-control-wrapper__grid-nav_active");
+        });
+        tab.classList.add("mobile-control-wrapper__grid-nav_active");
+        this.closeMenu();
+      };
     });
 
     controls.forEach((control) => {
