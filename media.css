@@ -104,10 +104,6 @@
     background-color: white;
     color: var(--blue);
   }
-  /* .second-panel__tab:hover > p {
-    text-decoration: underline dashed white;
-    text-underline-offset: 5px;
-  } */
   .tab_active {
     background-color: var(--blue);
   }
@@ -243,6 +239,11 @@
   .table__row-item-vacancy-name {
     grid-column-start: span 2;
     box-sizing: border-box;
+    height: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   p.table__row-item-vacancy-name-text {
     color: white;
@@ -258,11 +259,11 @@
   }
   .mobile-wrapper__row {
     display: grid;
-    grid-template-columns: 185px 1fr;
+    grid-template-columns: 115px 1fr;
   }
   .mobile-wrapper__row-number {
     grid-area: number;
-    grid-template-columns: 185px 1fr;
+    grid-template-columns: 115px 1fr;
   }
   .mobile-wrapper__row-edit {
     grid-area: edit;
@@ -274,6 +275,7 @@
     grid-area: date;
   }
   .row-wrapper {
+    grid-auto-rows: minmax(50px, auto);
     display: grid;
     grid-template-areas:
       "vacancy-name vacancy-name vacancy-name vacancy-name"
@@ -530,22 +532,28 @@
     height: 50px;
     box-sizing: border-box;
   }
+  .table__row-item{
+    font-size: 18px;
+  }
+  .mobile-wrapper__row-extra-content{
+    font-size: 18px;
+  }
 }
 
 @media (width <= 465px) {
   .mobile-wrapper__row {
     display: grid;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 115px 1fr;
   }
   .mobile-wrapper__row-number {
     grid-area: number;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 115px 1fr;
   }
   .table__row-item > p {
-    font-size: 14px;
+    font-size: 18px;
   }
 
   .mobile-wrapper__row-extra-content {
-    font-size: 14px;
+    font-size: 18px;
   }
 }

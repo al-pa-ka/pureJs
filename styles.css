@@ -650,8 +650,6 @@ p.table__row-item-vacancy-name-text {
   overflow: hidden;
   max-height: 100%;
   max-width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .table__row-item {
   /* flex: 1; */
