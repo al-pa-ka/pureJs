@@ -53,13 +53,13 @@ class FilterQuery {
     this.callback();
     if (
       this.mobileDateInput.value ||
-      this.mobileIdInput.value  ||
-      this.mobileSourceInput.value  ||
-      this.mobileVacancyInput.value  ||
-      this.idInput.value  ||
-      this.vacancyNameInput.value  ||
-      this.dateInput.value  ||
-      this.sourceInput.value 
+      this.mobileIdInput.value ||
+      this.mobileSourceInput.value ||
+      this.mobileVacancyInput.value ||
+      this.idInput.value ||
+      this.vacancyNameInput.value ||
+      this.dateInput.value ||
+      this.sourceInput.value
     ) {
       this.eventBus.notice({}, "fieldNotEmpty");
     } else {
@@ -101,12 +101,14 @@ class FilterQuery {
       this.onInput();
     }, "clearSearch");
     this.eventBus.addSubscriber((event) => {
-      this.dateInput.value = event.date;
+      this.dateInput.value =
+        event.date == this.dateInput.value ? "" : event.date;
       this.dateInput.dispatchEvent(new Event("input"));
       this.onInput();
     }, "dateSetted");
     this.eventBus.addSubscriber((event) => {
-      this.sourceInput.value = event.source;
+      this.sourceInput.value =
+        event.source == this.sourceInput.value ? "" : event.source;
       this.sourceInput.dispatchEvent(new Event("input"));
       this.onInput();
     }, "sourceSetted");

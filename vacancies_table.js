@@ -31,7 +31,7 @@ class VacanciesTable {
 
   setupRowsControl() {
     document.querySelectorAll(".row-wrapper").forEach((row) => {
-      row.querySelector(".control-edit.edit").onclick = async () => {
+      row.querySelector(".edit").onclick = async () => {
         const vacancyId = Number(row.querySelector(".id>p").textContent);
         const vacancy = this.data.find((vacancy) => {
           return vacancy.id == vacancyId;
@@ -51,7 +51,7 @@ class VacanciesTable {
         this.update();
       };
 
-      row.querySelector(".control-edit.delete").onclick = async () => {
+      row.querySelector(".delete").onclick = async () => {
         const vacancyId = Number(row.querySelector(".id>p").textContent);
         const vacancy = this.data.find((vacancy) => {
           return vacancy.id == vacancyId;
@@ -178,7 +178,7 @@ class VacanciesTable {
                         <div tooltip="редактировать вакансию" class="table__row-item title selectable non-border edit">
                             <span class="icon control-edit edit"></span>
                         </div>
-                        <div tooltip="удалить вакансию" class="table__row-item title selectable non-border edit">
+                        <div tooltip="удалить вакансию" class="table__row-item title selectable non-border edit delete">
                             <span class="icon control-edit delete"></span>
                         </div>
                       </div>
