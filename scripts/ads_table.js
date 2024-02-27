@@ -157,24 +157,25 @@ class BigScreenRenderer {
             <div class="ads-table__search-wrapper">
                 <div class="ads-table__cell search-wrapper"></div>
                 <div class="ads-table__cell search-wrapper ads-table__cell-search-wrapper-id">
-                    <input class="ads-table__search id" type="text" />
+                    <input id="id" class="ads-table__search id" type="text" />
                     <little-cross queryfor=".ads-table__search.id"></little-cross>
                     <search-hint id='hint-id' queryfor='.ads-table__search.id'></search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper ads-table__cell-search-wrapper-vacancy">
-                <search-hint queryfor=".ads-table__search.vacancy"></search-hint>
+                    <search-hint queryfor=".ads-table__search.vacancy"></search-hint>
                     <span class="icon"></span>
-                    <input class="ads-table__search vacancy" type="text" />
+                    <input id="vacancy" class="ads-table__search vacancy" type="text" />
                     <little-cross queryfor=".ads-table__search.vacancy"> </little-cross>
                     <search-hint id='hint-vacancy' queryfor='.ads-table__search.vacancy'> </search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper">
-                    <span class="icon"></span><input class="ads-table__search phone" type="text" />
+                    <span class="icon"></span>
+                    <input id="phone" class="ads-table__search phone" type="text" />
                     <little-cross queryfor=".ads-table__search.phone" ></little-cross>
                     <search-hint id='hint-phone' queryfor='.ads-table__search.phone'> </search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper">
-                    <custom-select id="status">
+                    <custom-select id="statuses">
                         <option value="active+notPublicated">Активное +
                         Еще не опубликованное</option>
                         <option value="active">Активное</option>
@@ -199,7 +200,7 @@ class BigScreenRenderer {
                 </div>
                 <div class="ads-table__cell search-wrapper">
                     <span class="icon"></span>
-                    <input class="ads-table__search inn" type="text" />
+                    <input id="#inn" class="ads-table__search inn" type="text" />
                     <little-cross queryfor=".ads-table__search.inn" />
                 </div>
                 <div class="ads-table__cell search-wrapper"><input class="ads-table__search" type="text" /></div>
@@ -294,18 +295,19 @@ class BigScreenRenderer {
             .forEach(row => {
                 row.remove();
             });
+    }
+    insert(contentMarkup) {
         this.container.querySelector(".ads-table").insertAdjacentHTML("beforeend", contentMarkup);
     }
-
     render(dataToView) {
         let contentMarkup = "";
 
         for (const [index, item] of dataToView.entries()) {
             contentMarkup += this.TEMPLATE_ROW(item, index);
         }
-        try {
-            this.clear()
-        } catch {}
+
+        this.clear();
+        this.insert(contentMarkup);
     }
 }
 
@@ -431,6 +433,7 @@ class AdsTableContoller {
         const inn = document.querySelector("#inn")?.value;
         const statuses = document.querySelector("#statuses")?.getCheckedValues();
         const rubp = document.querySelector("#rubp")?.getCheckedValues();
+        console.log({ id, phoneNumber, vacancyName, inn, statuses, rubp })
         return { id, phoneNumber, vacancyName, inn, statuses, rubp };
     }
 
@@ -452,7 +455,7 @@ class AdsTableContoller {
             rubpSelect.setDefault(0);
         }
 
-        const statusSelect = document.querySelector("#status");
+        const statusSelect = document.querySelector("#statuses");
         if (statusSelect) {
             statusSelect.customOnChange = () => {
                 const values = statusSelect.getCheckedValues();
@@ -470,12 +473,39 @@ class AdsTableContoller {
 
             statusSelect?.setDefault(8);
         }
+
+        ["#id", "#phone", "#vacancy", "#inn"].forEach(id => {
+            try {
+                document.querySelector(id).addEventListener("input", () => {
+                    this.update();
+                });
+            } catch {}
+        });
+        document.querySelector("#hint-vacancy").setDataToSearch(
+            this.model.data.map(el => {
+                return el.vacancyName;
+            })
+        );
+        document.querySelector("#hint-id").setDataToSearch(
+            this.model.data.map(el => {
+                return el.id
+            })
+        )
+        document.querySelector('#hint-phone').setDataToSearch(
+            this.model.data.map(el => {return el.phones}).flat()
+        )
+        document.querySelector('#statuses').customOnInput = () => {
+            this.update();
+        }
+        document.querySelector('#rubp').customOnInput = () => {
+            this.update();
+        }
     }
 
     init() {
         this.renderer.initialRender();
-        this.setup();
         this.update();
+        this.setup();
     }
 
     update() {
@@ -483,6 +513,7 @@ class AdsTableContoller {
         const paginatedData = this.paginator.paginateContent(filteredData);
         const dataToView = paginatedData[this.paginator.currentPage - 1];
         this.renderer.render(dataToView);
+        this.paginator.redrawControlPanel(this.paginator.numberOfPages);
     }
 }
 
