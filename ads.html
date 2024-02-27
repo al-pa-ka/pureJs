@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="popup_styles.css" />
+        <link rel="stylesheet" href="media.css" />
+        <script src="./scripts/navbar.js"></script>
+        <script src="./scripts/mobile_control.js"></script>
+        <script src="./scripts/paginator.js"></script>
+        <script src="./scripts/ads_table.js"></script>
+        <script src="./scripts/filter_decorator.js"></script>
+        <script src="./scripts/utils/format_phone_number.js"></script>
+        <script src="./scripts/utils/custom-select.js"></script>
+        <script src="./scripts/little-cross.js"></script>
+        <script src="./scripts/search-hint.js"></script>
+    </head>
+    <body>
+        <main class="main-container">
+            <div class="panels">
+                <div class="first-panel">
+                    <div class="control">
+                        <div class="first-panel__control-exit">
+                            <span class="icon"></span>
+                            <p>Войти</p>
+                        </div>
+                    </div>
+                </div>
+
+                <navbar-elem style="width: 100%"> </navbar-elem>
+            </div>
+
+                <div class="content-wrapper">
+                    <div class="control-panel">
+                        <div tooltip="добавить новую вакансию" class="control-panel__segment date-from">
+                            <p class="control-panel__segment-text">ДАТА ОТ <span></span></p>
+                        </div>
+                        <div tooltip="добавить новую вакансию" class="control-panel__segment date-from">
+                            <p class="control-panel__segment-text">ДАТА ДО <span></span></p>
+                        </div>
+                        <div tooltip="ОЧИСТИТЬ ВСЕ ПОЛЯ БЫСТРОГО ПОИСКА" class="control-panel__segment deselect">
+                            <span class="icon control-panel__segment-icon"></span>
+                            <p class="control-panel__segment-text">DESELECT</p>
+                        </div>
+                        <div tooltip="количество найденных вакансий" class="control-panel__segment in-total">
+                            <span class="icon control-panel__segment-icon"></span>
+                            <p class="control-panel__segment-text">IN TOTAL: <span class="green">12424</span></p>
+                        </div>
+                        <div tooltip="импорт вакансий из xlsx" class="control-panel__segment import-button">
+                            <span class="icon control-panel__segment-icon"></span>
+                            <p class="control-panel__segment-text">IMPORT</p>
+                        </div>
+                        <div tooltip="Экспорт вакансий в xlsx" class="control-panel__segment export-button">
+                            <span class="icon control-panel__segment-icon"></span>
+                            <p class="control-panel__segment-text">EXPORT</p>
+                        </div>
+                        <div tooltip="удалить вакансии в бд" class="control-panel__segment delete-everything active">
+                            <span class="icon control-panel__segment-icon"></span>
+                            <p class="control-panel__segment-text active">DELETE EVERYTHING</p>
+                        </div>
+                    </div>
+
+                    <pagination-control></pagination-control>
+
+                    <ads-table></ads-table>
+
+                    <!-- <pagination-control></pagination-control> -->
+                </div>
+            
+        </main>
+        <mobile-ui></mobile-ui>
+    </body>
+</html>
