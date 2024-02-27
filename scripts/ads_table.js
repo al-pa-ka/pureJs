@@ -200,8 +200,9 @@ class BigScreenRenderer {
                 </div>
                 <div class="ads-table__cell search-wrapper">
                     <span class="icon"></span>
-                    <input id="#inn" class="ads-table__search inn" type="text" />
-                    <little-cross queryfor=".ads-table__search.inn" />
+                    <input id="inn" class="ads-table__search inn" type="text" />
+                    <little-cross queryfor=".ads-table__search.inn" ></little-cross>
+                    <search-hint id="hint-inn" queryfor=".inn"></search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper"><input class="ads-table__search" type="text" /></div>
                 <div class="ads-table__cell search-wrapper"><input class="ads-table__search" type="text" /></div>
@@ -433,7 +434,7 @@ class AdsTableContoller {
         const inn = document.querySelector("#inn")?.value;
         const statuses = document.querySelector("#statuses")?.getCheckedValues();
         const rubp = document.querySelector("#rubp")?.getCheckedValues();
-        console.log({ id, phoneNumber, vacancyName, inn, statuses, rubp })
+        console.log({ id, phoneNumber, vacancyName, inn, statuses, rubp });
         return { id, phoneNumber, vacancyName, inn, statuses, rubp };
     }
 
@@ -488,18 +489,27 @@ class AdsTableContoller {
         );
         document.querySelector("#hint-id").setDataToSearch(
             this.model.data.map(el => {
-                return el.id
+                return el.id;
             })
-        )
-        document.querySelector('#hint-phone').setDataToSearch(
-            this.model.data.map(el => {return el.phones}).flat()
-        )
-        document.querySelector('#statuses').customOnInput = () => {
+        );
+        document.querySelector("#hint-phone").setDataToSearch(
+            this.model.data
+                .map(el => {
+                    return el.phones;
+                })
+                .flat()
+        );
+        document.querySelector("#hint-inn").setDataToSearch(
+            this.model.data.map(el => {
+                return String(el.INN);
+            })
+        );
+        document.querySelector("#statuses").customOnInput = () => {
             this.update();
-        }
-        document.querySelector('#rubp').customOnInput = () => {
+        };
+        document.querySelector("#rubp").customOnInput = () => {
             this.update();
-        }
+        };
     }
 
     init() {
@@ -525,7 +535,7 @@ class AdsTable extends HTMLElement {
                 phones: ["89375691412", ""],
                 id: 2,
                 vacancyName: "Погрузчик",
-                description: "Таскать мешки на горбу",
+                description: "Таскать мешки",
                 RUBP_ATTRYB: "Lenta",
                 statuses: [
                     { status: "active", date: "26.05.2022" },
@@ -533,7 +543,7 @@ class AdsTable extends HTMLElement {
                 ],
                 PUBLON: 1652140860,
                 PUBLOFF: 17002990860,
-                INN: 5404091669,
+                INN: 5404092269,
                 CONTRAGENT_NAME: "ООО РБ",
                 sources: [
                     { type: "link", link: "https://web.telegram.org/k/" },
@@ -544,8 +554,10 @@ class AdsTable extends HTMLElement {
             {
                 phones: ["89375691412", ""],
                 id: 22,
-                vacancyName: "Погрузчик",
-                description: "Таскать мешки на горбу",
+                vacancyName: "Загрузчик",
+                description: `Обязанности: сбор второсырья на мусоровозе, погрузка и разгрузка, работа с накладными, обработка рабочих поверхностей, поддержание оборудования в рабочем состоянии.
+                Требования: внимательность, дисциплинированность, ответственность, без рабоих привычек, желание работать. 
+                Условия: график работы: дни работы: 5/2, время работы: 08:00-17:00, зарплата: 70000руб/мес, премия за стаж, корпоративные подарки, мероприятия, материальная помощь, адрес места работы: город Нижний Новгород, ответственный за прием на работу: Анастасия, звонить: 09:00-17:00`,
                 RUBP_ATTRYB: "Lenta",
                 statuses: [
                     { status: "active", date: "26.05.2022" },
