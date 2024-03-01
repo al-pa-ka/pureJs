@@ -1,25 +1,25 @@
 class ExportVacancies extends DeleteEverythingPopup {
-  constructor() {
-    super();
-    this.IMPORT = "import";
-    this.CANCEL = "cancel";
-    this.resolve = null;
-    this.result = null;
-    this.eventBus = null;
-  }
+    constructor() {
+        super();
+        this.IMPORT = "import";
+        this.CANCEL = "cancel";
+        this.resolve = null;
+        this.result = null;
+        this.eventBus = null;
+    }
 
-  setEventBus(eventBus) {
-    this.eventBus = eventBus;
-  }
+    setEventBus(eventBus) {
+        this.eventBus = eventBus;
+    }
 
-  setContext(context) {
-    this.context = context;
-  }
+    setContext(context) {
+        this.context = context;
+    }
 
-  insert() {
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      `
+    insert() {
+        document.body.insertAdjacentHTML(
+            "beforeend",
+            `
               <div class="popup-wrapper">
                   <div class="popup">
                       <div class="popup__mobile-control">
@@ -48,56 +48,32 @@ class ExportVacancies extends DeleteEverythingPopup {
                   </div>
               </div>
             `
-    );
-    const pseudoInput = document.querySelector(".placeholder");
-    pseudoInput.onfocus = () => {
-      const defaultValue = "Введите название файла";
-      pseudoInput.textContent =
-        pseudoInput.textContent == defaultValue ? "" : pseudoInput.textContent;
-      pseudoInput.classList.remove("placeholder");
-    };
-    pseudoInput.onblur = () => {
-      const defaultValue = "Введите название файла";
-      if (pseudoInput.textContent != defaultValue) {
-        pseudoInput.textContent = pseudoInput.textContent.endsWith(".xlsx")
-          ? pseudoInput.textContent
-          : pseudoInput.textContent + ".xlsx";
-      }
-      document.querySelector('.download').setAttribute('download', pseudoInput.textContent)
-    };
-    pseudoInput.oninput = () => {
-      const button = document.querySelector('.btn.accept.blue')
-      if (pseudoInput.textContent){
-        button.classList.remove('inactive')
-      } else {
-        button.classList.add('inactive')
-      }
+        );
     }
-  }
 
-  setContext(context) {
-    this.context = context;
-  }
+    setContext(context) {
+        this.context = context;
+    }
 
-  setup() {
-    this.popup = document.querySelector(".popup-wrapper");
-    this.popup.querySelectorAll(".cross").forEach((cross) => {
-      cross.onclick = () => {
-        this.close();
-        this.resolve(this.CANCEL);
-      };
-    });
-    this.popup.querySelector(".cancel").onclick = () => {
-      this.close();
-      this.resolve(this.CANCEL);
-    };
-    this.popup.querySelector(".accept").onclick = () => {
-      if (this.popup.querySelector(".accept").classList.contains("inactive")) {
-        return;
-      }
-      document.querySelector('.download').click()
-      this.close();
-      this.resolve(this.IMPORT);
-    };
-  }
+    setup() {
+        this.popup = document.querySelector(".popup-wrapper");
+        this.popup.querySelectorAll(".cross").forEach(cross => {
+            cross.onclick = () => {
+                this.close();
+                this.resolve(this.CANCEL);
+            };
+        });
+        this.popup.querySelector(".cancel").onclick = () => {
+            this.close();
+            this.resolve(this.CANCEL);
+        };
+        this.popup.querySelector(".accept").onclick = () => {
+            if (this.popup.querySelector(".accept").classList.contains("inactive")) {
+                return;
+            }
+            document.querySelector(".download").click();
+            this.close();
+            this.resolve(this.IMPORT);
+        };
+    }
 }

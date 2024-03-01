@@ -1,6 +1,11 @@
 class BigScreenRenderer {
     STYLE = `
         <style>
+        .description-edit:hover{
+            text-decoration: var(--blue) solid underline;
+            color: var(--blue);
+            cursor: pointer;
+        }
         .ads-table__search-icon{
             color: gray;
             font-size: 20px;
@@ -36,7 +41,7 @@ class BigScreenRenderer {
         }
         .ads-table {
             display: grid;
-            grid-template-columns: 1fr minmax(50px, 1fr) 3fr 4fr minmax(200px, 4fr) 3fr minmax(100px, 3fr) minmax(100px, 4fr) 2fr;
+            grid-template-columns: 1fr minmax(50px, 1fr) minmax(100px, 2fr) minmax(200px, 2fr) minmax(200px, 4fr) minmax(130px, 3fr) minmax(100px, 3fr) minmax(100px, 4fr) minmax(100px, 3fr);
             grid-auto-rows: minmax(50px, auto);
         }
         .ads-table__titles_wrapper {
@@ -45,6 +50,7 @@ class BigScreenRenderer {
         .ads-table__cell {
             width: 100%;
             text-wrap: wrap;
+            overflow-wrap: break-word;
             white-space: normal;
             border: 1px solid lightgray;
             padding: 5px;
@@ -92,8 +98,14 @@ class BigScreenRenderer {
         .ads-table__status_active{
             color: purple;
         }
-        .ads-table__status_finished{
+        .ads-table__status_closed{
             color: green;
+        }
+        .ads-table__status_onModeration{
+            color: purple;
+        }
+        .ads-table__status_overdue{
+            color: red;
         }
         .search-wrapper > span.icon {
             font-size: 20px;
@@ -125,10 +137,20 @@ class BigScreenRenderer {
             color: #1037FF;
             cursor: pointer;
             text-decoration: underline;
+            overflow-wrap: break-word;
         }
         .ads-table__publ-and-date{
             display: flex;
             flex-direction: column;
+        }
+        .ads-table__cell-id{
+            width: 100%;
+            white-space: normal;
+            overflow: hidden;
+            white-space: break-spaces;
+        }
+        .ads-table__cell-description{
+            overflow-wrap: break-word;
         }
         </style>`;
     constructor(container) {
@@ -136,7 +158,11 @@ class BigScreenRenderer {
         this.statusMapping = {
             active: "Активное",
             notPublicated: "Еще не опубликовано",
-            finished: "Завершенное",
+            closed: "Завершенное",
+            activeUpdated: "Активное обновленное",
+            overdue: "Просроченное",
+            forceClosed: "Завершенное (принудительное)",
+            onModeration: "На модерации",
         };
     }
     initialRender() {
@@ -210,6 +236,16 @@ class BigScreenRenderer {
         </div>
     `;
     }
+
+    formattedDateFromUnix(unixtime) {
+        const date = new Date(unixtime * 1000);
+        const day = String(date.getDay()).padStart(2, "0");
+        const month = String(date.getMonth()).padStart(2, "0");
+        const year = date.getFullYear();
+        const formatted = `${day}/${month}/${year}`;
+        return formatted;
+    }
+
     TEMPLATE_ROW = (item, index) => {
         const phones = item.phones
             .map(phone => {
@@ -225,17 +261,8 @@ class BigScreenRenderer {
             })
             .join("<br>");
 
-        const publonDate = new Date(item.PUBLON * 1000);
-        const publonDay = String(publonDate.getDay()).padStart(2, "0");
-        const publonMonth = String(publonDate.getMonth()).padStart(2, "0");
-        const publonYear = publonDate.getFullYear();
-        const formatedPublon = `${publonDay}/${publonMonth}/${publonYear}`;
-
-        const publoffDate = new Date(item.PUBLOFF * 1000);
-        const publoffDay = String(publoffDate.getDay()).padStart(2, "0");
-        const publoffMonth = String(publoffDate.getMonth()).padStart(2, "0");
-        const publoffYear = publoffDate.getFullYear();
-        const formatedPubloff = `${publoffDay}/${publoffMonth}/${publoffYear}`;
+        const formatedPublon = this.formattedDateFromUnix(item.PUBLON);
+        const formatedPubloff = this.formattedDateFromUnix(item.PUBLOFF);
 
         const links = item.sources
             .map(source => {
@@ -243,13 +270,15 @@ class BigScreenRenderer {
             })
             .join("<br>");
 
-        return `
+        return /*html*/ `
             <div class="content-row">
-                <div class="ads-table__cell"><p>${index}</p></div>
-                <div class="ads-table__cell"><p>${item.id}</p></div>
+                <div class="ads-table__cell"><p >${index}</p></div>
+                <div class="ads-table__cell"><p class="ads-table__cell-id">${item.id}</p></div>
                 <div class="ads-table__cell"><p>${item.vacancyName}</p></div>
                 <div class="ads-table__cell">
-                    <p>${item.description || ""}<span class="ads-table__edit-icon"></span></p>
+                    <p class="ads-table__cell-description description-edit" itemId='${item.id}'>${
+            item.description || ""
+        }<span class="ads-table__edit-icon"></span></p>
                     ${phones}
                 </div>
                 <div class="ads-table__cell">
@@ -321,6 +350,12 @@ class MobileRenderer extends BigScreenRenderer {
             width: 100%;
             margin-top: 20px;
         }
+        .ads-table-mobile{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
         .ads-table-mobile__search-panel{
             display: flex;
             flex-direction: column;
@@ -328,6 +363,7 @@ class MobileRenderer extends BigScreenRenderer {
             gap: 10px;
         }
         .ads-table-mobile__search-wrapper{
+            position: relative;
             display: flex;
             justify-content: space-between;
             flex-direction: row;
@@ -335,7 +371,6 @@ class MobileRenderer extends BigScreenRenderer {
             height: 50px;
             box-sizing: border-box;
             padding: 10px;
-
             width: 100%;
             border: 2px solid lightgray;
         }
@@ -350,6 +385,44 @@ class MobileRenderer extends BigScreenRenderer {
         .icon{
             color: gray;
         }
+        .ads-table-mobile__item{
+            display: grid;
+            grid-template-columns: 1fr 5fr;
+            row-gap: 10px;
+            column-gap: 15px;
+        }
+        .ads-table-mobile__item-vacancy-name{
+            grid-column: span 2;
+            background-color: var(--blue);
+            padding: 10px 0 10px 10px;
+        }
+        span.ads-table-mobile-item-vacancy-name{
+            color: white;
+        }
+        .ads-table-mobile__item-title > span{
+            color: #9C9C9C;
+        }
+        .ads-table-mobile__item-title{
+            padding-left: 10px;
+        }
+        .ads-table-mobile__item-statuses{
+            display: flex;
+            flex-direction: column;
+            row-gap: 9px;
+        }
+        .ads-table__publon-container, .ads-table__publoff-container, .ads-table__inn-container{
+            display: flex;
+            flex-direction: column;
+        }
+        .ads-table-mobile__item-publ-and-inn{
+            display: flex;
+            flex-direction: column;
+            row-gap: 10px;
+        }
+        .ads-table__cell_mobile{
+            display: flex;
+            flex-direction: column;
+        }
     </style>
     `;
     CONTROL_TEMPLATE = /*html*/ `
@@ -359,39 +432,136 @@ class MobileRenderer extends BigScreenRenderer {
                 <span class="ads-table__search-icon"></span>
                 <input placeholder="id" id="id" class="ads-table__search ads-table-mobile__search" type="text" name="" id="" />
                 <little-cross queryfor="#id"></little-cross>
-                <search-hint id="hint-id" queryfor=".ads-table__search.id"></search-hint>
+                <search-hint id="hint-id" queryfor="#id"></search-hint>
             </div>
 
             <div class="ads-table-mobile__search-wrapper">
                 <span class="ads-table__search-icon"></span>
                 <input placeholder="Название вакансии" id="vacancy" class="ads-table__search ads-table-mobile__search" type="text" name="" id="" />
                 <little-cross queryfor="#vacancy"></little-cross>
-                <search-hint id="hint-id" queryfor=".ads-table__search.id"></search-hint>
+                <search-hint id="hint-vacancy" queryfor="#vacancy"></search-hint>
             </div>
 
             <div class="ads-table-mobile__search-wrapper">
                 <span class="ads-table__search-icon"></span>
                 <input placeholder="Телефон" id="phone" class="ads-table__search ads-table-mobile__search" type="text" name="" id="" />
                 <little-cross queryfor="#phone"></little-cross>
-                <search-hint id="hint-id" queryfor=".ads-table__search.id"></search-hint>
+                <search-hint id="hint-phone" queryfor="#phone"></search-hint>
             </div>
 
             <div class="ads-table-mobile__search-wrapper">
                 <span class="ads-table__search-icon"></span>
                 <input placeholder="ИНН" id="inn" class="ads-table__search ads-table-mobile__search" type="text" name="" id="" />
                 <little-cross queryfor="#inn"></little-cross>
-                <search-hint id="hint-id" queryfor=".ads-table__search.id"></search-hint>
+                <search-hint id="hint-inn" queryfor="#inn"></search-hint>
             </div>
         </div>
         <div class="ads-table-mobile"></div>
     `;
-    TEMPLATE_ROW = () => {
-        return ``;
+    TEMPLATE_ROW = (item, index) => {
+        const phonesMarkup = item.phones
+            ?.map(phone => {
+                return /*html*/ `
+                <span class="ads-table__phone">${formatPhoneNumber(phone)}</span>
+            `;
+            })
+            .join("<br>");
+        const statusesMarkup = item.statuses
+            .map(status => {
+                return `<span class="ads-table__status ads-table__status_${status.status}">${this.statusMapping[status.status]} ${
+                    status.date
+                }</span>`;
+            })
+            .join("");
+
+        const links = item.sources
+            .map(source => {
+                return `<a href="${source.link}" class="ads-table__${source.type}">${source.link}</a>`;
+            })
+            .join("<br>");
+
+        const formatedPublon = this.formattedDateFromUnix(item.PUBLON);
+        const formatedPubloff = this.formattedDateFromUnix(item.PUBLOFF);
+
+        return /*html*/ `
+            <div class="ads-table-mobile__item">
+                <div class="ads-table-mobile__item-vacancy-name">
+                    <span class="ads-table-mobile-item-vacancy-name">${item.vacancyName}</span>
+                </div>
+                <div class="ads-table-mobile__item-title">
+                    <span>№</span>
+                </div>
+                <div class="ads-table-mobile__item-info ads-table-mobile__item-number">${index}</div>
+                <div class="ads-table-mobile__item-title">
+                    <span>ID</span>
+                </div>
+                <div class="ads-table-mobile__item-info ads-table-mobile__item-id">${item.id}</div>
+                <div class="ads-table-mobile__item-title">
+                    <span>Дата</span>
+                </div>
+                <div class="ads-table-mobile__item-info ads-table-mobile__item-data"></div>
+                <div class="ads-table-mobile__item-title">
+                    <span>Описание/Телефоны</span>
+                </div>
+                <div class="ads-table-mobile__item-info ads-table-mobile__item-description-phones">
+                    <p class="description-edit" itemId='${item.id}'>${item.description}</p><br>
+                    ${phonesMarkup}
+                </div>
+                <div class="ads-table-mobile__item-title">
+                    <span>Статус</span>
+                </div>
+                <div class="ads-table-mobile__item-info ads-table-mobile__item-statuses">
+                    ${statusesMarkup}
+                </div>
+                <div class="ads-table-mobile__item-title">
+                    <span>RUBR_ATRYB</span>
+                </div>
+                <div class="ads-table-mobile__item-info ads-table-mobile__item-rubp">
+                    ${item.RUBP_ATTRYB}
+                </div>
+                <div class="ads-table-mobile__item-title">
+                    <span>PUBLON/ PUBLOFF/ ИНН И НАЗВАНИЕ КОНТРАГЕНТА</span>
+                </div>
+                <div class="ads-table-mobile__item-info ads-table-mobile__item-publ-and-inn">
+                    <div class="ads-table__publon-container">
+                        <span>${item.PUBLON}</span>
+                        <span>${formatedPublon}</span>
+                    </div>
+                    <div class="ads-table__publon-container">
+                        <span>${item.PUBLOFF}</span>
+                        <span>${formatedPubloff}</span>
+                    </div>
+                    <div class="ads-table__inn-container">
+                        <span>${item.INN}</span>
+                        <span>${item.CONTRAGENT_NAME}</span>
+                    </div>
+                </div>
+                <div class="ads-table-mobile__item-title">
+                    <span>Файл/ссылка на сайт</span>
+                </div>
+                <div class="ads-table-mobile__item-info">
+                    ${links}
+                </div>
+                <div class="ads-table-mobile__item-title">
+                    <span>Префикс/ счет/ дата счета </span>
+                </div>
+                <div class="ads-table__cell_mobile">
+                    <span class="ads-table__account-prefix">${item.account.id.replace(/[^A-zА-я]+/g, "")}</span>
+                    <span class="ads-table__account-id">${item.account.id}</span>
+                    <span class="ads-table__account-date">${item.account.date}</span>
+                </div>
+            </div>
+        `;
     };
     initialRender() {
         this.container.innerHTML = this.CONTROL_TEMPLATE;
     }
-    render() {}
+    clear() {
+        this.container.querySelector(".ads-table-mobile").innerText = "";
+    }
+    insert(contentMarkup) {
+        this.container.querySelector(".ads-table-mobile").insertAdjacentHTML("beforeend", contentMarkup);
+    }
 }
 
 class AdsTableModel {
@@ -413,6 +583,12 @@ class AdsTableModel {
             filterData.rubp
         ).filter();
     }
+    async getData() {
+        const response = await fetch("./data.json", {
+            method: "GET",
+        });
+        return await response.json();
+    }
 }
 
 class AdsTableContoller {
@@ -422,9 +598,22 @@ class AdsTableContoller {
         this.paginator = paginatorController;
     }
 
+    clearSearch() {
+        ["#id", "#phone", "#vacancy", "#inn"].forEach(input => {
+            const inp = document.querySelector(input);
+            inp.value = "";
+            inp.dispatchEvent(new Event("input"));
+        });
+    }
+
     setRenderStrategy(renderStrategy) {
         this.renderer = renderStrategy;
         this.init();
+    }
+
+    deleteEverything() {
+        this.model.data = [];
+        this.update();
     }
 
     collectFilterData() {
@@ -434,7 +623,6 @@ class AdsTableContoller {
         const inn = document.querySelector("#inn")?.value;
         const statuses = document.querySelector("#statuses")?.getCheckedValues();
         const rubp = document.querySelector("#rubp")?.getCheckedValues();
-        console.log({ id, phoneNumber, vacancyName, inn, statuses, rubp });
         return { id, phoneNumber, vacancyName, inn, statuses, rubp };
     }
 
@@ -450,10 +638,10 @@ class AdsTableContoller {
                     rubpSelect.setValue(rubpSelect.computeValue());
                 }
             };
+            rubpSelect.setDefault(0);
             rubpSelect.customOnInput = () => {
                 this.update();
             };
-            rubpSelect.setDefault(0);
         }
 
         const statusSelect = document.querySelector("#statuses");
@@ -504,12 +692,20 @@ class AdsTableContoller {
                 return String(el.INN);
             })
         );
-        document.querySelector("#statuses").customOnInput = () => {
-            this.update();
-        };
-        document.querySelector("#rubp").customOnInput = () => {
-            this.update();
-        };
+
+        const statuses = document.querySelector("#statuses");
+        const rubp = document.querySelector("#rubp");
+
+        if (statuses) {
+            statuses.customOnInput = () => {
+                this.update();
+            };
+        }
+        if (rubp) {
+            rubp.customOnInput = () => {
+                this.update();
+            };
+        }
     }
 
     init() {
@@ -518,11 +714,29 @@ class AdsTableContoller {
         this.setup();
     }
 
+    setupRows() {
+        document.body.querySelectorAll(".description-edit").forEach(description => {
+            description.onclick = () => {
+                const editPopup = document.createElement("edit-text");
+                editPopup.setAttribute("value", description.textContent);
+                editPopup.setCallback(value => {
+                    if (value != null) {
+                        const id = Number(description.getAttribute("itemId"));
+                        this.model.data[id].description = value;
+                        this.update();
+                    }
+                });
+                document.body.append(editPopup);
+            };
+        });
+    }
+
     update() {
         const filteredData = this.model.filter(this.collectFilterData());
         const paginatedData = this.paginator.paginateContent(filteredData);
         const dataToView = paginatedData[this.paginator.currentPage - 1];
         this.renderer.render(dataToView);
+        this.setupRows();
         this.paginator.redrawControlPanel(this.paginator.numberOfPages);
     }
 }
@@ -530,58 +744,17 @@ class AdsTableContoller {
 class AdsTable extends HTMLElement {
     constructor() {
         super();
-        this.model = new AdsTableModel([
-            {
-                phones: ["89375691412", ""],
-                id: 2,
-                vacancyName: "Погрузчик",
-                description: "Таскать мешки",
-                RUBP_ATTRYB: "Lenta",
-                statuses: [
-                    { status: "active", date: "26.05.2022" },
-                    { status: "notPublicated", date: "25.04.2020" },
-                ],
-                PUBLON: 1652140860,
-                PUBLOFF: 17002990860,
-                INN: 5404092269,
-                CONTRAGENT_NAME: "ООО РБ",
-                sources: [
-                    { type: "link", link: "https://web.telegram.org/k/" },
-                    { type: "file", link: "str_ob_20220829__111 понедельник_form_20220901__011624.xml" },
-                ],
-                account: { id: "ОМ0000022962", date: "08.05.2023" },
-            },
-            {
-                phones: ["89375691412", ""],
-                id: 22,
-                vacancyName: "Загрузчик",
-                description: `Обязанности: сбор второсырья на мусоровозе, погрузка и разгрузка, работа с накладными, обработка рабочих поверхностей, поддержание оборудования в рабочем состоянии.
-                Требования: внимательность, дисциплинированность, ответственность, без рабоих привычек, желание работать. 
-                Условия: график работы: дни работы: 5/2, время работы: 08:00-17:00, зарплата: 70000руб/мес, премия за стаж, корпоративные подарки, мероприятия, материальная помощь, адрес места работы: город Нижний Новгород, ответственный за прием на работу: Анастасия, звонить: 09:00-17:00`,
-                RUBP_ATTRYB: "Lenta",
-                statuses: [
-                    { status: "active", date: "26.05.2022" },
-                    { status: "notPublicated", date: "25.04.2020" },
-                ],
-                PUBLON: 1652140860,
-                PUBLOFF: 17002990860,
-                INN: 5404091669,
-                CONTRAGENT_NAME: "ООО РБ",
-                sources: [
-                    { type: "link", link: "https://web.telegram.org/k/" },
-                    { type: "file", link: "str_ob_20220829__111 понедельник_form_20220901__011624.xml" },
-                ],
-                account: { id: "ОМ0000022962", date: "08.05.2023" },
-            },
-        ]);
+        this.model = new AdsTableModel();
         this.renderer = window.innerWidth > this.RENDER_THRESHOLD ? new BigScreenRenderer(this) : new MobileRenderer(this);
         const paginator = document.querySelector("pagination-control");
         this.controller = new AdsTableContoller(this.model, this.renderer, paginator);
     }
 
-    RENDER_THRESHOLD = 1000;
+    RENDER_THRESHOLD = 1100;
 
-    connectedCallback() {
+    async connectedCallback() {
+        const data = await this.model.getData();
+        this.model.data = data;
         this.controller.init();
         window.addEventListener("resize", () => {
             if (window.innerWidth > this.RENDER_THRESHOLD && this.controller.renderer instanceof MobileRenderer) {

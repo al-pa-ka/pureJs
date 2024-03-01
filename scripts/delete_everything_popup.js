@@ -1,15 +1,15 @@
 class DeleteEverythingPopup {
-  CANCEL = "cancel";
-  DELETE = "delete";
-  constructor() {
-    this.resolve = null;
-    this.popup = null;
-  }
+    CANCEL = "cancel";
+    DELETE = "delete";
+    constructor() {
+        this.resolve = null;
+        this.popup = null;
+    }
 
-  insert() {
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      `
+    insert() {
+        document.body.insertAdjacentHTML(
+            "beforeend",
+            `
       <div class="popup-wrapper">
         <div class="popup">
             <div class="popup__mobile-control">
@@ -36,34 +36,34 @@ class DeleteEverythingPopup {
       </div>
     </div>
       `
-    );
-  }
-  close() {
-    this.popup.remove();
-  }
-  setup() {
-    this.popup = document.querySelector(".popup-wrapper");
-    this.popup.querySelectorAll(".cross").forEach((cross) => {
-      cross.onclick = () => {
-        this.close();
-        this.resolve(this.CANCEL);
-      };
-    });
-    this.popup.querySelector(".cancel").onclick = () => {
-      this.close();
-      this.resolve(this.CANCEL);
-    };
-    this.popup.querySelector(".accept").onclick = () => {
-      this.close();
-      this.resolve(this.DELETE);
-    };
-  }
+        );
+    }
+    close() {
+        this.popup.remove();
+    }
+    setup() {
+        this.popup = document.querySelector(".popup-wrapper");
+        this.popup.querySelectorAll(".cross").forEach(cross => {
+            cross.onclick = () => {
+                this.close();
+                this.resolve(this.CANCEL);
+            };
+        });
+        this.popup.querySelector(".cancel").onclick = () => {
+            this.close();
+            this.resolve(this.CANCEL);
+        };
+        this.popup.querySelector(".accept").onclick = () => {
+            this.close();
+            this.resolve(this.DELETE);
+        };
+    }
 
-  async open() {
-    return new Promise((resolve) => {
-      this.resolve = resolve;
-      this.insert();
-      this.setup();
-    });
-  }
+    async open() {
+        return new Promise(resolve => {
+            this.resolve = resolve;
+            this.insert();
+            this.setup();
+        });
+    }
 }
