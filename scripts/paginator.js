@@ -1,18 +1,102 @@
-class Paginator extends HTMLElement {
-    constructor() {
-        super();
-        this.currentPage = 1;
-        this.numberOfPages = 1;
-        this.callback = () => {};
-        // this.pagination = (items) => {
+class DrawStrategy {
+    constructor(container) {
+        this.container = container;
+    }
+    drawPages() {}
+    drawFromTo(from, to, activePage) {
+        const pivotElement = this.getPivot();
+        for (let index = from; index <= to; index++) {
+            const pageNumber = document.createElement("div");
+            pageNumber.classList.add("pagination__page-number");
+            pageNumber.textContent = index;
+            pageNumber.setAttribute("index", index);
+            console.log(`active page - is ${activePage}`);
+            index == activePage ? pageNumber.classList.add("active") : null;
+            pivotElement.insertAdjacentElement("beforebegin", pageNumber);
+        }
+    }
 
-        // }
+    getPivot() {
+        const pagination = this.container.querySelector(".pagination");
+        const pages = pagination.querySelectorAll(".page-control-element");
+        const pivotElement = pages[pages.length - 2];
+        return pivotElement;
     }
-    connectedCallback() {
-        this.paginateAlias = this.paginate
-        this.render();
+}
+
+class DefaultDrawStrategy extends DrawStrategy {
+    constructor(container, pagesToDraw) {
+        super(container);
+        this.pagesToDraw = pagesToDraw;
     }
-    render() {
+    drawPages() {
+        this.drawFromTo(1, this.pagesToDraw);
+    }
+}
+
+class OverflowDrawStrategy extends DrawStrategy {
+    constructor(container, pagesToDraw, currentPage, pagesCanBeDrawed) {
+        super(container);
+        this.pagesToDraw = pagesToDraw;
+        this.currentPage = currentPage;
+        this.pagesCanBeDrawed = pagesCanBeDrawed;
+    }
+
+    drawEllipses(index) {
+        const pivotElement = this.getPivot();
+        const ellipsis = document.createElement("div");
+        ellipsis.classList.add("pagination__page-number");
+        ellipsis.classList.add("ellipsis");
+        ellipsis.setAttribute("index", index);
+        ellipsis.textContent = "...";
+        pivotElement.insertAdjacentElement("beforebegin", ellipsis);
+    }
+
+    drawPages() {
+        const countOfPagesFromCurrentPagesToEnd = Number(this.pagesToDraw) - Number(this.currentPage);
+        if (countOfPagesFromCurrentPagesToEnd <= this.pagesCanBeDrawed) {
+            const startPage = this.pagesToDraw - this.pagesCanBeDrawed;
+            this.drawFromTo(startPage, this.pagesToDraw);
+        } else {
+            const countOfPagesBeforeEllipsis = Number(this.pagesCanBeDrawed) - 2;
+            this.drawFromTo(this.currentPage, Number(this.currentPage) + Number(countOfPagesBeforeEllipsis), this.currentPage);
+            this.drawEllipses(this.currentPage + countOfPagesBeforeEllipsis);
+            this.drawFromTo(this.pagesToDraw, this.pagesToDraw);
+        }
+    }
+}
+
+class OverflowDrawStrategyWithThresholds extends OverflowDrawStrategy {
+    constructor(container, pagesToDraw, currentPage, pagesCanBeDrawed) {
+        super(container, pagesToDraw, currentPage, pagesCanBeDrawed);
+    }
+    drawPages() {
+        const countOfPagesFromCurrentPagesToEnd = this.pagesToDraw - this.currentPage;
+        if (countOfPagesFromCurrentPagesToEnd < this.pagesCanBeDrawed) {
+            const startPage = this.pagesToDraw - this.pagesCanBeDrawed;
+            this.drawFromTo(startPage + 1, this.pagesToDraw, this.currentPage);
+        } else {
+            const countOfPagesBeforeEllipsis = this.pagesCanBeDrawed - 2;
+            const numberOfRange = Math.floor((this.currentPage - 1) / countOfPagesBeforeEllipsis);
+            const startPage = countOfPagesBeforeEllipsis * numberOfRange + 1;
+            this.drawFromTo(startPage, startPage + countOfPagesBeforeEllipsis - 1, this.currentPage);
+            this.drawEllipses(startPage + countOfPagesBeforeEllipsis);
+            this.drawFromTo(this.pagesToDraw, this.pagesToDraw);
+            console.log(`from - ${startPage} to - ${startPage + countOfPagesBeforeEllipsis}`);
+            console.log(
+                `can be drawed - ${this.pagesCanBeDrawed} type - ${typeof this.pagesCanBeDrawed} current page - ${this.currentPage} ${typeof this
+                    .currentPage} number of range - ${numberOfRange} start page - ${startPage}`
+            );
+        }
+    }
+}
+
+class PaginatorRenderer {
+    constructor(container, numberOfPages) {
+        this.container = container;
+        this.numberOfPages = numberOfPages;
+    }
+    initialRender() {
         const styles = `
             <style>
                 @media (width <= 750px) {
@@ -163,7 +247,7 @@ class Paginator extends HTMLElement {
                 }
             </style>
         `;
-        this.innerHTML =
+        this.container.innerHTML =
             `
                 <div class="pagination">
                     <div class="pagination__specify-page">
@@ -188,88 +272,66 @@ class Paginator extends HTMLElement {
                 </div>
             ` + styles;
     }
-    setPageChangedCallback(callable) {
-        this.callback = callable;
-    }
-    onCurrentPageChanged() {
-        this.callback();
-        this.setClassToCurrentPage(this.currentPage);
-        this.setStateToControl(this.numberOfPages);
-    }
     deleteLastPages() {
-        document.querySelectorAll(".pagination").forEach(el => {
-            el.querySelectorAll(".pagination__page-number").forEach(el => {
-                if (!el.classList.contains("page-control-element")) {
-                    el.remove();
-                }
-            });
+        this.container.querySelectorAll(".pagination__page-number:not(.page-control-element)").forEach(el => {
+            el.remove();
         });
     }
-    setStateToControl(numberOfPages) {
-        document.querySelectorAll(".pagination").forEach(el => {
-            const controlElements = el.querySelectorAll(
-                ".pagination__page-number.page-control-element"
-            );
-            if (this.currentPage > 1) {
-                Array.from(controlElements)
-                    .slice(0, 2)
-                    .forEach(el => {
-                        el.classList.remove("inactive");
-                    });
-            } else {
-                Array.from(controlElements)
-                    .slice(0, 2)
-                    .forEach(el => {
-                        el.classList.add("inactive");
-                    });
-            }
-            if (this.currentPage == this.numberOfPages) {
-                Array.from(controlElements)
-                    .slice(2, 4)
-                    .forEach(el => {
-                        el.classList.add("inactive");
-                    });
-            } else {
-                Array.from(controlElements)
-                    .slice(2, 4)
-                    .forEach(el => {
-                        el.classList.remove("inactive");
-                    });
-            }
-        });
-    }
-    drawPages(numberOfPages) {
-        const pagesControlContainer = document.querySelector(".pagination__pages-control");
-        const containerWidth = pagesControlContainer;
-        const numberOfPagesToDraw = document.querySelectorAll(".pagination").forEach(el => {
-            for (let index of Array.from(Array(numberOfPages).keys()).reverse()) {
-                el.querySelectorAll(
-                    ".pagination__page-number.page-control-element"
-                )[1].insertAdjacentHTML(
-                    "afterend",
-                    `<div class="pagination__page-number"><p>${Number(index) + 1}</p></div>`
-                );
-            }
-        });
-    }
-    redrawControlPanel(numberOfPages) {
+    render(currentPage) {
         this.deleteLastPages();
-        this.setStateToControl(numberOfPages);
-        this.drawPages(numberOfPages);
-        this.redrawPageInput();
+        this.drawPages(this.numberOfPages, currentPage);
+    }
+    calculatePagesCanBeDrawed() {
+        const pagesControlContainer = this.container.querySelector(".pagination__pages-control");
+        pagesControlContainer.style.setProperty("flex", "1");
+        const availableWidth = pagesControlContainer.clientWidth;
+        pagesControlContainer.style.setProperty("flex", "0");
+        const numberOfPagesCanDraw = Math.floor(availableWidth / 60) - 4;
+        return numberOfPagesCanDraw;
+    }
+    drawPages(numberOfPages, currentPage) {
+        const numberOfPagesCanDraw = this.calculatePagesCanBeDrawed();
+
+        if (numberOfPages > numberOfPagesCanDraw) {
+            new OverflowDrawStrategyWithThresholds(this.container, numberOfPages, currentPage, numberOfPagesCanDraw).drawPages();
+        } else {
+            console.log(`${numberOfPages} < ${numberOfPagesCanDraw} default draw`);
+            new DefaultDrawStrategy(this.container, numberOfPages).drawPages();
+        }
+    }
+}
+
+class Paginator extends HTMLElement {
+    constructor() {
+        super();
+        this.currentPage = 1;
+        this.numberOfPages = 1;
+        this.paginationRender = new PaginatorRenderer(this, this.numberOfPages);
+        this.callback = () => {};
+        this.prevRenderCall = null;
+    }
+    connectedCallback() {
+        this.paginationRender.initialRender();
+        this.paginationRender.render();
+    }
+
+    update() {
+        this.paginationRender = new PaginatorRenderer(this, this.numberOfPages);
+        this.paginationRender.render(this.currentPage);
         this.setupControl();
     }
 
-    redrawPageInput() {
-        const specifyPage = document.querySelectorAll(".pagination__specify-page");
-        specifyPage.forEach(el => {
-            const specifyPageInput = el.querySelector("input");
-            specifyPageInput.dispatchEvent(new Event("input", {}));
-        });
+    setPageChangedCallback(callable) {
+        this.callback = callable;
+    }
+
+    onCurrentPageChanged() {
+        this.callback();
+        this.update();
     }
 
     setupPageInput() {
-        const specifyPage = document.querySelectorAll(".pagination__specify-page");
+        const specifyPage = this.querySelectorAll(".pagination__specify-page");
         specifyPage.forEach(el => {
             const specifyPageInput = el.querySelector("input");
             const specifyPageGoButton = el.querySelector(".pagination__go-button");
@@ -284,11 +346,7 @@ class Paginator extends HTMLElement {
 
             specifyPageInput.oninput = () => {
                 const convertedUserInput = Number(specifyPageInput.value);
-                if (
-                    !isNaN(convertedUserInput) &&
-                    convertedUserInput >= 1 &&
-                    convertedUserInput <= this.numberOfPages
-                ) {
+                if (!isNaN(convertedUserInput) && convertedUserInput >= 1 && convertedUserInput <= this.numberOfPages) {
                     specifyPageGoButton.classList.remove("inactive");
                 } else {
                     specifyPageGoButton.classList.add("inactive");
@@ -299,14 +357,12 @@ class Paginator extends HTMLElement {
 
     setupControl() {
         this.setupPageInput();
-        document.querySelectorAll(".pagination").forEach(paginationElement => {
+        this.querySelectorAll(".pagination").forEach(paginationElement => {
             const prev = 0,
                 first = 1,
                 last = 2,
                 next = 3;
-            const controlElements = paginationElement.querySelectorAll(
-                ".pagination__page-number.page-control-element"
-            );
+            const controlElements = paginationElement.querySelectorAll(".pagination__page-number.page-control-element");
             controlElements[prev].onclick = () => {
                 if (this.currentPage > 1) {
                     this.currentPage--;
@@ -318,7 +374,6 @@ class Paginator extends HTMLElement {
                 this.onCurrentPageChanged();
             };
             controlElements[last].onclick = () => {
-                console.log(this.numberOfPages);
                 this.currentPage = this.numberOfPages;
                 this.onCurrentPageChanged();
             };
@@ -328,29 +383,23 @@ class Paginator extends HTMLElement {
                     this.onCurrentPageChanged();
                 }
             };
-            const pageNumbers = paginationElement.querySelectorAll(
-                ".pagination__page-number:not(.page-control-element)"
-            );
+            const pageNumbers = paginationElement.querySelectorAll(".pagination__page-number:not(.page-control-element)");
             pageNumbers.forEach(pageNumber => {
                 pageNumber.onclick = event => {
-                    this.currentPage = Number(event.target.textContent);
+                    const pageNumberToBeSetted = event.target.getAttribute("index");
+                    this.currentPage = Number(pageNumberToBeSetted);
                     this.onCurrentPageChanged();
                 };
             });
-        });
-
-        this.setClassToCurrentPage(this.currentPage);
-    }
-
-    setClassToCurrentPage(pageNumber) {
-        document.querySelectorAll(".pagination__page-number").forEach(el => {
-            if (Number(el.textContent) == pageNumber) {
-                el.classList.add("active");
-            } else {
-                el.classList.remove("active");
-            }
+            window.addEventListener("resize", () => {
+                clearTimeout(this.prevRenderCall);
+                this.prevRenderCall = setTimeout(() => {
+                    this.update();
+                }, 100);
+            });
         });
     }
+
     paginateContent(itemsArray) {
         const itemsInPage = 500;
         const pages = [];

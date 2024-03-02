@@ -706,6 +706,9 @@ class AdsTableContoller {
                 this.update();
             };
         }
+        this.paginator.setPageChangedCallback(() => {
+            this.update();
+        });
     }
 
     init() {
@@ -737,7 +740,7 @@ class AdsTableContoller {
         const dataToView = paginatedData[this.paginator.currentPage - 1];
         this.renderer.render(dataToView);
         this.setupRows();
-        this.paginator.redrawControlPanel(this.paginator.numberOfPages);
+        this.paginator.update();
     }
 }
 
