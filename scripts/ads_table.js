@@ -1,5 +1,5 @@
 class BigScreenRenderer {
-    STYLE = `
+    STYLE = /*html*/ `
         <style>
         .description-edit:hover{
             text-decoration: var(--blue) solid underline;
@@ -41,7 +41,7 @@ class BigScreenRenderer {
         }
         .ads-table {
             display: grid;
-            grid-template-columns: 1fr minmax(50px, 1fr) minmax(100px, 2fr) minmax(200px, 2fr) minmax(200px, 4fr) minmax(130px, 3fr) minmax(100px, 3fr) minmax(100px, 4fr) minmax(100px, 3fr);
+            grid-template-columns: 1fr minmax(50px, 1fr) minmax(200px, 2fr) minmax(200px, 2fr) minmax(200px, 2fr) minmax(130px, 1fr) minmax(100px, 3fr) minmax(100px, 3fr) minmax(80px, 2fr);
             grid-auto-rows: minmax(50px, auto);
         }
         .ads-table__titles_wrapper {
@@ -90,6 +90,11 @@ class BigScreenRenderer {
             width: 100%;
         }
         .ads-table__phone{
+            color: #1037FF;
+            cursor: pointer;
+        }
+        .ads-table__phone:hover{
+            /* text-decoration: underline; */
             color: var(--blue);
         }
         .ads-table__status_notPublicated{
@@ -118,6 +123,14 @@ class BigScreenRenderer {
             display: flex;
             flex-direction: column;
             gap: 10px;
+        }
+        .ads-table__inn{
+            color: #1037FF;
+            display: block;
+            cursor: pointer;
+        }
+        .ads-table__inn:hover{
+            color: var(--blue);
         }
         .ads-table__inn-contragent{
             display: flex;
@@ -177,7 +190,9 @@ class BigScreenRenderer {
                 <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">СТАТУС</p></div>
                 <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">RUBP_ATRYB</p></div>
                 <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">PUBLON/ PUBLOFF ИНН И НАЗВАНИЕ КОНТРАГЕНТА</p></div>
-                <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">ФАЙЛ/ССЫЛКА НА САЙТ</p></div>
+                <div class="ads-table__title ads-table__cell">
+                    <p class="ads-table__title-text" style="text-transform: uppercase;">ФАЙЛ / ССЫЛКА НА САЙТ<br> Рубрика начальная/Рубрика новая/Рубрика номер</p>
+                </div>
                 <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">ПРЕФИКС/СЧЕТ/ДАТА СЧЕТА</p></div>
             </div>
             <div class="ads-table__search-wrapper">
@@ -231,7 +246,7 @@ class BigScreenRenderer {
                     <search-hint id="hint-inn" queryfor=".inn"></search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper"><input class="ads-table__search" type="text" /></div>
-                <div class="ads-table__cell search-wrapper"><input class="ads-table__search" type="text" /></div>
+                <div class="ads-table__cell search-wrapper"><input id="prefix-account" class="ads-table__search" type="text" /></div>
             </div>
         </div>
     `;
@@ -301,18 +316,20 @@ class BigScreenRenderer {
                     <div class="ads-table__inn-contragent">
                         <span class="ads-table__inn">
                             ${item.INN}
-                            <a style="text-decoration: none;" href="contragents/${item.INN}"><span class="ads-table__edit-icon"></span></a>
                         </span>
                         <span class="ads-table__contragent-name"> ${item.CONTRAGENT_NAME} </span>
+                        <a style="text-decoration: none;" href="contragents/${item.INN}"><span class="ads-table__edit-icon"></span></a>
                     </div>
                 </div>
                 <div class="ads-table__cell">
                     ${links}
                 </div>
                 <div class="ads-table__cell">
-                    <span class="ads-table__account-prefix">${item.account.id.replace(/[^A-zА-я]+/g, "")}</span>
-                    <span class="ads-table__account-id">${item.account.id}</span>
-                    <span class="ads-table__account-date">${item.account.date}</span>
+                    <div style="display: flex; flex-direction: column;">
+                        <span class="ads-table__account-prefix">${item.account.id.replace(/[^A-zА-я]+/g, "")}</span>
+                        <span class="ads-table__account-id">${item.account.id}</span>
+                        <span class="ads-table__account-date">${item.account.date}</span>
+                    </div>
                 </div>
             </div>
         `;
@@ -567,6 +584,7 @@ class MobileRenderer extends BigScreenRenderer {
 class AdsTableModel {
     constructor(data) {
         this.data = data;
+        this.inputs = null;
     }
     filter(filterData) {
         return new FilterByRubp(
@@ -596,13 +614,12 @@ class AdsTableContoller {
         this.model = model;
         this.renderer = renderStrategy;
         this.paginator = paginatorController;
+        this.inputs = new Map();
     }
 
     clearSearch() {
-        ["#id", "#phone", "#vacancy", "#inn"].forEach(input => {
-            const inp = document.querySelector(input);
-            inp.value = "";
-            inp.dispatchEvent(new Event("input"));
+        this.inputs.forEach(input => {
+            input.value = "";
         });
     }
 
@@ -627,6 +644,18 @@ class AdsTableContoller {
     }
 
     setup() {
+        this.inputs.set("id", new InputDecorator(document.querySelector("#id")));
+        this.inputs.set("phone", new PhoneInputDecorator(document.querySelector("#phone")));
+        this.inputs.set("vacancy", new InputDecorator(document.querySelector("#vacancy")));
+        this.inputs.set("inn", new InputDecorator(document.querySelector("#inn")));
+        this.inputs.set("prefix-account", new InputDecorator(document.querySelector("#prefix-account")));
+
+        this.inputs.forEach((value, _) => {
+            value.oninput = () => {
+                this.update();
+            };
+        });
+
         const rubpSelect = document.querySelector("#rubp");
         if (rubpSelect) {
             rubpSelect.customOnChange = () => {
@@ -663,13 +692,6 @@ class AdsTableContoller {
             statusSelect?.setDefault(8);
         }
 
-        ["#id", "#phone", "#vacancy", "#inn"].forEach(id => {
-            try {
-                document.querySelector(id).addEventListener("input", () => {
-                    this.update();
-                });
-            } catch {}
-        });
         document.querySelector("#hint-vacancy").setDataToSearch(
             this.model.data.map(el => {
                 return el.vacancyName;
@@ -686,6 +708,9 @@ class AdsTableContoller {
                     return el.phones;
                 })
                 .flat()
+                .map(phone => {
+                    return phone.replace(/[^[0-9+]/g, "");
+                })
         );
         document.querySelector("#hint-inn").setDataToSearch(
             this.model.data.map(el => {
@@ -730,6 +755,16 @@ class AdsTableContoller {
                     }
                 });
                 document.body.append(editPopup);
+            };
+        });
+        document.body.querySelectorAll(".ads-table__phone").forEach(phone => {
+            phone.onclick = () => {
+                this.inputs.get("phone").value = phone.textContent;
+            };
+        });
+        document.body.querySelectorAll(".ads-table__inn").forEach(inn => {
+            inn.onclick = () => {
+                this.inputs.get("inn").value = inn.textContent.trim();
             };
         });
     }

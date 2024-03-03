@@ -42,7 +42,9 @@ class FilterPhoneNumberDecorator {
         if (this.value) {
             return this.prevFilter.filter().filter(el => {
                 const matchPhones = el.phones.filter(phone => {
-                    return String(phone).startsWith(this.value);
+                    const clearedPhoneValue = phone.replace(/[^0-9+]+/g, "");
+                    const clearedValue = this.value.replace(/[^0-9+]+/g, "");
+                    return clearedPhoneValue.startsWith(clearedValue);
                 });
                 return matchPhones.length;
             });

@@ -45,8 +45,6 @@ class SearchHint extends HTMLElement {
             };
             row.onmouseup = () => {
                 if (this.bufferToMouseDownElement == row) {
-                    console.log("mouseup");
-                    console.log(row.getAttribute("value"));
                     this.inputToAutoFill.value = row.getAttribute("value");
                     this.inputToAutoFill.dispatchEvent(new Event("input"));
                     this.inputToAutoFill.blur();
@@ -57,11 +55,9 @@ class SearchHint extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log("start connect");
         const inputSelector = this.getAttribute("queryfor");
         this.inputToAutoFill = document.querySelector(inputSelector);
         this.setup();
-        console.log("end connect");
     }
 
     matchData() {
