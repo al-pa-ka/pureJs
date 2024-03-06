@@ -1,23 +1,60 @@
-
 class Navbar extends HTMLElement {
     connectedCallback() {
         this.render();
         this.setup();
     }
+    THRID_PANEL_TABS = [
+        ["объявления", ""],
+        ["вакансии", ""],
+        ["вакансии объед", ""],
+        ["соискатели", ""],
+        ["отклики", ""],
+        ["фио", ""],
+        ["Адреса", ""],
+        ["Компании", ""],
+        ["Учебные заведения", ""],
+        ["Сокр.Ю.Ф.", ""],
+        ["Альтернативные", ""],
+        ["Филиалы", ""],
+        ["Квалификации", ""],
+        ["Специальности", ""],
+        ["Телефонные коды", ""],
+        ["Администраторы", ""],
+        ["email рассылка", ""],
+        ["КАК БЫЛО КАК НАДО", ""],
+        ["ПРЕФИКСЫ СЧЕТОВ", ""],
+        ["ПОИСК", ""],
+        ["БАНКИ", ""],
+        ["РУБРИКАТОР", ""],
+    ];
+    THIRD_PANEL_TAB_TEMPLATE = (tabName, icon, { classes, id } = { classes: "", id: "" }) => {
+        return /*html*/ `
+        <div class="third-panel__tab" ${id ? `id=${id.trim()}` : ""}>
+            ${icon ? `<span class="third-panel__tab-icon icon ads-icon in-panel ${classes}">${icon}</span>` : ""}
+            <p class="third-panel__tab-text">${tabName}</p>
+        </div>
+    `;
+    };
     render() {
-        this.innerHTML = `
+        const STYLE = /*html*/ `
             <style>
+                .reversed{
+                    display: inline-block !important;
+                    transform: rotate(180deg);
+                }
                 navbar-elem{
                     width: 100%;
                 }
-                #navbar {
-                    display: grid;
+                .panels__panel {
+                    box-sizing: border-box;
                     width: 100%;
+                    display: grid;
                     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-                    grid-template-rows: 1fr 1.5fr;
+                    height: min-content;
                 }
-                .second-panel {
-                    display: contents;
+                #navbar {
+                    display: flex;
+                    flex-direction: column;
                 }
                 .second-panel__tab {
                     display: flex;
@@ -25,15 +62,15 @@ class Navbar extends HTMLElement {
                     justify-content: center;
                     height: 60px;
                     box-sizing: border-box;
-                    font-size: 18px;
+                    font-size: 16px;
+                    text-transform: uppercase;
                 }
                 .second-panel__tab > p {
-                    font-size: inherit;
+                    font-size: inherit !important;
                 }
                 .second-panel .tab > span.icon {
                     font-size: 35px;
                 }
-
                 .second-panel .tab:hover > span.icon {
                     color: white;
                 }
@@ -41,14 +78,17 @@ class Navbar extends HTMLElement {
                     background-color: var(--blue);
                     color: white;
                 }
-
                 .second-panel .tab {
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
                 }
-                .third-panel__tab {
+                .third-panel{
+                    row-gap: 20px;
+                    box-sizing: border-box;
+                    padding: 25px 10px 25px 10px;
                     background-color: var(--blue);
+                }
+                .third-panel__tab {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
@@ -56,6 +96,7 @@ class Navbar extends HTMLElement {
                     color: white;
                     font-size: 18px;
                     cursor: pointer;
+                    overflow: hidden;
                 }
                 .third-panel__tab-icon {
                     color: inherit;
@@ -66,6 +107,10 @@ class Navbar extends HTMLElement {
                     font-size: inherit;
                     text-transform: uppercase;
                     text-align: center;
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: wrap;
                 }
                 .panels {
                     width: 100%;
@@ -73,17 +118,11 @@ class Navbar extends HTMLElement {
                     flex-direction: column;
                     align-items: center;
                 }
-                .panels__panel {
-                    padding: 0 20px 0 20px;
+                .other-tabs{
+                    display: none;
+                }
+                .other-tabs_active{
                     display: contents;
-                    flex-direction: row;
-                    width: 100%;
-                }
-                .panels__panel > div:first-child {
-                    padding-left: 20px;
-                }
-                .panels__panel > div:last-child {
-                    padding-right: 20px;
                 }
                 @media (width <= 880px) {
                     p.third-panel__tab-text{
@@ -91,8 +130,6 @@ class Navbar extends HTMLElement {
                     }
                     div#navbar {
                         display: none;
-                        grid-template-rows: repeat(9, 1fr);
-                        grid-auto-flow: column;
                         grid-template-columns: 1fr 1fr;
                         padding: 0;
                     }
@@ -101,9 +138,24 @@ class Navbar extends HTMLElement {
                         width: 100%;
                         grid-template-rows: 1fr;
                     }
-
-                    .panels__panel > div:first-child {
-                        padding: 0;
+                    .second-panel{
+                        grid-auto-flow: row;
+                    }
+                    .third-panel__tab.more{
+                        display: none;
+                    }
+                    .panels__panel{
+                        grid-template-columns: none;
+                    }
+                    .third-panel{
+                        column-gap: 10px;
+                        padding-right: 25px;
+                        box-sizing: border-box;
+                        grid-template-columns: 1fr 1fr;
+                        grid-template-rows: repeat(11, minmax(auto, 25px));
+                    }
+                    .other-tabs{
+                        display: contents;
                     }
                     .second-panel__tab {
                         height: 50px;
@@ -122,28 +174,31 @@ class Navbar extends HTMLElement {
                         width: 100%;
                         padding-left: 50px;
                     }
-                    .third-panel__tab > * {
+                    .third-panel__tab > span.icon{
+                        height: auto;
                         font-size: 18px;
-                        color: inherit;
-                        text-transform: capitalize;
                     }
-                    .third-panel__tab-text {
-                        padding-left: 15px;
+                    p.third-panel__tab-text {
+                        box-sizing: border-box;
+                        padding-left: 10px;
                         width: fit-content;
                         text-align: end;
-                        padding-right: 60px;
+                        font-size: 16px;
+                        text-transform: uppercase;
+                        white-space: nowrap;
                     }
                     .third-panel__tab-icon.icon {
                         display: block;
                         font-size: 26px;
                     }
                     .third-panel__tab {
+                        width: 100%;
+                        overflow: hidden;
                         display: flex;
                         flex-direction: row;
-                        justify-content: end;
+                        justify-content: start;
                         color: white;
                         cursor: pointer;
-                        font-size: 16px;
                     }
                     div.control-panel {
                         margin-top: 20px;
@@ -173,20 +228,17 @@ class Navbar extends HTMLElement {
                     .third-panel__tab-text {
                         font-size: 14px;
                     }
-                    .panels__panel > div:first-child {
-                        padding-left: 5px;
-                    }
-                    .panels__panel > div:last-child {
-                        padding-right: 5px;
-                    }
                 }
             </style>
+        `;
+        this.innerHTML = /*html*/ `
+        ${STYLE}
             <div class="mobile-control__menu-button">
                 <p>Меню</p>
                 <span class="icon burger"></span>
             </div>
             <div id="navbar">
-                <div class="second-panel panels__panel">
+                <div class="panels__panel second-panel ">
                     <div class="tab second-panel__tab" id="interface_tab">
                         <p>Интерфейс</p>
                     </div>
@@ -217,42 +269,24 @@ class Navbar extends HTMLElement {
                     </div>
                 </div>
                 <div class="third-panel journals panels__panel">
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon ads-icon in-panel"></span>
-                        <p class="third-panel__tab-text">объявления</p>
+                    ${(() => {
+                        let markup = "";
+                        for (const tab of this.THRID_PANEL_TABS.slice(0, 8)) {
+                            markup += this.THIRD_PANEL_TAB_TEMPLATE(tab[0], tab[1]);
+                        }
+                        return markup;
+                    })()}
+                    <div class="third-panel__tab more">
+                        <p class="third-panel__tab-text">Все 22 журнала <span class="icon reversed" style="padding-left: 5px;"></span></p>
                     </div>
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon vacancies-icon in-panel"></span>
-                        <p class="third-panel__tab-text">вакансии</p>
-                    </div>
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon offerors-icon in-panel"></span>
-                        <p class="third-panel__tab-text">соискатели</p>
-                    </div>
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon email-icon in-panel"></span>
-                        <p class="third-panel__tab-text">email рассылка</p>
-                    </div>
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon reply-icon in-panel"></span>
-                        <p class="third-panel__tab-text">отклики</p>
-                    </div>
-
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon fio-icon in-panel"></span>
-                        <p class="third-panel__tab-text">фио</p>
-                    </div>
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon stydies-icon in-panel"></span>
-                        <p class="third-panel__tab-text">учебные заведения</p>
-                    </div>
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon addresses-icon in-panel"></span>
-                        <p class="third-panel__tab-text">адреса</p>
-                    </div>
-                    <div class="third-panel__tab">
-                        <span class="third-panel__tab-icon icon companies-icon in-panel"></span>
-                        <p class="third-panel__tab-text">компании</p>
+                    <div class="other-tabs">
+                        ${(() => {
+                            let markup = "";
+                            for (const tab of this.THRID_PANEL_TABS.slice(8)) {
+                                markup += this.THIRD_PANEL_TAB_TEMPLATE(tab[0], tab[1]);
+                            }
+                            return markup;
+                        })()}
                     </div>
                 </div>
             </div>
@@ -264,9 +298,7 @@ class Navbar extends HTMLElement {
                 el.classList.add("tab_active");
             });
             document.addEventListener("click", event => {
-                const isAnotherTabClicked = Array.from(
-                    document.querySelectorAll(".second-panel__tab")
-                ).filter(el => {
+                const isAnotherTabClicked = Array.from(document.querySelectorAll(".second-panel__tab")).filter(el => {
                     return el.contains(event.target);
                 }).length;
 
@@ -276,18 +308,30 @@ class Navbar extends HTMLElement {
             });
         });
 
-        this.querySelectorAll(".third-panel__tab").forEach((el, index) => {
+        const moreTab = this.querySelector(".third-panel__tab.more");
+        moreTab.onclick = () => {
+            const otherTabs = this.querySelector(".other-tabs");
+            if (otherTabs.classList.contains("other-tabs_active")) {
+                otherTabs.classList.remove("other-tabs_active");
+                moreTab.querySelector("p").querySelector("span").classList.add("reversed");
+            } else {
+                otherTabs.classList.add("other-tabs_active");
+                moreTab.querySelector("p").querySelector("span").classList.remove("reversed");
+            }
+        };
+
+        this.querySelectorAll(".third-panel__tab:not(.more)").forEach((el, index) => {
             el.onclick = event => {
                 this.querySelectorAll(".third-panel__tab").forEach(el => {
-                    el.querySelector("span").style.setProperty("color", "white");
-                    el.querySelector("p").style.setProperty("color", "white");
+                    el.querySelector("span")?.style.setProperty("color", "white");
+                    el.querySelector("p")?.style.setProperty("color", "white");
                 });
-                el.querySelector("span").style.setProperty("color", "#FFE200");
-                el.querySelector("p").style.setProperty("color", "#FFE200");
+                el.querySelector("span")?.style.setProperty("color", "#FFE200");
+                el.querySelector("p")?.style.setProperty("color", "#FFE200");
             };
             if (index == 1) {
-                el.querySelector("span").style.setProperty("color", "#FFE200");
-                el.querySelector("p").style.setProperty("color", "#FFE200");
+                el.querySelector("span")?.style.setProperty("color", "#FFE200");
+                el.querySelector("p")?.style.setProperty("color", "#FFE200");
             }
         });
         document.querySelector(".icon.burger").onclick = () => {

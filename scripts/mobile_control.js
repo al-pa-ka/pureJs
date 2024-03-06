@@ -1,31 +1,75 @@
 class MobileControlMini extends HTMLElement {
+    constructor() {
+        super();
+        this.active = 1;
+    }
     connectedCallback() {
         this.render();
         this.setup();
     }
-
+    THRID_PANEL_TABS = [
+        ["объявления", ""],
+        ["вакансии", ""],
+        ["вакансии объед", ""],
+        ["соискатели", ""],
+        ["отклики", ""],
+        ["фио", ""],
+        ["Адреса", ""],
+        ["Компании", ""],
+        ["Учебные заведения", ""],
+        ["Сокр.Ю.Ф.", ""],
+        ["Альтернативные", ""],
+        ["Филиалы", ""],
+        ["Квалификации", ""],
+        ["Специальности", ""],
+        ["Телефонные коды", ""],
+        ["Администраторы", ""],
+        ["email рассылка", ""],
+        ["КАК БЫЛО КАК НАДО", ""],
+        ["ПРЕФИКСЫ СЧЕТОВ", ""],
+        ["ПОИСК", ""],
+        ["БАНКИ", ""],
+        ["РУБРИКАТОР", ""],
+    ];
+    TEMPLATE_TAB = (tabName, icon, { classes } = {}) => {
+        return /*html*/ `
+            <div class="mobile-control-wrapper__grid-nav ${classes}">
+                <div class="mobile-control-wrapper__icon-wrapper ">
+                    <span class="icon too-big-icon">${icon}</span>
+                </div>
+                <div class="mobile-control__tab-name">
+                    <p>${tabName}</p>
+                </div>
+            </div>
+        `;
+    };
     render() {
-        this.innerHTML = `
-            <style>
+        const STYLE = /*html*/ `<style>
                 @media (width <= 640px) {
                     div.mobile-control-wrapper__grid-nav-wrapper {
                         padding: 10px;
-                        padding-top: 0;
+                        padding-top: 20px;
+                        padding-left: 0;
+                        padding-right: 0;
                         display: grid;
                         grid-template-columns: 40px 1fr;
                         align-items: center;
                         height: 100%;
                         padding-bottom: 50px;
-                        max-height: 600px;
                         box-sizing: border-box;
+                        row-gap: 20px;
+                        overflow: auto;
+                    }
+                    div.mobile-control-wrapper__grid-nav-wrapper::-webkit-scrollbar{
+                        width: 0;
+                        height: 0;
                     }
                     div.mobile-control-wrapper__grid-nav {
                         display: contents;
-                        flex-direction: row;
-                        gap: 10px;
                         font-size: 20px;
                         color: #414141;
                         cursor: pointer;
+                        height: 50px;
                     }
                     div.mobile-control-wrapper__grid-nav_active {
                         color: var(--yellow);
@@ -90,9 +134,9 @@ class MobileControlMini extends HTMLElement {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        height: 100%;
+                        height: inherit;
                         width: 100%;
-                        max-height: 40px;
+                        padding-left: 20px;
                         box-sizing: border-box;
                         color: inherit;
                         background-color: inherit;
@@ -101,12 +145,14 @@ class MobileControlMini extends HTMLElement {
                     .mobile-control__tab-name {
                         box-sizing: border-box;
                         background-color: inherit;
-                        height: 100%;
-                        max-height: 40px;
+                        height: inherit;
                         display: flex;
                         align-items: center;
                         cursor: pointer;
-                        padding-left: 9px;
+                        padding-left: 14px;
+                    }
+                    .mobile-control__tab-name > p {
+                        text-transform: uppercase;
                     }
                     .mobile-control-wrapper__icon-wrapper > span {
                         color: inherit;
@@ -209,7 +255,9 @@ class MobileControlMini extends HTMLElement {
                 .mobile-control-wrapper__row.second {
                     display: none;
                 }
-            </style>
+            </style>`;
+        this.innerHTML = /*html*/ `
+            ${STYLE}
             <div class="mobile-menu-mini-wrapper">
                 <div class="mobile-menu-mini">
                     <div class="mobile-control-wrapper__grid-first-panel">
@@ -217,77 +265,15 @@ class MobileControlMini extends HTMLElement {
                         <p>Войти</p>
                     </div>
                     <div class="mobile-control-wrapper__grid-nav-wrapper">
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon too-big-icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>Объявления</p>
-                            </div>
-                        </div>
-                        <div
-                            class="mobile-control-wrapper__grid-nav mobile-control-wrapper__grid-nav_active">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>Вакансии</p>
-                            </div>
-                        </div>
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>Соискатели</p>
-                            </div>
-                        </div>
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>E-mail рассылка</p>
-                            </div>
-                        </div>
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>Отклики</p>
-                            </div>
-                        </div>
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name"><p>ФИО</p></div>
-                        </div>
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>Учебные заведения</p>
-                            </div>
-                        </div>
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon too-small-icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>Адреса</p>
-                            </div>
-                        </div>
-                        <div class="mobile-control-wrapper__grid-nav">
-                            <div class="mobile-control-wrapper__icon-wrapper">
-                                <span class="icon"></span>
-                            </div>
-                            <div class="mobile-control__tab-name">
-                                <p>Компании</p>
-                            </div>
-                        </div>
+                        ${(() => {
+                            let markup = ``;
+                            for (const [index, tab] of this.THRID_PANEL_TABS.entries()) {
+                                markup += this.TEMPLATE_TAB(tab[0], tab[1], {
+                                    classes: index == this.active ? "mobile-control-wrapper__grid-nav_active" : "",
+                                });
+                            }
+                            return markup;
+                        })()}
                     </div>
                 </div>
 
@@ -364,6 +350,10 @@ class MobileControlMini extends HTMLElement {
         mainContainer.style.setProperty("display", "flex");
     }
 
+    setActvie(index) {
+        this.active = index;
+    }
+
     openSecondRow() {
         const secondRow = document.querySelector(".mobile-control-wrapper__row.second");
         secondRow.style.display = "flex";
@@ -374,10 +364,9 @@ class MobileControlMini extends HTMLElement {
     }
 
     setup() {
-        document.querySelector(".mobile-control-wrapper__grid-control-wrapper.journals").onclick =
-            () => {
-                this.openMenu();
-            };
+        document.querySelector(".mobile-control-wrapper__grid-control-wrapper.journals").onclick = () => {
+            this.openMenu();
+        };
 
         document.querySelectorAll(".mobile-control-wrapper__grid-nav").forEach(nav => {
             nav.onclick = () => {
@@ -385,9 +374,7 @@ class MobileControlMini extends HTMLElement {
             };
         });
 
-        const controls = document.querySelectorAll(
-            ".mobile-control-wrapper__grid-control-wrapper:not(.more-button)"
-        );
+        const controls = document.querySelectorAll(".mobile-control-wrapper__grid-control-wrapper:not(.more-button)");
 
         const tabs = document.querySelectorAll(".mobile-control-wrapper__grid-nav");
         tabs.forEach(tab => {
@@ -413,9 +400,7 @@ class MobileControlMini extends HTMLElement {
             this.openMenu();
         };
 
-        const more = document.querySelector(
-            ".mobile-control-wrapper__grid-control-wrapper.more-button"
-        );
+        const more = document.querySelector(".mobile-control-wrapper__grid-control-wrapper.more-button");
         more.onclick = () => {
             if (more.querySelector("p").textContent == "Еще") {
                 more.querySelector("p").textContent = "Меньше";

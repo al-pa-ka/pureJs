@@ -19,7 +19,7 @@ class DrawStrategy {
     getPivot() {
         const pagination = this.container.querySelector(".pagination");
         const pages = pagination.querySelectorAll(".page-control-element");
-        const pivotElement = pages[pages.length - 2];
+        const pivotElement = pages[pages.length - 1];
         return pivotElement;
     }
 }
@@ -262,9 +262,9 @@ class PaginatorRenderer {
                         <div class="pagination__page-number page-control-element">
                             <p>First</p>
                         </div>
-                        <div class="pagination__page-number page-control-element">
+                        <!--<div class="pagination__page-number page-control-element">
                             <p>Last</p>
-                        </div>
+                        </div>-->
                         <div class="pagination__page-number page-control-element">
                             <span class="icon"></span>
                         </div>
@@ -360,8 +360,7 @@ class Paginator extends HTMLElement {
         this.querySelectorAll(".pagination").forEach(paginationElement => {
             const prev = 0,
                 first = 1,
-                last = 2,
-                next = 3;
+                next = 2;
             const controlElements = paginationElement.querySelectorAll(".pagination__page-number.page-control-element");
             controlElements[prev].onclick = () => {
                 if (this.currentPage > 1) {
@@ -371,10 +370,6 @@ class Paginator extends HTMLElement {
             };
             controlElements[first].onclick = () => {
                 this.currentPage = 1;
-                this.onCurrentPageChanged();
-            };
-            controlElements[last].onclick = () => {
-                this.currentPage = this.numberOfPages;
                 this.onCurrentPageChanged();
             };
             controlElements[next].onclick = () => {
