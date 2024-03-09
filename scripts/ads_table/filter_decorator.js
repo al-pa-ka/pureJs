@@ -3,7 +3,7 @@ class IFilter {
      *
      * @returns {any[]}
      */
-    filter() {
+    async filter() {
         return data;
     }
 }
@@ -18,7 +18,7 @@ class FilterId {
         this.value = value;
     }
 
-    filter() {
+    async filter() {
         if (this.value) {
             return this.data.filter(el => {
                 return String(el.id).startsWith(String(this.value));
@@ -38,18 +38,21 @@ class FilterPhoneNumberDecorator {
         this.prevFilter = filter;
         this.value = value;
     }
-    filter() {
+    async filter() {
         if (this.value) {
-            return this.prevFilter.filter().filter(el => {
-                const matchPhones = el.phones.filter(phone => {
+            console.log(`in phone filter`);
+            const data = await this.prevFilter.filter();
+            const filterObject = new AsyncFilter(data, row => {
+                const matchPhones = row.phones.filter(phone => {
                     const clearedPhoneValue = phone.replace(/[^0-9+]+/g, "");
                     const clearedValue = this.value.replace(/[^0-9+]+/g, "");
                     return clearedPhoneValue.startsWith(clearedValue);
                 });
                 return matchPhones.length;
             });
+            return await filterObject.filter(10, 1000);
         } else {
-            return this.prevFilter.filter();
+            return await this.prevFilter.filter();
         }
     }
 }
@@ -59,13 +62,13 @@ class FilterByINNDecorator {
         this.prevFilter = filter;
         this.value = value;
     }
-    filter() {
+    async filter() {
         if (this.value) {
-            return this.prevFilter.filter().filter(el => {
+            return await this.prevFilter.filter().filter(el => {
                 return String(el.INN).startsWith(this.value);
             });
         } else {
-            return this.prevFilter.filter();
+            return await this.prevFilter.filter();
         }
     }
 }
@@ -75,13 +78,14 @@ class FilterByVacancyNameDecorator {
         this.prevFilter = filter;
         this.value = value;
     }
-    filter() {
+    async filter() {
         if (this.value) {
-            return this.prevFilter.filter().filter(el => {
+            const data = await this.prevFilter.filter();
+            return data.filter(el => {
                 return el.vacancyName.toLowerCase().startsWith(this.value.toLowerCase());
             });
         } else {
-            return this.prevFilter.filter();
+            return await this.prevFilter.filter();
         }
     }
 }
@@ -92,9 +96,10 @@ class FilterByStatus {
         this.value = value;
     }
 
-    filter() {
+    async filter() {
         if (this.value?.length && !this.value.includes("all")) {
-            return this.prevFilter.filter().filter(el => {
+            const data = await this.prevFilter.filter();
+            return data.filter(el => {
                 const elStatuses = el.statuses.map(el => {
                     return el.status;
                 });
@@ -115,7 +120,7 @@ class FilterByStatus {
                 }
             });
         } else {
-            return this.prevFilter.filter();
+            return await this.prevFilter.filter();
         }
     }
 }
@@ -125,13 +130,14 @@ class FilterByRubp {
         this.prevFilter = filter;
         this.value = value;
     }
-    filter() {
+    async filter() {
         if (this.value?.length && !this.value.includes("all")) {
-            return this.prevFilter.filter().filter(el => {
+            const data = await this.prevFilter.filter();
+            return data.filter(el => {
                 return this.value.includes(el.RUBP_ATTRYB.toLowerCase());
             });
         } else {
-            return this.prevFilter.filter();
+            return await this.prevFilter.filter();
         }
     }
 }

@@ -62,11 +62,11 @@ class Navbar extends HTMLElement {
                     justify-content: center;
                     height: 60px;
                     box-sizing: border-box;
-                    font-size: 16px;
-                    text-transform: uppercase;
+                    font-size: 18px;
+                    text-transform: capitalize;
                 }
                 .second-panel__tab > p {
-                    font-size: inherit !important;
+                    font-size: inherit;
                 }
                 .second-panel .tab > span.icon {
                     font-size: 35px;
@@ -83,12 +83,17 @@ class Navbar extends HTMLElement {
                     align-items: center;
                 }
                 .third-panel{
+                    align-items: center;
                     row-gap: 20px;
                     box-sizing: border-box;
-                    padding: 25px 10px 25px 10px;
+                    padding: 25px 10px 20px 10px;
                     background-color: var(--blue);
+                    align-items: start;
                 }
+                
                 .third-panel__tab {
+                    font-weight: 100;
+                    color: white;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
@@ -98,11 +103,20 @@ class Navbar extends HTMLElement {
                     cursor: pointer;
                     overflow: hidden;
                 }
-                .third-panel__tab-icon {
+                .third-panel__tab_active{
+                    color: var(--yellow);
+                    font-weight: 900;
+                    font-family: 'Inter-Bold'
+                }
+                span.third-panel__tab-icon {
+                    font-weight: normal;
                     color: inherit;
-                    font-size: 25px;
+                    font-size: 30px;
+                    margin-bottom: 6px;
                 }
                 .third-panel__tab-text {
+                    font-weight: inherit;
+                    font-family: inherit;
                     color: inherit;
                     font-size: inherit;
                     text-transform: uppercase;
@@ -124,13 +138,16 @@ class Navbar extends HTMLElement {
                 .other-tabs_active{
                     display: contents;
                 }
+                .third-panel__tab.more{
+                    align-self: center;
+                }
                 @media (width <= 880px) {
                     p.third-panel__tab-text{
                         font-size: 18px;
                     }
                     div#navbar {
                         display: none;
-                        grid-template-columns: 1fr 1fr;
+                        grid-template-columns: 2fr 5fr;
                         padding: 0;
                     }
                     .panels {
@@ -147,12 +164,16 @@ class Navbar extends HTMLElement {
                     .panels__panel{
                         grid-template-columns: none;
                     }
-                    .third-panel{
+                    div.third-panel{
+                        align-items: center;
                         column-gap: 10px;
+                        row-gap: 0;
+                        padding: 0;
                         padding-right: 25px;
+                        padding-left: 15px;
                         box-sizing: border-box;
                         grid-template-columns: 1fr 1fr;
-                        grid-template-rows: repeat(11, minmax(auto, 25px));
+                        grid-template-rows: repeat(11, minmax(50px, auto));
                     }
                     .other-tabs{
                         display: contents;
@@ -168,22 +189,22 @@ class Navbar extends HTMLElement {
                     .tab_active > p {
                         color: white;
                     }
-                    .second-panel__tab > p {
+                    div.second-panel__tab > p {
                         font-size: 18px;
                         text-align: left;
                         width: 100%;
-                        padding-left: 50px;
+                        padding-left: 25px;
                     }
                     .third-panel__tab > span.icon{
                         height: auto;
-                        font-size: 18px;
+                        font-size: 20px;
                     }
                     p.third-panel__tab-text {
                         box-sizing: border-box;
                         padding-left: 10px;
                         width: fit-content;
                         text-align: end;
-                        font-size: 16px;
+                        font-size: 18px;
                         text-transform: uppercase;
                         white-space: nowrap;
                     }
@@ -197,7 +218,7 @@ class Navbar extends HTMLElement {
                         display: flex;
                         flex-direction: row;
                         justify-content: start;
-                        color: white;
+                        /* color: white; */
                         cursor: pointer;
                     }
                     div.control-panel {
@@ -214,19 +235,16 @@ class Navbar extends HTMLElement {
                     }
                 }
                 @media (width <= 1250px) {
-                    .second-panel__tab {
-                        font-size: 16px;
-                    }
                     .third-panel__tab-text {
-                        font-size: 16px;
+                        font-size: 18px;
                     }
                 }
                 @media (width <= 1150px) {
                     .second-panel__tab {
-                        font-size: 14px;
+                        font-size: 16px;
                     }
                     .third-panel__tab-text {
-                        font-size: 14px;
+                        font-size: 16px;
                     }
                 }
             </style>
@@ -277,12 +295,15 @@ class Navbar extends HTMLElement {
                         return markup;
                     })()}
                     <div class="third-panel__tab more">
-                        <p class="third-panel__tab-text">Все 22 журнала <span class="icon reversed" style="padding-left: 5px;"></span></p>
+                        <p class="third-panel__tab-text">Все 22<br> журнала <span class="icon reversed" style="padding-left: 5px;"></span></p>
                     </div>
                     <div class="other-tabs">
                         ${(() => {
                             let markup = "";
-                            for (const tab of this.THRID_PANEL_TABS.slice(8)) {
+                            for (const [index, tab] of this.THRID_PANEL_TABS.slice(8).entries()) {
+                                if (index == 8) {
+                                    markup += `<div class="third-panel__tab more"></div>`;
+                                }
                                 markup += this.THIRD_PANEL_TAB_TEMPLATE(tab[0], tab[1]);
                             }
                             return markup;
@@ -323,15 +344,12 @@ class Navbar extends HTMLElement {
         this.querySelectorAll(".third-panel__tab:not(.more)").forEach((el, index) => {
             el.onclick = event => {
                 this.querySelectorAll(".third-panel__tab").forEach(el => {
-                    el.querySelector("span")?.style.setProperty("color", "white");
-                    el.querySelector("p")?.style.setProperty("color", "white");
+                    el.classList.remove("third-panel__tab_active");
                 });
-                el.querySelector("span")?.style.setProperty("color", "#FFE200");
-                el.querySelector("p")?.style.setProperty("color", "#FFE200");
+                el.classList.add("third-panel__tab_active");
             };
             if (index == 1) {
-                el.querySelector("span")?.style.setProperty("color", "#FFE200");
-                el.querySelector("p")?.style.setProperty("color", "#FFE200");
+                el.classList.add("third-panel__tab_active");
             }
         });
         document.querySelector(".icon.burger").onclick = () => {

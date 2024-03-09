@@ -74,6 +74,8 @@ class MobileControlMini extends HTMLElement {
                     div.mobile-control-wrapper__grid-nav_active {
                         color: var(--yellow);
                         background-color: var(--blue);
+                        font-weight: 900;
+                        font-family: 'Inter-Bold'
                     }
                     .mobile-control-wrapper__grid-nav > span {
                         height: auto;
@@ -156,6 +158,7 @@ class MobileControlMini extends HTMLElement {
                     }
                     .mobile-control-wrapper__icon-wrapper > span {
                         color: inherit;
+                        font-weight: normal;
                     }
                     .medium-screen-size__table-name {
                         display: none;
@@ -396,9 +399,12 @@ class MobileControlMini extends HTMLElement {
             });
         });
 
-        document.querySelector(".mobile-cocntrol-wrapper__go-back").onclick = () => {
-            this.openMenu();
-        };
+        const goBack = document.querySelector(".mobile-cocntrol-wrapper__go-back");
+        if (goBack) {
+            goBack.onclick = () => {
+                this.openMenu();
+            };
+        }
 
         const more = document.querySelector(".mobile-control-wrapper__grid-control-wrapper.more-button");
         more.onclick = () => {

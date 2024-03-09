@@ -178,14 +178,15 @@ class BigScreenRenderer {
             onModeration: "На модерации",
         };
     }
+
     initialRender() {
         this.container.innerHTML = /*html*/ `
         ${this.STYLE}
         <div class="ads-table">
             <div class="ads-table__titles_wrapper">
-                <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">№</p></div>
-                <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">ID</p></div>
-                <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">ВАКАНСИЯ</p></div>
+                <div class="ads-table__title ads-table__cell number"><p class="ads-table__title-text">№</p></div>
+                <div class="ads-table__title ads-table__cell id"><p class="ads-table__title-text">ID</p></div>
+                <div class="ads-table__title ads-table__cell vacancy"><p class="ads-table__title-text">ВАКАНСИЯ</p></div>
                 <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">ОПИСАНИЕ/ТЕЛЕФОНЫ</p></div>
                 <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">СТАТУС</p></div>
                 <div class="ads-table__title ads-table__cell"><p class="ads-table__title-text">RUBP_ATRYB</p></div>
@@ -287,7 +288,7 @@ class BigScreenRenderer {
 
         return /*html*/ `
             <div class="content-row">
-                <div class="ads-table__cell"><p >${index}</p></div>
+                <div class="ads-table__cell"><p >${item.number}</p></div>
                 <div class="ads-table__cell"><p class="ads-table__cell-id">${item.id}</p></div>
                 <div class="ads-table__cell"><p>${item.vacancyName}</p></div>
                 <div class="ads-table__cell">
@@ -346,7 +347,7 @@ class BigScreenRenderer {
     insert(contentMarkup) {
         this.container.querySelector(".ads-table").insertAdjacentHTML("beforeend", contentMarkup);
     }
-    render(dataToView) {
+    render(dataToView, interval, timeToFreeze) {
         let contentMarkup = "";
 
         for (const [index, item] of dataToView.entries()) {
@@ -585,27 +586,67 @@ class AdsTableModel {
     constructor(data) {
         this.data = data;
         this.inputs = null;
+        this.filter = this.filterClosure();
+        this.sortingQuery = new SortingQuery();
+        this.sort = this.sortClosure();
     }
-    filter(filterData) {
-        return new FilterByRubp(
-            new FilterByStatus(
-                new FilterByVacancyNameDecorator(
-                    new FilterByINNDecorator(
-                        new FilterPhoneNumberDecorator(new FilterId(this.data, filterData.id), filterData.phoneNumber),
-                        filterData.inn
+
+    filterClosure() {
+        let lastCall = null;
+        return async function filter(inputValues) {
+            if (lastCall) {
+                lastCall.cancel();
+            }
+            const filterQuery = new FilterByRubp(
+                new FilterByStatus(
+                    new FilterByVacancyNameDecorator(
+                        new FilterByINNDecorator(
+                            new FilterPhoneNumberDecorator(new FilterId(this.data, inputValues.id), inputValues.phoneNumber),
+                            inputValues.inn
+                        ),
+                        inputValues.vacancyName
                     ),
-                    filterData.vacancyName
+                    inputValues.statuses
                 ),
-                filterData.statuses
-            ),
-            filterData.rubp
-        ).filter();
+                inputValues.rubp
+            );
+            if (lastCall) {
+                lastCall.cancel();
+            }
+            lastCall = new CancellablePromise(async resolve => {
+                resolve(await filterQuery.filter());
+            });
+            return lastCall;
+        };
     }
+
+    sortClosure() {
+        let lastCall = null;
+
+        return async function sort(data) {
+            if (lastCall) {
+                lastCall.cancel();
+            }
+            lastCall = new CancellablePromise(async (resolve, _) => {
+                resolve(await this.sortingQuery.sort(data));
+            });
+            return await lastCall;
+        };
+    }
+
+    addNumberFieldToData(data) {
+        return data.map((el, index) => {
+            el.number = index + 1;
+            return el;
+        });
+    }
+
     async getData() {
         const response = await fetch("./data.json", {
             method: "GET",
         });
-        return await response.json();
+        const data = await response.json();
+        return this.addNumberFieldToData(data);
     }
 }
 
@@ -614,7 +655,9 @@ class AdsTableContoller {
         this.model = model;
         this.renderer = renderStrategy;
         this.paginator = paginatorController;
-        this.inputs = new Map();
+        this.inputs = new Inputs(this);
+        this.sortingLinks = new SortingLinks(this);
+        this.update = this.updateClosure();
     }
 
     clearSearch() {
@@ -633,29 +676,21 @@ class AdsTableContoller {
         this.update();
     }
 
-    collectFilterData() {
-        const id = document.querySelector("#id")?.value;
-        const phoneNumber = document.querySelector("#phone")?.value;
-        const vacancyName = document.querySelector("#vacancy")?.value;
-        const inn = document.querySelector("#inn")?.value;
-        const statuses = document.querySelector("#statuses")?.getCheckedValues();
-        const rubp = document.querySelector("#rubp")?.getCheckedValues();
-        return { id, phoneNumber, vacancyName, inn, statuses, rubp };
+    setEventBus(eventBus) {
+        this.inputs.eventBus = eventBus;
+    }
+
+    getSortInstance(name) {
+        return this.model.sortingQuery.getSortInstance(name);
+    }
+
+    updateQuery(newSortingInstance) {
+        this.model.sortingQuery.updateQuery(newSortingInstance);
     }
 
     setup() {
-        this.inputs.set("id", new InputDecorator(document.querySelector("#id")));
-        this.inputs.set("phone", new PhoneInputDecorator(document.querySelector("#phone")));
-        this.inputs.set("vacancy", new InputDecorator(document.querySelector("#vacancy")));
-        this.inputs.set("inn", new InputDecorator(document.querySelector("#inn")));
-        this.inputs.set("prefix-account", new InputDecorator(document.querySelector("#prefix-account")));
-
-        this.inputs.forEach((value, _) => {
-            value.oninput = () => {
-                this.update();
-            };
-        });
-
+        this.sortingLinks.setup();
+        this.inputs.setup();
         const rubpSelect = document.querySelector("#rubp");
         if (rubpSelect) {
             rubpSelect.customOnChange = () => {
@@ -736,7 +771,7 @@ class AdsTableContoller {
         });
     }
 
-    init() {
+    async init() {
         this.renderer.initialRender();
         this.update();
         this.setup();
@@ -769,13 +804,21 @@ class AdsTableContoller {
         });
     }
 
-    update() {
-        const filteredData = this.model.filter(this.collectFilterData());
-        const paginatedData = this.paginator.paginateContent(filteredData);
-        const dataToView = paginatedData[this.paginator.currentPage - 1];
-        this.renderer.render(dataToView);
-        this.setupRows();
-        this.paginator.update();
+    updateClosure() {
+        let lastCall = null;
+        return async function update() {
+            lastCall ? lastCall.cancel() : null;
+            lastCall = new CancellablePromise(async _ => {
+                const filteredData = await this.model.filter(this.inputs.collectInputValues());
+                const sortedData = await this.model.sort(filteredData);
+                const paginatedData = this.paginator.paginateContent(sortedData);
+                const dataToView = paginatedData[this.paginator.currentPage - 1];
+                this.renderer.render(dataToView);
+                this.setupRows();
+                this.paginator.update();
+            });
+            await lastCall;
+        };
     }
 }
 
