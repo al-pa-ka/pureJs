@@ -33,6 +33,7 @@ class Inputs {
 
     setup() {
         this.inputs.set("id", new InputDecorator(document.querySelector("#id")));
+        console.log(document.querySelector("#phone"));
         this.inputs.set("phone", new PhoneInputDecorator(document.querySelector("#phone")));
         this.inputs.set("vacancy", new InputDecorator(document.querySelector("#vacancy")));
         this.inputs.set("inn", new InputDecorator(document.querySelector("#inn")));

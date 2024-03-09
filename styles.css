@@ -110,7 +110,6 @@ body {
     width: 100%;
 }
 
-
 .main-container {
     padding-bottom: 50px;
     overflow-y: visible;
@@ -281,7 +280,6 @@ input[type="text"] {
     /* padding вокруг плашки */
 }
 
-
 .mobile-tab {
     display: none;
 }
@@ -366,12 +364,9 @@ p {
     overflow-y: visible;
 }
 
-
-
 .vacancy-name {
     z-index: 5;
 }
-
 
 .icon-red:hover {
     color: red !important;
@@ -456,7 +451,7 @@ p {
     padding-right: 20px;
     width: 100%;
     grid-template-columns:
-        minmax(40px, 1fr) 1fr 7fr minmax(50px, 1fr) minmax(50px, 1fr)
+        minmax(40px, 1fr) 1fr 7fr minmax(50px, 1fr) minmax(50px, 1fr) 2fr
         6fr minmax(95px, 1fr);
     grid-auto-rows: minmax(50px, auto);
 }
@@ -593,7 +588,6 @@ div.mobile-wrapper__input > div.hint {
     background-color: #b1f1ff;
 }
 
-
 .table__row-item.search {
     overflow: visible;
 }
@@ -619,8 +613,6 @@ div.mobile-wrapper__input > div.hint {
     align-items: center;
     position: absolute;
 }
-
-
 
 .table__row-item.date {
     justify-content: start;

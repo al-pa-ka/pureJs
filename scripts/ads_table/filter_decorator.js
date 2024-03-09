@@ -50,7 +50,7 @@ class FilterPhoneNumberDecorator {
                 });
                 return matchPhones.length;
             });
-            return await filterObject.filter(10, 1000);
+            return await filterObject.filter(200, 100);
         } else {
             return await this.prevFilter.filter();
         }

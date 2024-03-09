@@ -47,6 +47,9 @@ class MergeSort extends SortStrategy {
             leftPartPointer++;
             arrayPointer++;
         }
+        if (resultArray.length > 30) {
+            await new Promise(resolve => setTimeout(resolve, 1));
+        }
         return resultArray;
     }
 }
@@ -70,7 +73,6 @@ class AsyncSort {
             }
             conversedData.push([data[i], this.mapFunction(data[i])]);
         }
-        console.log(conversedData);
         return conversedData;
     }
 
@@ -81,7 +83,6 @@ class AsyncSort {
     async sort(data) {
         const conversedData = await this.schwartzConversion(data);
         const sortedData = await this.sortingStrategy.sort(conversedData);
-        console.log(sortedData);
         return this.reverseConversion(sortedData);
     }
 }

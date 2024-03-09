@@ -19,7 +19,7 @@ class PhoneInputDecorator extends InputDecorator {
     constructor(input) {
         super(input);
         input.addEventListener("input", () => {
-            // this.toFormat();
+            this.toFormat();
         });
     }
     toFormat() {
@@ -32,5 +32,10 @@ class PhoneInputDecorator extends InputDecorator {
     set value(value) {
         super.value = value;
         this.toFormat();
+        this.input.dispatchEvent(new Event("input"));
+        this.input.dispatchEvent(new Event("blur"));
+    }
+    get value() {
+        return this.input.value;
     }
 }

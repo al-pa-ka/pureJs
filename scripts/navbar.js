@@ -27,17 +27,20 @@ class Navbar extends HTMLElement {
         ["БАНКИ", ""],
         ["РУБРИКАТОР", ""],
     ];
-    THIRD_PANEL_TAB_TEMPLATE = (tabName, icon, { classes, id } = { classes: "", id: "" }) => {
+    THIRD_PANEL_TAB_TEMPLATE = (tabName, icon, { classes, id, tabNameClasses } = { classes: "", id: "", tabNameClasses: "" }) => {
         return /*html*/ `
         <div class="third-panel__tab" ${id ? `id=${id.trim()}` : ""}>
             ${icon ? `<span class="third-panel__tab-icon icon ads-icon in-panel ${classes}">${icon}</span>` : ""}
-            <p class="third-panel__tab-text">${tabName}</p>
+            <p class="third-panel__tab-text ${tabNameClasses}">${tabName}</p>
         </div>
     `;
     };
     render() {
         const STYLE = /*html*/ `
             <style>
+                .no-white{
+                    white-space: nowrap !important;
+                }
                 .reversed{
                     display: inline-block !important;
                     transform: rotate(180deg);
@@ -139,7 +142,7 @@ class Navbar extends HTMLElement {
                     display: contents;
                 }
                 .third-panel__tab.more{
-                    align-self: center;
+                    align-self: end;
                 }
                 @media (width <= 880px) {
                     p.third-panel__tab-text{
@@ -290,6 +293,10 @@ class Navbar extends HTMLElement {
                     ${(() => {
                         let markup = "";
                         for (const tab of this.THRID_PANEL_TABS.slice(0, 8)) {
+                            if (tab[0] == "вакансии объед") {
+                                markup += this.THIRD_PANEL_TAB_TEMPLATE(tab[0], tab[1], { tabNameClasses: "no-white" });
+                                continue;
+                            }
                             markup += this.THIRD_PANEL_TAB_TEMPLATE(tab[0], tab[1]);
                         }
                         return markup;

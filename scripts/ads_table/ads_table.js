@@ -809,11 +809,16 @@ class AdsTableContoller {
         return async function update() {
             lastCall ? lastCall.cancel() : null;
             lastCall = new CancellablePromise(async _ => {
+                console.log(this.inputs.collectInputValues());
                 const filteredData = await this.model.filter(this.inputs.collectInputValues());
+                console.log("data filtered!");
                 const sortedData = await this.model.sort(filteredData);
+                console.log("data sorted!");
                 const paginatedData = this.paginator.paginateContent(sortedData);
+                console.log("data paginated!");
                 const dataToView = paginatedData[this.paginator.currentPage - 1];
                 this.renderer.render(dataToView);
+                console.log("data rendered!");
                 this.setupRows();
                 this.paginator.update();
             });

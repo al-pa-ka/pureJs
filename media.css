@@ -203,6 +203,9 @@
   .mobile-wrapper__row-date {
     grid-area: date;
   }
+  .mobile-wrapper__row-frequency{
+    grid-area: frq;
+  }
   .row-wrapper {
     grid-auto-rows: minmax(50px, auto);
     display: grid;
@@ -211,7 +214,8 @@
       "number number number edit"
       "id id id id"
       "source source source source"
-      "date date date date";
+      "date date date date"
+      "frq frq frq frq"
     /* "edit edit"; */
   }
 

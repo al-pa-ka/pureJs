@@ -171,6 +171,14 @@ class VacanciesTable {
                         </div>
                       </div>
                         `;
+            const frequency = `
+                <div class="mobile-wrapper__row mobile-wrapper__row-frequency"> 
+                    <p class="mobile-wrapper__row-extra-content caption">Частота</p>
+                    <div class="table__row-item">
+                    <p class=""></p>
+                    </div>
+                </div>
+            `;
             const source = `
                         <div class="mobile-wrapper__row mobile-wrapper__row-source"> 
                           <p class="mobile-wrapper__row-extra-content caption">Источник добавления</p>
@@ -188,7 +196,7 @@ class VacanciesTable {
                   `;
             this.dataTable.insertAdjacentHTML(
                 "beforeend",
-                `<div class="row-wrapper">${itemNumberHTML + idHTML + vacancyName + edit + source + date}</div>`
+                `<div class="row-wrapper">${itemNumberHTML + idHTML + vacancyName + edit + frequency + source + date}</div>`
             );
             number++;
         }
