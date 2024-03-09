@@ -95,6 +95,9 @@ class Navbar extends HTMLElement {
                 }
                 
                 .third-panel__tab {
+                    padding-left: 4px;
+                    padding-right: 4px;
+                    box-sizing: border-box;
                     font-weight: 100;
                     color: white;
                     display: flex;
@@ -144,6 +147,12 @@ class Navbar extends HTMLElement {
                 .third-panel__tab.more{
                     align-self: end;
                 }
+                .third-panel__tab.more > p.third-panel__tab-text{
+                    text-align: center;
+                }
+                .third-panel__tab.more > p.third-panel__tab-text > span{
+                    position: absolute;
+                }
                 @media (width <= 880px) {
                     p.third-panel__tab-text{
                         font-size: 18px;
@@ -164,6 +173,7 @@ class Navbar extends HTMLElement {
                     .third-panel__tab.more{
                         display: none;
                     }
+
                     .panels__panel{
                         grid-template-columns: none;
                     }

@@ -347,15 +347,23 @@ class BigScreenRenderer {
     insert(contentMarkup) {
         this.container.querySelector(".ads-table").insertAdjacentHTML("beforeend", contentMarkup);
     }
-    render(dataToView, interval, timeToFreeze) {
+    async render(dataToView, interval, timeToFreeze, { signal } = { signal: null }) {
         let contentMarkup = "";
-
+        this.clear();
         for (const [index, item] of dataToView.entries()) {
+            if (index % interval) {
+                await new Promise(resolve => setTimeout(resolve, timeToFreeze));
+                if (signal && signal.aborted) {
+                    throw new DOMException("Render aborted", "AbortError");
+                }
+                this.insert(contentMarkup);
+                contentMarkup = "";
+            }
             contentMarkup += this.TEMPLATE_ROW(item, index);
         }
 
-        this.clear();
         this.insert(contentMarkup);
+        console.log("function passed!");
     }
 }
 
@@ -593,10 +601,7 @@ class AdsTableModel {
 
     filterClosure() {
         let lastCall = null;
-        return async function filter(inputValues) {
-            if (lastCall) {
-                lastCall.cancel();
-            }
+        return async function filter(inputValues, { signal } = { signal: null }) {
             const filterQuery = new FilterByRubp(
                 new FilterByStatus(
                     new FilterByVacancyNameDecorator(
@@ -610,13 +615,8 @@ class AdsTableModel {
                 ),
                 inputValues.rubp
             );
-            if (lastCall) {
-                lastCall.cancel();
-            }
-            lastCall = new CancellablePromise(async resolve => {
-                resolve(await filterQuery.filter());
-            });
-            return lastCall;
+            const filterResult = await filterQuery.filter();
+            return filterResult;
         };
     }
 
@@ -689,6 +689,7 @@ class AdsTableContoller {
     }
 
     setup() {
+        console.log("setup");
         this.sortingLinks.setup();
         this.inputs.setup();
         const rubpSelect = document.querySelector("#rubp");
@@ -773,8 +774,8 @@ class AdsTableContoller {
 
     async init() {
         this.renderer.initialRender();
-        this.update();
         this.setup();
+        await this.update();
     }
 
     setupRows() {
@@ -817,7 +818,8 @@ class AdsTableContoller {
                 const paginatedData = this.paginator.paginateContent(sortedData);
                 console.log("data paginated!");
                 const dataToView = paginatedData[this.paginator.currentPage - 1];
-                this.renderer.render(dataToView);
+                console.log("before render");
+                await this.renderer.render(dataToView, 100, 1000);
                 console.log("data rendered!");
                 this.setupRows();
                 this.paginator.update();
