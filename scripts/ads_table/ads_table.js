@@ -600,7 +600,6 @@ class AdsTableModel {
     }
 
     filterClosure() {
-        let lastCall = null;
         return async function filter(inputValues, { signal } = { signal: null }) {
             const filterQuery = new FilterByRubp(
                 new FilterByStatus(
@@ -615,7 +614,7 @@ class AdsTableModel {
                 ),
                 inputValues.rubp
             );
-            const filterResult = await filterQuery.filter();
+            const filterResult = await filterQuery.filter({signal});
             return filterResult;
         };
     }

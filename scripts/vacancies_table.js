@@ -175,7 +175,7 @@ class VacanciesTable {
                 <div class="mobile-wrapper__row mobile-wrapper__row-frequency"> 
                     <p class="mobile-wrapper__row-extra-content caption">Частота</p>
                     <div class="table__row-item">
-                    <p class=""></p>
+                    <p class="">${vacancy.frequency ? vacancy.frequency : ''}</p>
                     </div>
                 </div>
             `;
