@@ -139,10 +139,19 @@ class FilterQuery {
 
             input.onfocus = async event => {
                 const container = input.parentElement;
-                this.currentHint = new Hint(
-                    this.data.map(vacancy => String(vacancy[fieldName])),
-                    container
-                );
+                if (input == this.vacancyNameInput) {
+                    this.currentHint = new VacancyHint(
+                        this.data,
+                        container,
+                        null,
+                        document.querySelector(".show-frequency-in-hint")?.checked
+                    );
+                } else {
+                    this.currentHint = new Hint(
+                        this.data.map(vacancy => String(vacancy[fieldName])),
+                        container
+                    );
+                }
                 this.currentHint.setInitial(event.target.value);
                 const result = await this.currentHint.open();
                 if (result) {

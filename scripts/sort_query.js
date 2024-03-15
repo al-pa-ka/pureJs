@@ -5,6 +5,8 @@ class SortQuery {
     }
 
     setupControl() {
+        const showFrequency = document.querySelector(".show-frequency-in-hint")
+        showFrequency.onclick = event => event.stopPropagation();
         document.querySelector(".id-sort").onclick = () => {
             let reversed = false;
             this.sortQuery = this.sortQuery

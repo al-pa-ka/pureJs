@@ -15,7 +15,6 @@
         <script src="./scripts/cross.js"></script>
         <script src="./scripts/sort_query.js"></script>
         <script src="./scripts/date_to_format.js"></script>
-        <script src="./scripts/plug_data.js"></script>
         <script src="./scripts/hint.js"></script>
         <script src="./scripts/event_bus.js"></script>
         <script src="./scripts/popup_factory.js"></script>
@@ -111,8 +110,16 @@
                             <div class="table__row-item title center id-sort sort">
                                 <p class="medium table__row-title-text">ID</p>
                             </div>
-                            <div class="table__row-item title center vacancy-name-sort sort">
+                            <div style="position: relative" class="table__row-item title center vacancy-name-sort sort">
                                 <p class="medium table__row-title-text">Название вакансии</p>
+                                <input
+                                    tooltip="Отображать частоту в подсказках"
+                                    style="position: absolute; right: 0px; width: fit-content; margin-right: 10px"
+                                    class="show-frequency-in-hint"
+                                    checked="true"
+                                    type="checkbox"
+                                    name=""
+                                    id="" />
                             </div>
                             <div class="table__row-item title center">
                                 <p class="medium">edit</p>

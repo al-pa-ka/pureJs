@@ -312,7 +312,9 @@ class Navbar extends HTMLElement {
                         return markup;
                     })()}
                     <div class="third-panel__tab more">
-                        <p class="third-panel__tab-text">Все 22<br> журнала <span class="icon reversed" style="padding-left: 5px;"></span></p>
+                        <p class="third-panel__tab-text">
+                            <span style="width: 100%; text-align: center; position: static;">Все 22</span>
+                            <br> журнала <span class="icon reversed" style="padding-left: 5px;"></span></p>
                     </div>
                     <div class="other-tabs">
                         ${(() => {
@@ -351,10 +353,10 @@ class Navbar extends HTMLElement {
             const otherTabs = this.querySelector(".other-tabs");
             if (otherTabs.classList.contains("other-tabs_active")) {
                 otherTabs.classList.remove("other-tabs_active");
-                moreTab.querySelector("p").querySelector("span").classList.add("reversed");
+                moreTab.querySelector("p").querySelector("span.icon").classList.add("reversed");
             } else {
                 otherTabs.classList.add("other-tabs_active");
-                moreTab.querySelector("p").querySelector("span").classList.remove("reversed");
+                moreTab.querySelector("p").querySelector("span.icon").classList.remove("reversed");
             }
         };
 

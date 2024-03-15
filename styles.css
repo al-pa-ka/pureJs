@@ -160,7 +160,7 @@ body {
     width: 100%;
 }
 *[tooltip]:hover::before {
-    z-index: 3;
+    z-index: 100;
     content: "";
     position: absolute;
     transform: translateY(20px);
@@ -174,7 +174,7 @@ body {
 }
 *[tooltip]:hover::after {
     position: absolute;
-    z-index: 3;
+    z-index: 100;
     font-size: 18px;
     width: fit-content;
     box-sizing: border-box;
@@ -592,7 +592,7 @@ div.mobile-wrapper__input > div.hint {
     overflow: visible;
 }
 
-.title:hover > p.table__row-title-text {
+.title:hover:has(input:not(:hover)) > p.table__row-title-text  {
     color: var(--blue);
     text-decoration: underline dashed var(--blue);
 }

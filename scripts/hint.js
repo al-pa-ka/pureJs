@@ -14,6 +14,11 @@ class Hint {
         this.setup();
     }
 
+    rowOnClick(row) {
+        this.resolve(row.textContent);
+        this.close();
+    }
+
     setup() {
         const hint = document.querySelector(".hint");
         const rows = hint?.querySelectorAll(".hint__row");
@@ -26,9 +31,7 @@ class Hint {
 
         rows?.forEach(row => {
             row.onmousedown = event => {
-                console.log("clicked row");
-                this.resolve(row.textContent);
-                this.close();
+                this.rowOnClick(row);
             };
         });
     }
@@ -97,5 +100,37 @@ class Hint {
         return new Promise(resolve => {
             this.resolve = resolve;
         });
+    }
+}
+
+class VacancyHint extends Hint {
+    constructor(data, container, eventBus, isNeedToShowFrequency) {
+        super(data, container, eventBus);
+        this.isNeedToShowFrequency = isNeedToShowFrequency;
+    }
+    rowOnClick(row) {
+        const valueToResolve = /\(\d+\)$/g.test(row.textContent) ? row.textContent.slice(0, row.textContent.length - 3).trim() : row.textContent;
+        this.resolve(valueToResolve);
+        this.close();
+    }
+    filterData() {
+        const vacancies = this.data.filter(row => {
+            return row.vacancyName.toLowerCase().startsWith(this.search.toLowerCase());
+        });
+        const vacanciesWithoutDuplicates = [...new Set(vacancies)];
+        const vacanciesSelectedByFrequencyCriteria = vacanciesWithoutDuplicates
+            .sort((el, el2) => {
+                const frequency1 = el.frequency ? el.frequency : 0;
+                const frequency2 = el2.frequency ? el2.frequency : 0;
+                return -(frequency1 - frequency2);
+            })
+            .map(row => (this.isNeedToShowFrequency ? `${row.vacancyName}${row.frequency ? ` (${row.frequency})` : ``}` : `${row.vacancyName}`))
+            .slice(0, 13);
+        return vacanciesSelectedByFrequencyCriteria
+            .map(vacancy => [vacancy, vacancy.replace(/[^A-zА-я]/g, "").toLowerCase()])
+            .sort((a, b) => {
+                return a[1] > b[1] ? 1 : a[1] < b[1] ? -1 : 0;
+            })
+            .map(vacancy => vacancy[0]);
     }
 }
