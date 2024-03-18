@@ -21,14 +21,19 @@ async function main() {
 
     sortQuery.setupControl();
     controlPanel.setup();
-    let data = await fetch('db.json')
-    data = await data.json()
-    console.log(data)
+    let data = await fetch("db.json");
+    data = await data.json();
+    console.log(data);
     // const data = plugData.map(vacancy => {
     //     const date = dateToFormat(vacancy.date);
     //     vacancy.date = date;
     //     return vacancy;
     // });
+
+    window.onscroll = event => {
+        console.log(this.scrollY);
+        localStorage.setItem("vacancies__scroll", this.scrollY);
+    };
 
     const filterQuery = new FilterQuery(data, eventBus);
     const paginators = document.body.querySelectorAll("pagination-control");
@@ -36,8 +41,13 @@ async function main() {
     const paginatorShadow = new PaginatorShadow(paginators[0], paginators[1]);
     const table = new VacanciesTable(data, paginatorShadow, filterQuery, popupFactory, sortQuery, eventBus);
     table.setup();
+    const mutationObserver = new MutationObserver(() => {
+        window.scrollTo(0, Number(localStorage.getItem("vacancies__scroll")));
+        mutationObserver.disconnect();
+    });
+    mutationObserver.observe(document.querySelector(".table.vacancies"), { attributes: true, childList: true });
     table.render();
     table.setupEventBusCallbacks();
 }
 
-main()
+main();

@@ -175,7 +175,7 @@ class VacanciesTable {
                 <div class="mobile-wrapper__row mobile-wrapper__row-frequency"> 
                     <p class="mobile-wrapper__row-extra-content caption">Частота</p>
                     <div class="table__row-item">
-                    <p class="">${vacancy.frequency ? vacancy.frequency : ''}</p>
+                    <p class="">${vacancy.frequency ? vacancy.frequency : ""}</p>
                     </div>
                 </div>
             `;
@@ -183,7 +183,7 @@ class VacanciesTable {
                         <div class="mobile-wrapper__row mobile-wrapper__row-source"> 
                           <p class="mobile-wrapper__row-extra-content caption">Источник добавления</p>
                           <div class="table__row-item source">
-                            <p class="source ${vacancy.source == "Published" ? "published" : ""}">${vacancy.source}</p>
+                            <p title="${vacancy.source}" class="source ${vacancy.source == "Published" ? "published" : ""}">${vacancy.source}</p>
                           </div>
                         </div>`;
             const date = `

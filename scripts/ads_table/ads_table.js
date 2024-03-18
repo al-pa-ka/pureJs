@@ -350,8 +350,9 @@ class BigScreenRenderer {
     async render(dataToView, interval, timeToFreeze, { signal } = { signal: null }) {
         let contentMarkup = "";
         this.clear();
+        console.log(`render called`);
         for (const [index, item] of dataToView.entries()) {
-            if (index % interval) {
+            if (!index % interval) {
                 await new Promise(resolve => setTimeout(resolve, timeToFreeze));
                 if (signal && signal.aborted) {
                     throw new DOMException("Render aborted", "AbortError");
@@ -614,7 +615,7 @@ class AdsTableModel {
                 ),
                 inputValues.rubp
             );
-            const filterResult = await filterQuery.filter({signal});
+            const filterResult = await filterQuery.filter({ signal });
             return filterResult;
         };
     }
@@ -805,24 +806,18 @@ class AdsTableContoller {
     }
 
     updateClosure() {
-        let lastCall = null;
         return async function update() {
-            lastCall ? lastCall.cancel() : null;
-            lastCall = new CancellablePromise(async _ => {
-                console.log(this.inputs.collectInputValues());
-                const filteredData = await this.model.filter(this.inputs.collectInputValues());
-                console.log("data filtered!");
-                const sortedData = await this.model.sort(filteredData);
-                console.log("data sorted!");
-                const paginatedData = this.paginator.paginateContent(sortedData);
-                console.log("data paginated!");
-                const dataToView = paginatedData[this.paginator.currentPage - 1];
-                console.log("before render");
-                await this.renderer.render(dataToView, 100, 1000);
-                console.log("data rendered!");
-                this.setupRows();
-                this.paginator.update();
-            });
+            const abortController = new AbortController();
+            const { signal } = abortController;
+
+            const filteredData = await this.model.filter(this.inputs.collectInputValues());
+            const sortedData = await this.model.sort(filteredData);
+            const paginatedData = this.paginator.paginateContent(sortedData);
+            const dataToView = paginatedData[this.paginator.currentPage - 1];
+            await this.renderer.render(dataToView, 20, 100);
+            this.setupRows();
+            this.paginator.update();
+
             await lastCall;
         };
     }

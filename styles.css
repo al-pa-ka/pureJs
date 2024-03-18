@@ -452,7 +452,7 @@ p {
     width: 100%;
     grid-template-columns:
         minmax(40px, 1fr) 1fr 7fr minmax(50px, 1fr) minmax(50px, 1fr) 2fr
-        6fr minmax(95px, 1fr);
+        6fr minmax(110px, 1fr);
     grid-auto-rows: minmax(50px, auto);
 }
 
@@ -473,6 +473,7 @@ p.table__row-item-vacancy-name-text {
     padding: 5px;
     height: 100%;
     box-sizing: border-box;
+    font-size: 18px;
 }
 .table__row-item.title.center {
     justify-content: center;
@@ -522,6 +523,8 @@ p.table__row-item-vacancy-name-text {
 }
 .table__row-item.source {
     cursor: pointer;
+    width: 100%;
+    overflow: hidden;
 }
 p.source {
     border-radius: 50px;
@@ -529,6 +532,7 @@ p.source {
     padding: 25px;
     padding-top: 5px;
     padding-bottom: 5px;
+    width: 100%;
     color: var(--dark-orange);
     overflow: hidden;
     white-space: nowrap;

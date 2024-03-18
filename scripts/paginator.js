@@ -212,7 +212,8 @@ class PaginatorRenderer {
                     cursor: default;
                 }
                 .page-control-element > p {
-                    cursor: pointer;
+                    display: inline;
+                    vertical-align: middle;
                 }
                 .page-control-element > span.icon {
                     cursor: pointer;
@@ -239,6 +240,7 @@ class PaginatorRenderer {
                     justify-content: center;
                     align-items: center;
                     cursor: pointer;
+                    vertical-aling: middle;
                 }
                 .pagination__go-button.inactive {
                     border-color: lightgray;
@@ -253,14 +255,14 @@ class PaginatorRenderer {
                     <div class="pagination__specify-page">
                         <p class="pagination__specify-page-text">Укажите страницу</p>
                         <input type="text" />
-                        <div class="pagination__go-button inactive">Go</div>
+                        <div class="pagination__go-button inactive"><span style="line-height: 1px; height: 3px;">Go</span></div>
                     </div>
                     <div class="pagination__pages-control">
                         <div class="pagination__page-number page-control-element">
                             <span class="icon"></span>
                         </div>
                         <div class="pagination__page-number page-control-element">
-                            <p>First</p>
+                            <p style="line-height: 1px; height: 3px;">First</p>
                         </div>
                         <!--<div class="pagination__page-number page-control-element">
                             <p>Last</p>
@@ -291,12 +293,25 @@ class PaginatorRenderer {
     }
     drawPages(numberOfPages, currentPage) {
         const numberOfPagesCanDraw = this.calculatePagesCanBeDrawed();
-
+        const pageControlElements = this.container.querySelectorAll(".page-control-element");
+        const BACK = 0,
+            FIRST = 1,
+            NEXT = 2;
+        pageControlElements[BACK].classList.remove("inactive");
+        pageControlElements[FIRST].classList.remove("inactive");
+        pageControlElements[NEXT].classList.remove("inactive");
         if (numberOfPages > numberOfPagesCanDraw) {
             new OverflowDrawStrategyWithThresholds(this.container, numberOfPages, currentPage, numberOfPagesCanDraw).drawPages();
         } else {
             console.log(`${numberOfPages} < ${numberOfPagesCanDraw} default draw`);
             new DefaultDrawStrategy(this.container, numberOfPages).drawPages();
+        }
+        if (currentPage == 1) {
+            pageControlElements[BACK].classList.add("inactive");
+            pageControlElements[FIRST].classList.add("inactive");
+        }
+        if (currentPage == numberOfPages) {
+            pageControlElements[NEXT].classList.add("inactive");
         }
     }
 }
