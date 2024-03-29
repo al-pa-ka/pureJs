@@ -10,8 +10,8 @@ class DrawStrategy {
             pageNumber.classList.add("pagination__page-number");
             pageNumber.textContent = index;
             pageNumber.setAttribute("index", index);
-            console.log(`active page - is ${activePage}`);
             index == activePage ? pageNumber.classList.add("active") : null;
+            console.log(index, activePage);
             pivotElement.insertAdjacentElement("beforebegin", pageNumber);
         }
     }
@@ -25,12 +25,13 @@ class DrawStrategy {
 }
 
 class DefaultDrawStrategy extends DrawStrategy {
-    constructor(container, pagesToDraw) {
+    constructor(container, pagesToDraw, currentPage) {
         super(container);
         this.pagesToDraw = pagesToDraw;
+        this.currentPage = currentPage;
     }
     drawPages() {
-        this.drawFromTo(1, this.pagesToDraw);
+        this.drawFromTo(1, this.pagesToDraw, this.currentPage);
     }
 }
 
@@ -82,11 +83,6 @@ class OverflowDrawStrategyWithThresholds extends OverflowDrawStrategy {
             this.drawFromTo(startPage, startPage + countOfPagesBeforeEllipsis - 1, this.currentPage);
             this.drawEllipses(startPage + countOfPagesBeforeEllipsis);
             this.drawFromTo(this.pagesToDraw, this.pagesToDraw);
-            console.log(`from - ${startPage} to - ${startPage + countOfPagesBeforeEllipsis}`);
-            console.log(
-                `can be drawed - ${this.pagesCanBeDrawed} type - ${typeof this.pagesCanBeDrawed} current page - ${this.currentPage} ${typeof this
-                    .currentPage} number of range - ${numberOfRange} start page - ${startPage}`
-            );
         }
     }
 }
@@ -303,8 +299,7 @@ class PaginatorRenderer {
         if (numberOfPages > numberOfPagesCanDraw) {
             new OverflowDrawStrategyWithThresholds(this.container, numberOfPages, currentPage, numberOfPagesCanDraw).drawPages();
         } else {
-            console.log(`${numberOfPages} < ${numberOfPagesCanDraw} default draw`);
-            new DefaultDrawStrategy(this.container, numberOfPages).drawPages();
+            new DefaultDrawStrategy(this.container, numberOfPages, currentPage).drawPages();
         }
         if (currentPage == 1) {
             pageControlElements[BACK].classList.add("inactive");

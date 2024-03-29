@@ -10,9 +10,18 @@ class Inputs {
         const phoneNumber = this.inputs.get("phone")?.value;
         const vacancyName = this.inputs.get("vacancy")?.value;
         const inn = this.inputs.get("inn")?.value;
+        const account = this.inputs.get("account")?.value;
         const statuses = this.inputs.get("statuses")?.getCheckedValues();
         const rubp = this.inputs.get("rubp")?.getCheckedValues();
-        return { id, phoneNumber, vacancyName, inn, statuses, rubp };
+        return { id, phoneNumber, vacancyName, inn, statuses, rubp, account };
+    }
+
+    clear() {
+        for (let [key, input] of this.inputs.entries()) {
+            if (key != "rubp" && key != "statuses") {
+                input.value = "";
+            }
+        }
     }
 
     onInput() {
@@ -32,18 +41,32 @@ class Inputs {
     }
 
     setup() {
-        this.inputs.set("id", new InputDecorator(document.querySelector("#id")));
-        console.log(document.querySelector("#phone"));
-        this.inputs.set("phone", new PhoneInputDecorator(document.querySelector("#phone")));
-        this.inputs.set("vacancy", new InputDecorator(document.querySelector("#vacancy")));
-        this.inputs.set("inn", new InputDecorator(document.querySelector("#inn")));
-        this.inputs.set("prefix-account", new InputDecorator(document.querySelector("#prefix-account")));
+        const rubp = document.querySelector("#rubp");
+        const statuses = document.querySelector("#statuses");
+        const phoneInput = document.querySelector("#phone");
+        if (phoneInput) {
+            this.inputs.set("phone", new PhoneInputDecorator(phoneInput));
+        }
+        this.inputs.set("rubp", rubp);
+        this.inputs.set("statuses", statuses);
+
+        [
+            ["account", "#account"],
+            ["id", "#id"],
+            ["vacancy", "#vacancy"],
+            ["inn", "#inn"],
+        ].forEach(el => {
+            const element = document.querySelector(el[1]);
+            element ? this.inputs.set(el[0], new InputDecorator(element)) : null;
+        });
 
         this.inputs.forEach((value, _) => {
-            value.oninput = async () => {
-                // this.onInput();
-                await this.controller.update();
-            };
+            if (value) {
+                value.oninput = async () => {
+                    // this.onInput();
+                    await this.controller.update();
+                };
+            }
         });
     }
 }

@@ -1,13 +1,25 @@
-class AdsTableEventBusRelation {
+class EventBusDecorator {
     constructor(controller, eventBus) {
         this.controller = controller;
         this.eventBus = eventBus;
     }
-    onUpdateInputs() {
-        this.eventBus.notice()
+    setupOnDateSetted() {
+        this.eventBus.addSubscriber(event => {}, "dateSetted");
     }
-    onUpdateTable() {
-        this.eventBus.notice("totalRows", controller.getTotalRows());
-
+    setupDeselect() {
+        this.eventBus.addSubscriber(event => {
+            console.log("eventBusDeselect");
+            this.controller.clearSearch();
+        }, "deselect");
+    }
+    setup() {
+        this.setupDeselect();
+        this.setupOnDateSetted();
+    }
+    onUpdateInputs() {
+        this.eventBus.notice();
+    }
+    noticeTotalRows(totalRows) {
+        this.eventBus.notice({ totalRows }, "totalRows");
     }
 }

@@ -8,19 +8,37 @@ class IFilter {
     }
 }
 
+class FilterDecorator {
+    constructor(filter, value) {
+        this.prevFilter = filter;
+        this.value = value;
+    }
+    async filter({ signal }) {
+        if (signal && signal.aborted) {
+            throw new DOMException("AbortError");
+        }
+        if (this.value) {
+            return await this._filter({ signal });
+        } else {
+            return await this.prevFilter.filter({ signal });
+        }
+    }
+    async _filter({ signal }) {
+        if (signal && signal.aborted) {
+            throw new DOMException("AbortError");
+        }
+    }
+}
+
 class FilterId {
-    /**
-     *
-     * @param {any[]} data
-     */
     constructor(data, value) {
         this.data = data;
         this.value = value;
     }
-
-    async filter() {
+    async filter({ signal }) {
         if (this.value) {
             return this.data.filter(el => {
+                if (signal && signal.aborted) throw new DOMException("AbortError");
                 return String(el.id).startsWith(String(this.value));
             });
         } else {
@@ -29,77 +47,55 @@ class FilterId {
     }
 }
 
-class FilterPhoneNumberDecorator {
-    /**
-     *
-     * @param {IFilter} filter
-     */
-    constructor(filter, value) {
-        this.prevFilter = filter;
-        this.value = value;
-    }
-    async filter() {
-        if (this.value) {
-            console.log(`in phone filter`);
-            const data = await this.prevFilter.filter();
-            const filterObject = new AsyncFilter(data, row => {
-                const matchPhones = row.phones.filter(phone => {
-                    const clearedPhoneValue = phone.replace(/[^0-9+]+/g, "");
-                    const clearedValue = this.value.replace(/[^0-9+]+/g, "");
-                    return clearedPhoneValue.startsWith(clearedValue);
-                });
-                return matchPhones.length;
+class FilterPhoneNumberDecorator extends FilterDecorator {
+    async _filter({ signal }) {
+        await super._filter({ signal });
+        const data = await this.prevFilter.filter({ signal });
+        const filterObject = new AsyncFilter(data, row => {
+            if (signal && signal.aborted) {
+                throw new DOMException("AbortError");
+            }
+            const matchPhones = row.phones.filter(phone => {
+                if (signal && signal.aborted) {
+                    throw new DOMException("AbortError");
+                }
+                const clearedPhoneValue = phone.replace(/[^0-9+]+/g, "");
+                const clearedValue = this.value.replace(/[^0-9+]+/g, "");
+                return clearedPhoneValue.startsWith(clearedValue);
             });
-            return await filterObject.filter(500, 10);
-        } else {
-            return await this.prevFilter.filter();
-        }
+            return matchPhones.length;
+        });
+        return await filterObject.filter(100, 10, { signal });
     }
 }
 
-class FilterByINNDecorator {
-    constructor(filter, value) {
-        this.prevFilter = filter;
-        this.value = value;
-    }
-    async filter() {
-        if (this.value) {
-            return await this.prevFilter.filter().filter(el => {
-                return String(el.INN).startsWith(this.value);
-            });
-        } else {
-            return await this.prevFilter.filter();
-        }
+class FilterByINNDecorator extends FilterDecorator {
+    async _filter({ signal }) {
+        await super._filter({ signal });
+        return (await this.prevFilter.filter({ signal })).filter(el => {
+            if (signal && signal.aborted) throw new DOMException("AbortError");
+            return String(el.INN).startsWith(this.value);
+        });
     }
 }
 
-class FilterByVacancyNameDecorator {
-    constructor(filter, value) {
-        this.prevFilter = filter;
-        this.value = value;
-    }
-    async filter() {
-        if (this.value) {
-            const data = await this.prevFilter.filter();
-            return data.filter(el => {
-                return el.vacancyName.toLowerCase().startsWith(this.value.toLowerCase());
-            });
-        } else {
-            return await this.prevFilter.filter();
-        }
+class FilterByVacancyNameDecorator extends FilterDecorator {
+    async _filter({ signal }) {
+        await super._filter({ signal });
+        const data = await this.prevFilter.filter({ signal });
+        return data.filter(el => {
+            if (signal && signal.aborted) throw new DOMException("AbortError");
+            return el.vacancyName.toLowerCase().startsWith(this.value.toLowerCase());
+        });
     }
 }
 
-class FilterByStatus {
-    constructor(filter, value) {
-        this.prevFilter = filter;
-        this.value = value;
-    }
-
-    async filter() {
+class FilterByStatus extends FilterDecorator {
+    async filter({ signal }) {
         if (this.value?.length && !this.value.includes("all")) {
-            const data = await this.prevFilter.filter();
+            const data = await this.prevFilter.filter({ signal });
             return data.filter(el => {
+                if (signal && signal.aborted) throw new DOMException("AbortError");
                 const elStatuses = el.statuses.map(el => {
                     return el.status;
                 });
@@ -120,24 +116,42 @@ class FilterByStatus {
                 }
             });
         } else {
-            return await this.prevFilter.filter();
+            return await this.prevFilter.filter({ signal });
         }
     }
 }
 
-class FilterByRubp {
-    constructor(filter, value) {
-        this.prevFilter = filter;
-        this.value = value;
-    }
-    async filter() {
+class FilterByRubp extends FilterDecorator {
+    async filter({ signal }) {
         if (this.value?.length && !this.value.includes("all")) {
-            const data = await this.prevFilter.filter();
+            const data = await this.prevFilter.filter({ signal });
             return data.filter(el => {
+                if (signal && signal.aborted) throw new DOMException("AbortError");
                 return this.value.includes(el.RUBP_ATTRYB.toLowerCase());
             });
         } else {
-            return await this.prevFilter.filter();
+            return await this.prevFilter.filter({ signal });
+        }
+    }
+}
+
+class FilterByAccount extends FilterDecorator {
+    async _filter({ signal }) {
+        console.log(this.value);
+        await super._filter({ signal });
+        const data = await this.prevFilter.filter({ signal });
+        if (/[А-яA-z]+\d{0,50}/.test(this.value)) {
+            const filterObject = new AsyncFilter(data, row => {
+                return row.account.id.toLowerCase().startsWith(this.value.toLowerCase());
+            });
+            const filteredDta = await filterObject.filter(100, 10, { signal });
+            console.log(filteredDta);
+            return filteredDta;
+        } else {
+            const filterObject = new AsyncFilter(data, row => {
+                return row.account.id.match(/\d+/)[0].startsWith(this.value);
+            });
+            return await filterObject.filter(100, 10, { signal });
         }
     }
 }

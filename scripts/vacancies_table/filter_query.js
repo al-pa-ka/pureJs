@@ -1,3 +1,12 @@
+/*
+    DEPRECATED
+
+*/
+
+
+
+
+
 class FilterQuery {
     constructor(data, eventBus) {
         this.data = data;

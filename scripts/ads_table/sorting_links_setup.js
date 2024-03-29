@@ -9,17 +9,20 @@ class SortSetupTemplateMethod {
     createSortInstance() {}
 
     setup(controller) {
-        this.getElement().onclick = async () => {
-            let sortInstance = controller.getSortInstance(this.name);
-            console.log(sortInstance);
-            if (!sortInstance) {
-                sortInstance = this.createSortInstance();
-            } else {
-                sortInstance.reversed = !Boolean(sortInstance.reversed);
-            }
-            controller.updateQuery(sortInstance);
-            await controller.update();
-        };
+        const sortInstance = this.createSortInstance();
+        controller.updateQuery(sortInstance);
+        this.getElement()
+            ? (this.getElement().onclick = async () => {
+                  let sortInstance = controller.getSortInstance(this.name);
+                  if (!sortInstance) {
+                      sortInstance = this.createSortInstance();
+                  } else {
+                      sortInstance.reversed = !Boolean(sortInstance.reversed);
+                  }
+                  controller.updateQuery(sortInstance);
+                  await controller.update();
+              })
+            : null;
     }
 }
 
@@ -36,7 +39,7 @@ class NubmerSort extends SortSetupTemplateMethod {
                 return a > b ? 1 : a < b ? -1 : 0;
             }
         );
-        const sortInstance = new SortInstance(this.name, sortObject);
+        const sortInstance = new SortInstance(this.name, sortObject, false);
         return sortInstance;
     }
     accept(visitor) {
@@ -57,7 +60,7 @@ class IdSort extends SortSetupTemplateMethod {
                 return a > b ? 1 : a < b ? -1 : 0;
             }
         );
-        const sortInstance = new SortInstance(this.name, sortObject);
+        const sortInstance = new SortInstance(this.name, sortObject, false);
         return sortInstance;
     }
     accept(visitor) {
@@ -80,7 +83,7 @@ class VacancySort extends SortSetupTemplateMethod {
                 return aLowerCased.localeCompare(bLowerCased);
             }
         );
-        const sortInstance = new SortInstance(this.name, sortObject);
+        const sortInstance = new SortInstance(this.name, sortObject, false);
         return sortInstance;
     }
 

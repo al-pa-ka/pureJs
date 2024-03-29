@@ -4,8 +4,8 @@ class CustomSelect extends HTMLElement {
         this.optionViews = [];
         this.value = "";
         this.default = "Не выбрано";
-        this.customOnChange = () => {};
-        this.customOnInput = () => {};
+        this.onChangeBehaviour = null;
+        this.onInputBehaviour = null;
         this.lastState = [];
     }
 
@@ -34,7 +34,6 @@ class CustomSelect extends HTMLElement {
         inputs.forEach((input, index) => {
             input.checked = this.lastState.includes(Number(index));
         });
-        this.customOnChange();
         this.update();
     }
 
@@ -48,7 +47,7 @@ class CustomSelect extends HTMLElement {
             .filter(el => {
                 return el != null;
             });
-        this.customOnInput();
+        this.onInputBehaviour.process(this);
     }
 
     close() {
@@ -88,17 +87,17 @@ class CustomSelect extends HTMLElement {
         };
         const inputs = Array.from(this.querySelectorAll("input"));
         inputs.forEach(input => {
+            input.oninput = event => event.stopPropagation();
             input.onchange = () => {
                 this.update();
-                console.log("mustbesetted onchange");
-                this.customOnChange();
+                this.onChangeBehaviour.process(this);
             };
         });
         this.querySelector("button").onclick = () => {
             this.closeWithSavingStates();
         };
         window.addEventListener("click", event => {
-            if (!this.querySelector(".custom-select__container").contains(event.target)) {
+            if (!this.contains(event.target)) {
                 this.closeWithoutSavingStates();
             }
         });
@@ -259,11 +258,13 @@ class CustomSelect extends HTMLElement {
     }
     setDefault(index) {
         Array.from(this.querySelectorAll("input"))[index].checked = true;
-        this.customOnChange();
         this.closeWithSavingStates();
     }
     update() {
         this.querySelector(".custom-select__value").textContent = this.value.trim().length ? this.value : this.default;
+    }
+    getInputs() {
+        return Array.from(this.querySelectorAll("input"));
     }
     getCheckedValues() {
         const inputs = Array.from(this.querySelectorAll("input"));

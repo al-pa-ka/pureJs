@@ -4,7 +4,7 @@ class AsyncFilter {
         this.predicate = predicate;
     }
 
-    async filter(interval, timeToFreezeImMs) {
+    async filter(interval, timeToFreezeImMs, { signal, maxLength }) {
         const filtered = [];
         const _interval = interval ? interval : 100;
         const _timeToFreeze = timeToFreezeImMs ? timeToFreezeImMs : 100;
@@ -17,8 +17,14 @@ class AsyncFilter {
         while (index--) {
             if (!(index % _interval)) {
                 await wait();
+                if (signal && signal.aborted) {
+                    throw new DOMException("AbortError");
+                }
             }
-            (await this.predicate(this.data[index])) ? filtered.push(this.data[index]) : undefined;
+            if (await this.predicate(this.data[index])) {
+                filtered.push(this.data[index]);
+                if (maxLength && filtered.length == maxLength) return filtered.reverse();
+            }
         }
         return filtered.reverse();
     }

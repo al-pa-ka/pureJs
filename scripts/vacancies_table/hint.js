@@ -92,9 +92,6 @@ class Hint {
     }
 
     async open() {
-        console.log("opened");
-        console.log("search - ", this.search);
-        console.log("filterData.length - ", this.filterData().length);
         this.insert();
         this.setup();
         return new Promise(resolve => {

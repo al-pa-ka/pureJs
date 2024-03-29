@@ -546,6 +546,7 @@ p.source.published {
     cursor: default;
 }
 p.date {
+    font-size: 18px;
     text-decoration: #5098c8 dashed underline;
     color: #5098c8;
     text-underline-offset: 3px;
@@ -596,7 +597,7 @@ div.mobile-wrapper__input > div.hint {
     overflow: visible;
 }
 
-.title:hover:has(input:not(:hover)) > p.table__row-title-text  {
+.title:hover:has(input:not(:hover)) > p.table__row-title-text {
     color: var(--blue);
     text-decoration: underline dashed var(--blue);
 }

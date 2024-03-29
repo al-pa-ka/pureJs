@@ -18,26 +18,28 @@ class SortingQuery {
     }
 
     getSortInstance(name) {
+        console.log(this.sortingInstances);
         return this.sortingInstances.find(el => el.name == name);
     }
 
     updateQuery(newSortingInstance) {
+        console.log(newSortingInstance);
         const lastSortStrategyIndex = this.sortingInstances.findIndex(sortingInstance => {
             return sortingInstance.name == newSortingInstance.name;
         });
-        if (lastSortStrategyIndex) {
+        console.log(lastSortStrategyIndex);
+        if (lastSortStrategyIndex != -1) {
             this.sortingInstances.splice(lastSortStrategyIndex, 1);
         }
+        console.log(this.sortingInstances);
         this.sortingInstances.push(newSortingInstance);
     }
 
     async sort(data) {
-        return new CancellablePromise(async (resolve, _) => {
-            let sortedData = data;
-            for (let i = 0; i < this.sortingInstances.length; i++) {
-                sortedData = await this.sortingInstances[i].sort(sortedData);
-            }
-            resolve(sortedData);
-        });
+        let sortedData = data;
+        for (let i = 0; i < this.sortingInstances.length; i++) {
+            sortedData = await this.sortingInstances[i].sort(sortedData);
+        }
+        return sortedData;
     }
 }

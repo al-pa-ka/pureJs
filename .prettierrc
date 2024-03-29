@@ -1,6 +1,6 @@
-{   
+{
     "printWidth": 150,
-    "arrowParens": "avoid",
     "tabWidth": 4,
+    "arrowParens": "avoid",
     "bracketSameLine": true
 }
