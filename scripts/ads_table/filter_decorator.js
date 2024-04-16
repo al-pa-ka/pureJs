@@ -155,3 +155,16 @@ class FilterByAccount extends FilterDecorator {
         }
     }
 }
+
+class FilterByLink extends FilterDecorator {
+    async _filter({ signal }) {
+        await super._filter({ signal });
+        const data = await this.prevFilter.filter({ signal });
+        if (signal && signal.aborted) throw new DOMException("AbortError");
+        const filterObject = new AsyncFilter(data, row => {
+            const criterias = row.sources.map(source => source.link.startsWith(this.value));
+            return criterias.includes(true);
+        });
+        return await filterObject.filter(300, 10, { signal });
+    }
+}

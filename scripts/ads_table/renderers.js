@@ -48,6 +48,7 @@ class BigScreenRenderer {
             display: contents;
         }
         .ads-table__cell {
+            background-color: white;
             width: 100%;
             text-wrap: wrap;
             overflow-wrap: break-word;
@@ -204,20 +205,20 @@ class BigScreenRenderer {
                 <div class="ads-table__cell search-wrapper ads-table__cell-search-wrapper-id">
                     <input id="id" class="ads-table__search id" type="text" />
                     <little-cross queryfor=".ads-table__search.id"></little-cross>
-                    <search-hint id='hint-id' queryfor='.ads-table__search.id'></search-hint>
+                    <search-hint id='hint-id' queryfor='.ads-table__search.id' nodark="div.ads-table__cell:has(#id)"></search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper ads-table__cell-search-wrapper-vacancy">
                     <search-hint queryfor=".ads-table__search.vacancy"></search-hint>
                     <span class="icon"></span>
                     <input id="vacancy" class="ads-table__search vacancy" type="text" />
                     <little-cross queryfor=".ads-table__search.vacancy"> </little-cross>
-                    <search-hint id='hint-vacancy' queryfor='.ads-table__search.vacancy'> </search-hint>
+                    <search-hint id='hint-vacancy' queryfor='.ads-table__search.vacancy' nodark="div.ads-table__cell:has(#vacancy)"> </search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper">
                     <span class="icon"></span>
                     <input id="phone" class="ads-table__search phone" type="text" />
                     <little-cross queryfor=".ads-table__search.phone" ></little-cross>
-                    <search-hint id='hint-phone' queryfor='.ads-table__search.phone'> </search-hint>
+                    <search-hint id='hint-phone' queryfor='.ads-table__search.phone' nodark="div.ads-table__cell:has(#phone)"> </search-hint>
                 </div>
                 <div class="ads-table__cell search-wrapper">
                     <custom-select id="statuses">
@@ -247,13 +248,17 @@ class BigScreenRenderer {
                     <span class="icon"></span>
                     <input id="inn" class="ads-table__search inn" type="text" />
                     <little-cross queryfor=".ads-table__search.inn" ></little-cross>
-                    <search-hint id="hint-inn" queryfor=".inn"></search-hint>
+                    <search-hint id="hint-inn" queryfor=".inn" nodark="div.ads-table__cell:has(#inn)"></search-hint>
                 </div>
-                <div class="ads-table__cell search-wrapper"><input class="ads-table__search" type="text" /></div>
+                <div class="ads-table__cell search-wrapper">
+                    <input id="source" class="ads-table__search inn" type="text" />
+                    <little-cross queryfor="#source" ></little-cross>
+                    <search-hint id="hint-source" queryfor="#source" nodark="div.ads-table__cell:has(#source)"></search-hint>
+                </div>
                 <div class="ads-table__cell search-wrapper">
                     <input id="account" class="ads-table__search" type="text" />
                     <little-cross queryfor="#account" ></little-cross>
-                    <search-hint-account id="hint-account" queryfor="#account"></search-hint>
+                    <search-hint-account id="hint-account" queryfor="#account" nodark="div.ads-table__cell:has(#account)"></search-hint>
                 </div>
             </div>
         </div>

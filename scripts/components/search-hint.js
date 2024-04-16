@@ -4,34 +4,50 @@ class SearchHint extends HTMLElement {
         this.dataToSearch = [];
         this.inputToAutoFill = null;
         this.bufferToMouseDownElement = null;
+        this.lastInputIsClicked = false;
+        this.signal = null;
     }
 
     setDataToSearch(value) {
         this.dataToSearch = value;
+        return this;
     }
 
-    clear() {
-        this.innerHTML = "";
-        document.querySelector(".search-hint__dimmer")?.remove();
+    setupNoDarkElems() {
+        const notDarkenedElems = this.getNoDarkenedElems();
+        notDarkenedElems.forEach(elem => {
+            elem.style.setProperty("z-index", "10");
+        });
+    }
+
+    clearNoDarkElems() {
+        const notDarkenedElems = this.getNoDarkenedElems();
+        notDarkenedElems.forEach(elem => {
+            elem.style.setProperty("z-index", "0");
+        });
     }
 
     setup() {
-        this.inputToAutoFill.addEventListener("focus", () => {
-            if (this.inputToAutoFill.value) {
-                this.render();
+        this.inputToAutoFill.addEventListener("focus", async () => {
+            if (this.inputToAutoFill.value && !this.lastInputIsClicked) {
+                console.log("focus");
+                this.setupNoDarkElems();
+                await this.render();
                 this.setupControll();
             }
         });
-        this.inputToAutoFill.addEventListener("input", () => {
-            if (this.inputToAutoFill.value) {
-                this.render();
+        this.inputToAutoFill.addEventListener("input", async () => {
+            if (this.inputToAutoFill.value && !this.lastInputIsClicked) {
+                this.setupNoDarkElems();
+                await this.render();
                 this.setupControll();
             } else {
-                this.clear();
+                this.close();
             }
         });
         this.inputToAutoFill.addEventListener("blur", event => {
-            this.clear();
+            this.close();
+            this.clearNoDarkElems();
         });
     }
 
@@ -41,16 +57,23 @@ class SearchHint extends HTMLElement {
             row.onmousedown = event => {
                 event.preventDefault();
                 this.bufferToMouseDownElement = row;
-                console.log("mousedown");
             };
             row.onmouseup = () => {
                 if (this.bufferToMouseDownElement == row) {
+                    this.lastInputIsClicked = true;
                     this.inputToAutoFill.value = row.getAttribute("value");
                     this.inputToAutoFill.dispatchEvent(new Event("input"));
-                    this.inputToAutoFill.blur();
-                    this.inputToAutoFill.dispatchEvent(new Event("focusout"));
+                    this.inputToAutoFill.dispatchEvent(new Event("blur"));
                 }
             };
+        });
+    }
+
+    getNoDarkenedElems() {
+        const selectors = this.getAttribute("nodark")?.split(",");
+        if (!selectors) return [];
+        return selectors.map(selector => {
+            return document.querySelector(selector);
         });
     }
 
@@ -60,90 +83,106 @@ class SearchHint extends HTMLElement {
         this.setup();
     }
 
-    matchData() {
+    async matchData() {
         const value = this.inputToAutoFill.value;
-        return Array.from(
-            new Set(
-                this.dataToSearch.filter(row => {
-                    return String(row).toLowerCase().startsWith(String(value).toLowerCase());
-                })
-            )
-        ).slice(0, 13);
+        const filterObject = new AsyncFilter(this.dataToSearch, row => {
+            return String(row).replace(/ /g, "").toLowerCase().startsWith(String(value).toLowerCase().replace(/ /g, ""));
+        });
+        const result = await filterObject.filter(500, 10, { maxLength: 13 });
+        return result;
     }
 
-    divideOnParts(row, value) {
-        const matchPart = String(row).slice(0, value.length);
-        const otherPart = String(row).slice(matchPart.length, row.length);
-        return [matchPart, otherPart];
+    highlightString(string, value) {
+        const regex = new RegExp(`^(${value.replace("+", "\\+").replace(/([^+\\])/g, "$1\\s*")})`, "gi");
+        return string.replace(regex, '<span class="search-hint__match-highlight">$1</span>');
     }
 
-    render() {
+    async render() {
         this.clear();
-        if (!this.matchData().length) {
-            return;
-        }
+
+        const data = await this.matchData();
+        console.log(data);
         const style = `
-        <style>
-            .search-hint__dimmer{
-                position: fixed;
-                background-color: rgba(0,0,0,0.6);
-                top: 0;
-                right: 0;
-                width: 100vw;
-                height: 100vh;
-                z-index: 1;
-            }
-            .search-hint__wrapper{
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 0px;
-            }
-            .search-hint{
-                padding: 10px 0 10px 0;
-                box-sizing: border-box;
-                position: absolute;
-                width: 100%;
-                left: 0;
-                top: 0;
-                display: flex;
-                flex-direction: column;
-                background-color: white;
-                z-index: 2;
-                row-gap: 10px;
-            }
-            .search-hint__row{
-                padding-left: 10px;
-            }
-            .search-hint__row:hover{
-                background-color: lightblue;
-            }
-            .search-hint__match-highlight{
-                color: var(--blue);
-            }
+            <style>
+                .search-hint__dimmer{
+                    position: fixed;
+                    background-color: rgba(0,0,0,0.6);
+                    top: 0;
+                    right: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    z-index: 1;
+                }
+                .search-hint__wrapper{
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 0px;
+                }
+                .search-hint{
+                    padding: 10px 0 10px 0;
+                    box-sizing: border-box;
+                    position: absolute;
+                    width: 100%;
+                    left: 0;
+                    top: 0;
+                    display: flex;
+                    flex-direction: column;
+                    background-color: white;
+                    z-index: 2;
+                    row-gap: 10px;
+                }
+                .search-hint__row{
+                    padding-left: 10px;
+                }
+                .search-hint__row:hover{
+                    background-color: lightblue;
+                }
+                .search-hint__match-highlight{
+                    color: var(--blue);
+                }
+    
+            </style>`;
 
-        </style>`;
+        const hintMarkup = data
+            .map(row => {
+                const value = this.inputToAutoFill.value;
+                return `<span class="search-hint__row" value="${row}">${this.highlightString(row, value)}</span>`;
+            })
+            .join("");
 
-        const markup = `
-        ${style}
-        <div class="search-hint__wrapper">
-            <div class="search-hint">
-                ${this.matchData()
-                    .map(row => {
-                        const value = this.inputToAutoFill.value;
-                        const [matchPart, otherPart] = this.divideOnParts(row, value);
-                        return `<span class="search-hint__row" value="${row}"><span class="search-hint__match-highlight">${matchPart}</span>${otherPart}</span>`;
-                    })
-                    .join("")}
-            </div>
-        </div>
-        `;
-        this.innerHTML = markup;
-        const dimmer = document.createElement("div");
-        dimmer.classList.add("search-hint__dimmer");
-        document.body.append(dimmer);
+        let hint;
+        if ((hint = this.querySelector(".serch-hint"))) {
+            hint.innerHTML = hintMarkup;
+        } else {
+            const markup = `
+                ${style}
+                <div class="search-hint__wrapper">
+                    <div class="search-hint">
+                        ${hintMarkup}
+                    </div>
+                </div>
+            `;
+            this.innerHTML = markup;
+        }
+        if (!document.querySelector(".search-hint__dimmer")) {
+            const dimmer = document.createElement("div");
+            dimmer.classList.add("search-hint__dimmer");
+            document.body.append(dimmer);
+        }
     }
 }
 
 customElements.define("search-hint", SearchHint);
+
+class SearchHintController {
+    constructor() {
+
+    }
+    setupControll() {}
+}
+
+class SearchHintModel {
+    
+}

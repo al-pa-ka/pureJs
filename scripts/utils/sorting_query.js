@@ -23,15 +23,12 @@ class SortingQuery {
     }
 
     updateQuery(newSortingInstance) {
-        console.log(newSortingInstance);
         const lastSortStrategyIndex = this.sortingInstances.findIndex(sortingInstance => {
             return sortingInstance.name == newSortingInstance.name;
         });
-        console.log(lastSortStrategyIndex);
         if (lastSortStrategyIndex != -1) {
             this.sortingInstances.splice(lastSortStrategyIndex, 1);
         }
-        console.log(this.sortingInstances);
         this.sortingInstances.push(newSortingInstance);
     }
 

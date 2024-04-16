@@ -11,7 +11,6 @@ class DrawStrategy {
             pageNumber.textContent = index;
             pageNumber.setAttribute("index", index);
             index == activePage ? pageNumber.classList.add("active") : null;
-            console.log(index, activePage);
             pivotElement.insertAdjacentElement("beforebegin", pageNumber);
         }
     }

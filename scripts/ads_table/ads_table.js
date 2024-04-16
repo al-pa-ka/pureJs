@@ -9,21 +9,24 @@ class AdsTableModel {
 
     filterClosure() {
         return async function filter(inputValues, { signal } = { signal: null }) {
-            const filterQuery = new FilterByAccount(
-                new FilterByRubp(
-                    new FilterByStatus(
-                        new FilterByVacancyNameDecorator(
-                            new FilterByINNDecorator(
-                                new FilterPhoneNumberDecorator(new FilterId(this.data, inputValues.id), inputValues.phoneNumber),
-                                inputValues.inn
+            const filterQuery = new FilterByLink(
+                new FilterByAccount(
+                    new FilterByRubp(
+                        new FilterByStatus(
+                            new FilterByVacancyNameDecorator(
+                                new FilterByINNDecorator(
+                                    new FilterPhoneNumberDecorator(new FilterId(this.data, inputValues.id), inputValues.phoneNumber),
+                                    inputValues.inn
+                                ),
+                                inputValues.vacancyName
                             ),
-                            inputValues.vacancyName
+                            inputValues.statuses
                         ),
-                        inputValues.statuses
+                        inputValues.rubp
                     ),
-                    inputValues.rubp
+                    inputValues.account
                 ),
-                inputValues.account
+                inputValues.source
             );
             const filterResult = await filterQuery.filter({ signal: signal });
             return filterResult;
@@ -62,7 +65,10 @@ class AdsTableContoller {
         this.paginator = paginatorController;
         this.inputs = new Inputs(this);
         this.sortingLinks = new SortingLinks(this);
-        this.update = this.updateClosure();
+        this.lastUpdateCall = {
+            abortController: new AbortController(),
+            finished: false,
+        };
     }
 
     clearSearch() {
@@ -104,38 +110,34 @@ class AdsTableContoller {
             statusSelect.onInputBehaviour = new StatusSelectOnInputBehaviour(this);
         }
 
-        document.querySelector("#hint-vacancy").setDataToSearch(
-            this.model.data.map(el => {
-                return el.vacancyName;
-            })
-        );
-        document.querySelector("#hint-id").setDataToSearch(
-            this.model.data.map(el => {
-                return el.id;
-            })
-        );
-        document.querySelector("#hint-phone").setDataToSearch(
-            this.model.data
-                .map(el => {
-                    return el.phones;
-                })
-                .flat()
-                .map(phone => {
-                    return phone.replace(/[^[0-9+]/g, "");
-                })
-        );
-        document.querySelector("#hint-inn").setDataToSearch(
-            this.model.data.map(el => {
-                return String(el.INN);
-            })
-        );
-        document.querySelector("#hint-account").setDataToSearch(
-            this.model.data.map(el => {
-                return el.account.id;
-            })
-        );
+        const vacancies = [];
+        const ids = [];
+        const phones = [];
+        const inns = [];
+        const accounts = [];
+        const sources = [];
 
-        this.paginator.setPageChangedCallback(() => {
+        this.model.data.forEach(row => {
+            vacancies.push(row.vacancyName);
+            ids.push(row.id);
+            phones.push(...row.phones);
+            inns.push(row.inn);
+            accounts.push(row.account.id);
+            sources.push(
+                ...row.sources.map(source => {
+                    return source.link;
+                })
+            );
+        });
+
+        document.querySelector("#hint-vacancy").setDataToSearch(Array.from(new Set(vacancies)));
+        document.querySelector("#hint-id").setDataToSearch(Array.from(new Set(ids)));
+        document.querySelector("#hint-phone").setDataToSearch(Array.from(new Set(phones)));
+        document.querySelector("#hint-inn").setDataToSearch(Array.from(new Set(inns)));
+        document.querySelector("#hint-account").setDataToSearch(Array.from(new Set(accounts)));
+        document.querySelector("#hint-source").setDataToSearch(Array.from(new Set(sources)));
+        this.setupSignals();
+        this.paginator.setPageChangedCallback(_ => {
             this.update();
         });
     }
@@ -189,35 +191,27 @@ class AdsTableContoller {
                     this.inputs.inputs.get("phone").value = phone.textContent.trim();
                 };
             });
-            console.log('setup')
         });
     }
 
-    updateClosure() {
-        let lastCall = {
-            abortController: new AbortController(),
-            finished: false,
-        };
-        return async function update() {
-            if (!lastCall.finished) {
-                lastCall.abortController.abort();
-                await new Promise(resolve => {
-                    setTimeout(resolve, 500);
-                });
-                lastCall.abortController = new AbortController();
-            }
-            lastCall.finished = false;
-
-            const filteredData = await this.model.filter(this.inputs.collectInputValues(), { signal: lastCall.abortController.signal });
-            this.eventBus.noticeTotalRows(filteredData.length);
-            const sortedData = await this.model.sort(filteredData, { signal: lastCall.abortController.signal });
-            const paginatedData = this.paginator.paginateContent(sortedData, { signal: lastCall.abortController.signal });
-            const dataToView = paginatedData[this.paginator.currentPage - 1];
-            await this.renderer.render(dataToView, 100, 100, { signal: lastCall.abortController.signal });
-            this.setupRows();
-            this.paginator.update();
-            lastCall.finished = true;
-        };
+    async update() {
+        if (!this.lastUpdateCall.finished) {
+            this.lastUpdateCall.abortController.abort();
+            await new Promise(resolve => {
+                setTimeout(resolve, 0);
+            });
+            this.lastUpdateCall.abortController = new AbortController();
+        }
+        this.lastUpdateCall.finished = false;
+        const filteredData = await this.model.filter(this.inputs.collectInputValues(), { signal: this.lastUpdateCall.abortController.signal });
+        this.eventBus.noticeTotalRows(filteredData.length);
+        const sortedData = await this.model.sort(filteredData, { signal: this.lastUpdateCall.abortController.signal });
+        const paginatedData = this.paginator.paginateContent(sortedData, { signal: this.lastUpdateCall.abortController.signal });
+        const dataToView = paginatedData[this.paginator.currentPage - 1];
+        await this.renderer.render(dataToView, 100, 100, { signal: this.lastUpdateCall.abortController.signal });
+        this.setupRows();
+        this.paginator.update();
+        this.lastUpdateCall.finished = true;
     }
 }
 

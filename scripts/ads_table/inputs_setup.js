@@ -11,9 +11,10 @@ class Inputs {
         const vacancyName = this.inputs.get("vacancy")?.value;
         const inn = this.inputs.get("inn")?.value;
         const account = this.inputs.get("account")?.value;
+        const source = this.inputs.get("source")?.value;
         const statuses = this.inputs.get("statuses")?.getCheckedValues();
         const rubp = this.inputs.get("rubp")?.getCheckedValues();
-        return { id, phoneNumber, vacancyName, inn, statuses, rubp, account };
+        return { id, phoneNumber, vacancyName, inn, statuses, rubp, account, source };
     }
 
     clear() {
@@ -55,6 +56,7 @@ class Inputs {
             ["id", "#id"],
             ["vacancy", "#vacancy"],
             ["inn", "#inn"],
+            ["source", "#source"],
         ].forEach(el => {
             const element = document.querySelector(el[1]);
             element ? this.inputs.set(el[0], new InputDecorator(element)) : null;
