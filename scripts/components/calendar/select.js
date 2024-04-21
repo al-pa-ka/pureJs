@@ -4,12 +4,11 @@ class Select extends HTMLElement {
     arrowLeft;
     arrowRight;
     valueSpan;
-    constructor(variables, defailtValue) {
+    constructor(variables, placeholder) {
         super();
-        this.defaultValue = defailtValue;
+        this.placeholder = placeholder;
         this.variables = variables;
-        this.value = variables[0];
-        this.currentIndex = 0;
+        this.currentIndex = null;
     }
 
     STYLE = /*html*/ `
@@ -45,7 +44,7 @@ class Select extends HTMLElement {
                 transform: rotateZ(90deg);
             }
             .horizontal-select__value{
-                color: blue;
+                color: #2879FF;
                 font-size: 19px;
                 cursor: pointer;
                 width: 100%;
@@ -64,7 +63,7 @@ class Select extends HTMLElement {
         this.arrowRight.textContent = "";
 
         this.valueSpan = document.createElement("span");
-        this.valueSpan.textContent = this.defaultValue;
+        this.valueSpan.textContent = this.currentIndex !== null ? this.variables[this.currentIndex] : this.placeholder;
         container.appendChild(this.arrowLeft);
         container.appendChild(this.valueSpan);
         container.appendChild(this.arrowRight);
@@ -77,50 +76,51 @@ class Select extends HTMLElement {
     }
 
     next() {
-        if (!this.variables.length) {
+        if (this.currentIndex === null) {
+            this.currentIndex = 0;
+            this.update();
             return;
         }
-        if (this.value == this.defaultValue) {
-            this.value = this.variables[this.currentIndex];
-            return;
-        }
-        if (this.currentIndex + 1 >= this.variables.length) {
+        if (!this.variables.length || this.currentIndex + 1 >= this.variables.length) {
             return;
         } else {
             this.currentIndex++;
-            this.value = this.variables[this.currentIndex];
         }
         this.update();
     }
 
     prev() {
-        if (!this.variables.length) {
+        if (this.currentIndex === null) {
+            this.currentIndex = 0;
+            this.update();
             return;
         }
-        if (this.value == this.defaultValue) {
-            this.currentIndex = this.variables.length - 1;
-            this.value = this.variables[this.currentIndex];
-            return;
-        }
-        if (this.currentIndex - 1 < 0) {
+        if (!this.variables.length || this.currentIndex - 1 < 0) {
             return;
         } else {
             this.currentIndex--;
-            this.value = this.variables[this.currentIndex];
         }
         this.update();
     }
 
     update() {
-        this.valueSpan.textContent = this.value;
+        console.log(this.valueSpan);
+        if (this.valueSpan) {
+            this.valueSpan.textContent = this.variables[this.currentIndex];
+        }
+    }
+
+    get value() {
+        if (typeof this.currentIndex != "number") {
+            throw new Error(`Index is not number, index is - ${this.currentIndex}`);
+        }
+        return this.variables[this.currentIndex];
     }
 
     setup() {
         this.arrowRight.onclick = () => {
-            this.next(); 
+            this.next();
             this.onChangeCallback(this.value);
-            console.log(this.onChangeCallback);
-            console.log("after change callback");
         };
         this.arrowLeft.onclick = () => {
             this.prev();
@@ -131,10 +131,8 @@ class Select extends HTMLElement {
         };
     }
 
-    setValue(index) {
+    setValueIndex(index) {
         this.currentIndex = index;
-        this.value = this.variables[this.currentIndex];
-        console.log(this.value, this.currentIndex);
         this.update();
     }
 
@@ -145,13 +143,6 @@ class Select extends HTMLElement {
     connectedCallback() {
         this.render();
         this.setup();
-    }
-
-    setOnChangeCallback(callable) {
-        this.onChangeCallback = callable;
-    }
-    setOnValueClickedCallback(callable) {
-        this.onValueClicked = callable;
     }
 }
 

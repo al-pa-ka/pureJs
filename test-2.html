@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <script src="./scripts/utils/create_element.js"></script>
+        <script src="./scripts/utils/end_of_contenteditable.js"></script>
+        <script src="./scripts/components/calendar/abstract_buttons_container.js"></script>
+        <script src="./scripts/components/calendar/days_buttons.js"></script>
+        <script src="./scripts/components/calendar/calendar.js"></script>
+        <script src="./scripts/components/calendar/model.js"></script>
+        <script src="./scripts/components/calendar/render_strategy.js"></script>
+        <script src="./scripts/components/calendar/date-input.js"></script>
+        <script src="./scripts/components/calendar/select.js"></script>
+        <script src="./scripts/components/calendar/doubled_calendar.js"></script>
+        <script src="./scripts/components/calendar/calendar_behaviour.js"></script>
+        <script src="./scripts/components/calendar/view_factory.js"></script>
+        <script src="./scripts/components/calendar/setup_factory.js"></script>
+        <script src="./scripts/utils/end_of_contenteditable.js"></script>
+        <script src="./scripts/components/calendar/builder.js"></script>
+
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="label"></div>
+    </body>
+    <script defer>
+        const div = document.getElementById("label");
+        div.style.padding = "20px";
+        div.style.backgroundColor = "white";
+        div.style.height = "100vh";
+        div.style.boxSizing = "border-box";
+        const calendar = new Calendar("Дата");
+        div.append(calendar);
+    </script>
+</html>

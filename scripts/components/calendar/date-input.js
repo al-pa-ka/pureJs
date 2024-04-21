@@ -71,14 +71,22 @@ class DateInput extends HTMLElement {
             }
         </style>
     `;
+
+    constructor({ day, month, year } = { day: "", month: "", year: "" }) {
+        super();
+        this.day = day;
+        this.month = month;
+        this.year = year;
+    }
+
     dayInput = null;
     monthInput = null;
     yearInput = null;
-    constructor(onDayInput, onMonthInput, onYearInput) {
-        super();
-        this.onDayInput = onDayInput;
-        this.onMonthInput = onMonthInput;
-        this.onYearInput = onYearInput;
+
+    update(day, month, year) {
+        this.dayInput.textContent = day ? day.toString().padStart(2, "0") : "";
+        this.monthInput.textContent = month ? month.toString().padStart(2, "0") : "";
+        this.yearInput.textContent = year;
     }
 
     render() {
@@ -115,6 +123,10 @@ class DateInput extends HTMLElement {
         monthInput.setAttribute("placeholder", "ММ");
         yearInput.setAttribute("placeholder", "ГГГГ");
 
+        this.dayInput.textContent = this.day;
+        this.monthInput.textContent = this.month;
+        this.yearInput.textContent = this.year;
+
         yearInput.classList.add("year");
 
         dateSection.classList.add("date-section");
@@ -149,7 +161,9 @@ class DateInput extends HTMLElement {
         this.yearInput.addEventListener("input", this.onYearInput);
 
         document.addEventListener("keydown", e => {
-            e.key == "Enter" && [this.dayInput, this.monthInput, this.yearInput].includes(document.activeElement) ? e.preventDefault() : null;
+            e.key == "Enter" && [this.dayInput, this.monthInput, this.yearInput].includes(document.activeElement)
+                ? e.preventDefault()
+                : null;
         });
 
         this.dayInput.addEventListener("blur", () => {
@@ -173,7 +187,11 @@ class DateInput extends HTMLElement {
             let prevValue = "";
             return () => {
                 const number = this.monthInput.textContent === "" ? 1 : Number(this.monthInput.textContent);
-                if (!/^\d{0,2}$/g.test(this.monthInput.textContent) || number > 12 || (this.monthInput.textContent.length >= 2 && number <= 0)) {
+                if (
+                    !/^\d{0,2}$/g.test(this.monthInput.textContent) ||
+                    number > 12 ||
+                    (this.monthInput.textContent.length >= 2 && number <= 0)
+                ) {
                     this.monthInput.textContent = prevValue;
                     setEndOfContenteditable(this.monthInput);
                     if (this.monthInput.textContent.length == 2) {
@@ -206,15 +224,17 @@ class DateInput extends HTMLElement {
     }
 
     get value() {
-        return `${this.dayInput.value}.${this.monthInput.value}.${this.yearInput.value}`;
+        return `${this.day}.${this.month}.${this.year}`;
     }
 
     set value(value) {
         const [day, month, year] = value.split(".");
-        this.dayInput.textContent = day ? day.toString().padStart(2, "0") : "";
-        this.monthInput.textContent = month ? month.toString().padStart(2, "0") : "";
-        this.yearInput.textContent = year;
-        //this.update();
+        this.day = day;
+        this.month = month;
+        this.year = year;
+        try {
+            this.update(day, month, year);
+        } catch {}
     }
 }
 
