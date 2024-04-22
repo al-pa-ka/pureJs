@@ -43,7 +43,7 @@ class CalendarModel {
         const months = this.getMonths();
         return months.findIndex(name => name.toLocaleUpperCase() == monthName.toLocaleUpperCase());
     }
-    getDaysOfYear() {
+    getDaysOfMonth() {
         const countOfDays = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
         return countOfDays;
     }
@@ -85,7 +85,7 @@ class CalendarModel {
         return {
             isYearSetted: this.isYearSetted,
             year: this.getYear(),
-            isMonthsetted: this.isMonthSetted,
+            isMonthSetted: this.isMonthSetted,
             month: this.getMonth(),
             isDaySetted: this.isDaySetted,
             day: this.getDay(),

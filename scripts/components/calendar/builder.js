@@ -1,14 +1,18 @@
 class ClosedCalendarBuilder {
-    constructor(placeholder, container) {
+    constructor(placeholder, container, initialData) {
         this.placeholder = placeholder;
         this.container = container;
+        this.initialData = initialData;
     }
 
     createDateInput() {
+        console.log(this.initialData);
         const dateInput = new DateInput();
         dateInput.setAttribute("placeholder", this.placeholder);
         if (this.initialData) {
-            dateInput.value = `${this.initialData.day}.${this.initialData.month}.${this.initialData.year}`;
+            const month = this.initialData.month !== "" ? this.initialData.month + 1 : "";
+            console.log(month);
+            dateInput.value = [this.initialData.day, month, this.initialData.year];
         }
         return dateInput;
     }
@@ -23,10 +27,9 @@ class ClosedCalendarBuilder {
 
 class CalendarWithSelectsBuilder extends ClosedCalendarBuilder {
     constructor(placeholder, container, years, months, initialData) {
-        super(placeholder, container);
+        super(placeholder, container, initialData);
         this.years = years;
         this.months = months;
-        this.initialData = initialData;
         console.log(`constructor initial data is ${initialData}`);
         console.log(initialData);
     }
@@ -43,11 +46,12 @@ class CalendarWithSelectsBuilder extends ClosedCalendarBuilder {
     createMonthSelect() {
         console.log(this.months);
         const monthSelect = new Select(this.months, "Выберите месяц");
+        console.log(!!this.initialData);
+        console.log(this.initialData.isMonthSetted);
+        console.log(!!this.initialData && !!this.initialData.isMonthSetted);
         if (this.initialData && this.initialData.isMonthSetted) {
-            //const monthIndex = yearSelect
-            //    .getVariables()
-            //    .findIndex(month => month.toUpperCase() == this.initialData.month);
-            //monthSelect.setValue(this.initialData.month);
+            console.log("in select setup");
+            monthSelect.setValueIndex(this.initialData.month);
         }
         return monthSelect;
     }
@@ -63,8 +67,8 @@ class CalendarWithSelectsBuilder extends ClosedCalendarBuilder {
 }
 
 class CalendarWithYearChoiceBuilder extends ClosedCalendarBuilder {
-    constructor(placeholder, container, years) {
-        super(placeholder, container);
+    constructor(placeholder, container, years, initialData) {
+        super(placeholder, container, initialData);
         this.years = years;
     }
 
@@ -87,24 +91,43 @@ class CalendarWithYearChoiceBuilder extends ClosedCalendarBuilder {
                 justify-content: center;
                 cursor: pointer;
             }
+            .calendar__year-input-wrapper{
+                border: 1px solid lightgray;
+                height: 50px;
+                width: 100%;
+            }
+            .calendar__year-input{
+                width: 100%;
+                box-sizing: border-box;
+                display:inline-block;
+                vertical-align: middle;
+                text-align: center;
+                height: fit-content;
+                outline: none;
+            }
         </style>
     `;
 
-    createYearsContainer() {
-        const container = createElement("div", { classes: ["calendar__years-container"] });
-        return container;
+    createYearsButtons() {
+        const yearButtons = new YearButtons();
+        yearButtons.update(this.years);
     }
 
     createYearInput() {
-        const spanInput = createElement("span");
-        return spanInput;
+        const spanInput = createElement("span", { classes: ["calendar__year-input"] });
+        spanInput.contentEditable = true;
+        const inputWrapper = createElement("div", {
+            classes: ["calendar__year-input-wrapper"],
+            nodesToAppend: [spanInput],
+        });
+
+        return inputWrapper;
     }
 
     createYearsButtons() {
-        const yearsButtons = [];
-        for (const year of this.years) {
-            yearsButtons.push(createElement("span", { textContent: year, classes: ["calendar__year"] }));
-        }
+        const yearsButtons = new YearButtons();
+        yearsButtons.setupContainer();
+        yearsButtons.update(this.years);
         return yearsButtons;
     }
 
@@ -113,8 +136,39 @@ class CalendarWithYearChoiceBuilder extends ClosedCalendarBuilder {
         const calendar = new CalendarWithYearChoice(this.container);
         calendar.setDateInput(this.createDateInput());
         calendar.setYearInput(this.createYearInput());
-        calendar.setYearsContainer(this.createYearsContainer());
         calendar.setYearsButtons(this.createYearsButtons());
+        calendar.render();
+        return calendar;
+    }
+}
+
+class CalendarWithMonthChoiceBuilder extends ClosedCalendarBuilder {
+    constructor(placeholder, container, months, initialData) {
+        super(placeholder, container, initialData);
+        this.months = months;
+    }
+
+    createYearSelect() {
+        const yearSelect = new Select(this.months, "Выберите год");
+        if (this.initialData && this.initialData.isMonthSetted) {
+            const yearIndex = yearSelect.getVariables().findIndex(year => year == this.initialData.year);
+            yearSelect.setValueIndex(yearIndex);
+        }
+        return yearSelect;
+    }
+
+    createMonthButtons() {
+        const monthButtons = new MonthButtons();
+        monthButtons.setupContainer();
+        monthButtons.update(this.months);
+        return monthButtons;
+    }
+
+    build() {
+        const calendar = new CalendarWithMonthChoice(this.container);
+        calendar.setDateInput(this.createDateInput());
+        calendar.setYearSelect(this.createYearSelect());
+        calendar.setMonthsButtons(this.createMonthButtons());
         calendar.render();
         return calendar;
     }
@@ -129,6 +183,7 @@ class CalendarWithDayChoiceBuilder extends CalendarWithSelectsBuilder {
 
     createDaysButtons() {
         const daysButtons = new DaysContainer();
+        daysButtons.setupContainer();
         daysButtons.update(this.days, this.startsWith);
         return daysButtons;
     }
@@ -138,6 +193,7 @@ class CalendarWithDayChoiceBuilder extends CalendarWithSelectsBuilder {
         calendar.setDateInput(this.createDateInput());
         calendar.setYearSelect(this.createYearSelect());
         calendar.setMonthSelect(this.createMonthSelect());
+
         calendar.setDays(this.createDaysButtons());
         calendar.render();
         return calendar;

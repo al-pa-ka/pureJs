@@ -531,10 +531,6 @@
 //    }
 //}
 
-// Наследование даёт течи и повторение кода. Думаю всё же, что сложный UI - задача композиции. А сложный UI - который имеет миллион отличий в десктопной и мобильной версиях - уж тем более
-// Сложный UI - значит стоит использовать паттерн. Думаю Builder будет хорошей идеей. Директор будет заниматься выбором строителя, строитель - просто строить. Весьма удобно.
-// Динамический builder -
-
 class ClosedCalendar {
     constructor(container) {
         this.container = container;
@@ -567,19 +563,33 @@ class CalendarWithSelects extends ClosedCalendar {
 class CalendarWithYearChoice extends ClosedCalendar {
     yearInput;
     yearsButtons;
-    yearsContainer;
     setYearInput(yearInput) {
         this.yearInput = yearInput;
     }
     setYearsButtons(yearsButtons) {
         this.yearsButtons = yearsButtons;
     }
-    setYearsContainer(yearsContainer) {
-        this.yearsContainer = yearsContainer;
-    }
     render() {
-        this.yearsContainer.append(...this.yearsButtons);
-        this.container.append(this.dateInput, this.yearInput, this.yearsContainer);
+        console.log(this.yearInput);
+        this.container.append(this.dateInput, this.yearInput);
+        this.container.append(this.yearsButtons.container);
+    }
+}
+
+class CalendarWithMonthChoice extends ClosedCalendar {
+    yearSelect;
+    monthsButtons;
+    setYearSelect(yearSelect) {
+        this.yearSelect = yearSelect;
+    }
+    setMonthsButtons(monthButtons) {
+        this.monthsButtons = monthButtons;
+    }
+
+    render() {
+        super.render();
+        this.container.append(this.yearSelect);
+        this.container.append(this.monthsButtons.container);
     }
 }
 
@@ -591,8 +601,7 @@ class CalendarWithDayChoice extends CalendarWithSelects {
 
     render() {
         super.render();
-        this.container.append(this.daysContainer);
-        this.container.append(this.days.render());
+        this.container.append(this.days.container);
     }
 }
 

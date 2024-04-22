@@ -57,7 +57,7 @@ class DateInput extends HTMLElement {
                 animation-duration: 1.3s;
                 animation-iteration-count: infinite;
             }
-            .date-input-wrapper.dot-before::before{
+            .date-input-wrapper:has(.dot-before)::before{
                 content: ".";
             }
             .date-input.year{
@@ -79,9 +79,9 @@ class DateInput extends HTMLElement {
         this.year = year;
     }
 
-    dayInput = null;
-    monthInput = null;
-    yearInput = null;
+    dayInput = createElement("span", { classes: ["date-input"] });
+    monthInput = createElement("span", { classes: ["date-input", "dot-before"] });
+    yearInput = createElement("span", { classes: ["date-input", "dot-before", "year"] });
 
     update(day, month, year) {
         this.dayInput.textContent = day ? day.toString().padStart(2, "0") : "";
@@ -89,27 +89,35 @@ class DateInput extends HTMLElement {
         this.yearInput.textContent = year;
     }
 
+    setDay(day) {
+        if (!/\d{1,2}/g.test(day.toString())) {
+            throw new Error(`${day} - bad format`);
+        }
+        this.dayInput.textContent = day.toString().padStart(2, "0");
+    }
+    setMonth(month) {
+        if (!/\d{1,2}/g.test(month.toString())) {
+            throw new Error(`${month} - bad format`);
+        }
+        this.monthInput.textContent = month.toString().padStart(2, "0");
+    }
+    setYear(year) {
+        console.log(year);
+        if (!/\d{4}/.test(year.toString())) {
+            throw new Error(`${year} - bad format`);
+        }
+        this.yearInput.textContent = year.toString();
+    }
     render() {
-        const container = document.createElement("div");
-        const dateSection = document.createElement("div");
-        const dateWithPlaceholder = document.createElement("div");
-        const dateLabel = document.createElement("p");
-        const date = document.createElement("div");
-        const dayInput = document.createElement("span");
-        const monthInput = document.createElement("span");
-        const yearInput = document.createElement("span");
+        const container = createElement("div", { classes: ["input-container"] });
+        const dateSection = document.createElement("div", { classes: ["date-section"] });
+        const dateWithPlaceholder = createElement("div", { classes: ["date-with-placeholder"] });
+        const dateLabel = createElement("p", { classes: ["date-label"] });
+        const date = createElement("div", { classes: ["date"] });
 
-        this.dayInput = dayInput;
-        this.monthInput = monthInput;
-        this.yearInput = yearInput;
-
-        for (let input of [dayInput, monthInput, yearInput]) {
+        for (let input of [this.dayInput, this.monthInput, this.yearInput]) {
             input.contentEditable = true;
-            input.classList.add("date-input");
-            const inputWrapper = document.createElement("div");
-            inputWrapper.appendChild(input);
-            inputWrapper.classList.add("date-input-wrapper");
-            input !== dayInput ? inputWrapper.classList.add("dot-before") : null;
+            const inputWrapper = createElement("div", { classes: ["date-input-wrapper"], nodesToAppend: [input] });
             date.appendChild(inputWrapper);
         }
 
@@ -119,21 +127,9 @@ class DateInput extends HTMLElement {
         dateWithPlaceholder.appendChild(date);
         dateLabel.textContent = this.getAttribute("placeholder");
 
-        dayInput.setAttribute("placeholder", "ДД");
-        monthInput.setAttribute("placeholder", "ММ");
-        yearInput.setAttribute("placeholder", "ГГГГ");
-
-        this.dayInput.textContent = this.day;
-        this.monthInput.textContent = this.month;
-        this.yearInput.textContent = this.year;
-
-        yearInput.classList.add("year");
-
-        dateSection.classList.add("date-section");
-        dateWithPlaceholder.classList.add("date-with-placeholder");
-        dateLabel.classList.add("date-label");
-        date.classList.add("date");
-        container.classList.add("input-container");
+        this.dayInput.setAttribute("placeholder", "ДД");
+        this.monthInput.setAttribute("placeholder", "ММ");
+        this.yearInput.setAttribute("placeholder", "ГГГГ");
 
         this.insertAdjacentHTML("afterbegin", this.style);
         this.appendChild(container);
@@ -228,25 +224,11 @@ class DateInput extends HTMLElement {
     }
 
     set value(value) {
-        const [day, month, year] = value.split(".");
-        this.day = day;
-        this.month = month;
-        this.year = year;
-        try {
-            this.update(day, month, year);
-        } catch {}
+        const [day, month, year] = value;
+        this.dayInput.textContent = day ? day : "";
+        this.monthInput.textContent = month ? month : "";
+        this.yearInput.textContent = year ? year : "";
     }
 }
 
 customElements.define("date-input", DateInput);
-
-class InputBehaviour {
-    constructor() {
-        return new Proxy(this, {
-            apply(target, prop, args) {
-                return this.processInput(...args);
-            },
-        });
-    }
-    processInput(event) {}
-}
