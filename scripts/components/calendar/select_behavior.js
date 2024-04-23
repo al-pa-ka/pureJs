@@ -10,6 +10,7 @@ class SelectBehaviour extends Function {
     }
     addBehaviour(callableFunction) {
         this.functionsToCall.push(callableFunction);
+        return this;
     }
     onCall(...args) {
         for (const functionToCall of this.functionsToCall) {

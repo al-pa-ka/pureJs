@@ -76,39 +76,83 @@ class DoubledCalendar extends HTMLElement {
         this.insertAdjacentHTML("beforeend", this.STYLE);
     }
 
+    updateRange() {
+        if (!(this.leftCalendar.model.isDaySetted && this.rightCalendar.model.isDaySetted)) return;
+
+        const leftDate = this.leftCalendar.model.currentDate;
+        const rightDate = this.rightCalendar.model.currentDate;
+        const rangeCalculator = new RangeCalculator(leftDate, rightDate);
+        const result = rangeCalculator.calculate();
+        try {
+            this.leftCalendar.setRange(result[0]["from"], result[0]["to"]);
+            this.rightCalendar.setRange(result[1]["from"], result[1]["to"]);
+        } catch {
+            console.log("setRange on state without this operation");
+        }
+    }
+
     setup() {
         [this.leftCalendar, this.rightCalendar].forEach(el => {
-            el.onDateChanged = () => {
-                const bothDaySetted = this.leftCalendar.model.isDaySetted && this.rightCalendar.model.isDaySetted;
-                const leftDate = this.leftCalendar.model.currentDate;
-                const rightDate = this.rightCalendar.model.currentDate;
-
-                if (!bothDaySetted) {
-                    this.leftCalendar.model.isDaySetted ? this.leftCalendar.setRange(leftDate.getDate(), leftDate.getDate()) : null;
-                    this.rightCalendar.model.isDaySetted ? this.rightCalendar.setRange(rightDate.getDate(), rightDate.getDate()) : null;
-                    return;
-                }
-
-                const isThisOneRange = leftDate.getMonth() == rightDate.getMonth() && leftDate.getFullYear() == rightDate.getFullYear();
-                if (leftDate > rightDate) {
-                    if (isThisOneRange) {
-                        this.leftCalendar.setRange(rightDate.getDate(), leftDate.getDate());
-                        this.rightCalendar.setRange(rightDate.getDate(), leftDate.getDate());
-                    } else {
-                        this.leftCalendar.setRange(0, leftDate.getDate());
-                        this.rightCalendar.setRange(rightDate.getDate(), 40);
-                    }
-                } else {
-                    if (isThisOneRange) {
-                        this.leftCalendar.setRange(leftDate.getDate(), rightDate.getDate());
-                        this.rightCalendar.setRange(leftDate.getDate(), rightDate.getDate());
-                    } else {
-                        this.leftCalendar.setRange(leftDate.getDate(), 40);
-                        this.rightCalendar.setRange(0, rightDate.getDate());
-                    }
-                }
-            };
+            el.onDateChanged = () => this.updateRange();
+            el.onDaysUpdated = () => this.updateRange();
+            el.onDayChoiceOpened = () => this.updateRange();
         });
+    }
+}
+
+class RangeCalculator {
+    constructor(leftCalendarDate, rightCalendarDate) {
+        this.leftCalendarDate = leftCalendarDate;
+        this.rightCalendarDate = rightCalendarDate;
+    }
+    calculate() {
+        let strategy;
+        if (this.leftCalendarDate > this.rightCalendarDate) {
+            strategy = new LeftGreaterThanRight();
+        } else {
+            strategy = new LeftLessThanRight();
+        }
+        return strategy.calculate(this.leftCalendarDate, this.rightCalendarDate);
+    }
+}
+
+class AbstractRangeCalculatorStrategy {
+    isInOneRange(leftDate, rightDate) {
+        return leftDate.getMonth() == rightDate.getMonth() && leftDate.getFullYear() == rightDate.getFullYear();
+    }
+}
+
+class LeftGreaterThanRight extends AbstractRangeCalculatorStrategy {
+    calculate(leftDate, rightDate) {
+        const isThisOneRange = this.isInOneRange(leftDate, rightDate);
+        if (!isThisOneRange) {
+            return [
+                { from: 0, to: leftDate.getDate() },
+                { from: rightDate.getDate(), to: 40 },
+            ];
+        } else {
+            return [
+                { from: rightDate.getDate(), to: leftDate.getDate() },
+                { from: rightDate.getDate(), to: leftDate.getDate() },
+            ];
+        }
+    }
+}
+
+class LeftLessThanRight extends AbstractRangeCalculatorStrategy {
+    calculate(leftDate, rightDate) {
+        const isThisOneRange = this.isInOneRange(leftDate, rightDate);
+        if (!isThisOneRange) {
+            return [
+                { from: leftDate.getDate(), to: 40 },
+                { from: 0, to: rightDate.getDate() },
+            ];
+        } else {
+            return [
+                { from: leftDate.getDate(), to: rightDate.getDate() },
+                { from: leftDate.getDate(), to: rightDate.getDate() },
+            ];
+        }
     }
 }
 

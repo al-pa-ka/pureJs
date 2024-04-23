@@ -225,8 +225,8 @@ class DateInput extends HTMLElement {
 
     set value(value) {
         const [day, month, year] = value;
-        this.dayInput.textContent = day ? day : "";
-        this.monthInput.textContent = month ? month : "";
+        this.dayInput.textContent = day ? day.toString().padStart(2, "0") : "";
+        this.monthInput.textContent = month ? month.toString().padStart(2, "0") : "";
         this.yearInput.textContent = year ? year : "";
     }
 }

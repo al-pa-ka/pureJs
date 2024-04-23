@@ -57,6 +57,7 @@ class Calendar extends HTMLElement {
     onYearChoiceOpened = () => {};
     onClosed = () => {};
     onDateChanged = () => {};
+    onDaysUpdated = () => {};
     constructor(placeholder) {
         super();
         this.currentBehaviour = { clear() {} };
@@ -66,6 +67,9 @@ class Calendar extends HTMLElement {
     }
     connectedCallback() {
         this.openClosedCalendar();
+        this.model.onDateChanged = () => {
+            this.onDateChanged();
+        };
     }
 
     clear() {
@@ -87,12 +91,21 @@ class Calendar extends HTMLElement {
     }
     openCalendarWithDayChoice() {
         this.changeState(new CalendarWithDayChoiceState());
+        this.onDayChoiceOpened();
     }
     openCalendarWithYearChoice() {
         this.changeState(new CalendarWithYearChoiceState());
     }
     openCalendarWithMonthChoice() {
         this.changeState(new CalendarWithMonthChoiceState());
+    }
+
+    setRange(from, to) {
+        if (this.state.constructor.name !== "CalendarWithDayChoiceState") {
+            throw new Error("This state has no setRange operation");
+        }
+        console.log(from, to);
+        this.state.calendar.days.setRange(from, to);
     }
 }
 

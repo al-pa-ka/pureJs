@@ -14,20 +14,34 @@ class DaysContainer extends AbstractButtonsContainer {
                 font-size: 20px;
                 cursor: pointer;
             }
+            .calendar__days-cell_selected{
+                background-color: #00B0D9;
+                color: white;
+            }
+            .calendar__days-cell_in-range{
+                background-color: #CDE7ED;
+                color: #CBCBCB;
+            }
         </style>
     `;
 
+    filler = null;
+
     clear() {
+        this.filler ? this.filler.remove() : null;
         this.buttons.forEach(el => el.remove());
         this.buttons = [];
     }
 
     update(days, startsWith) {
-        const filler = createElement("span", { style: { gridColumn: `span ${startsWith}` } });
+        this.clear();
         for (let day = 1; day <= days; day++) {
             this.buttons.push(createElement("span", { textContent: day, classes: ["calendar__days-cell"] }));
         }
-        this.container.append(filler);
+        if (startsWith - 1) {
+            this.filler = createElement("span", { style: { gridColumn: `span ${startsWith - 1}` } });
+            this.container.append(this.filler);
+        }
         this.container.append(...this.buttons);
     }
 
@@ -37,5 +51,21 @@ class DaysContainer extends AbstractButtonsContainer {
         ["пн", "вт", "ср", "чт", "пт", "сб", "вс"].forEach(day =>
             this.container.append(createElement("span", { textContent: day, classes: ["calendar__days-cell"] }))
         );
+    }
+
+    setRange(from, to) {
+        this.buttons.forEach(button => {
+            button.classList.remove("calendar__days-cell_in-range");
+            button.classList.remove("calendar__days-cell_selected");
+            const value = Number(button.textContent.trim());
+            const inRange = value >= from && value <= to;
+            if (inRange) {
+                button.classList.add("calendar__days-cell_in-range");
+            }
+            if (value == from || value == to) {
+                button.classList.remove("calendar__days-cell_in-range");
+                button.classList.add("calendar__days-cell_selected");
+            }
+        });
     }
 }

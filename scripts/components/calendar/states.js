@@ -150,5 +150,41 @@ class CalendarWithDayChoiceState {
         return this.calendar;
     }
 
-    setup() {}
+    setupDaysButtons(context) {
+        this.calendar.days.buttons.forEach(button => {
+            button.onclick = () => {
+                const value = button.textContent.trim();
+                context.model.setDate(value);
+                this.calendar.dateInput.setDay(value);
+                const day = context.model.getDay();
+            };
+        });
+    }
+
+    setup(context) {
+        const updateDays = (() => {
+            const calendar = this.calendar;
+            return () => {
+                const startsWith = context.model.getDayweekIndexOfFirstDay();
+                const daysCount = context.model.getDaysOfMonth();
+                calendar.days.update(daysCount, startsWith);
+                this.setupDaysButtons(context);
+                const month = context.model.getMonth() !== "" ? context.model.getMonth() + 1 : "";
+                calendar.dateInput.value = [context.model.getDay(), month, context.model.getYear()];
+                context.onDaysUpdated();
+            };
+        })();
+        this.calendar.yearSelect.onValueClicked = () => context.openCalendarWithYearChoice();
+        this.calendar.monthSelect.onValueClicked = () => context.openCalendarWithMonthChoice();
+        this.calendar.monthSelect.onChangeCallback = SelectBehaviour.defaultMonthChanged(
+            this.calendar.dateInput,
+            this.calendar.monthSelect,
+            context
+        ).addBehaviour(updateDays);
+        this.calendar.yearSelect.onChangeCallback = SelectBehaviour.defaultYearChanged(
+            this.calendar.dateInput,
+            context
+        ).addBehaviour(updateDays);
+        this.setupDaysButtons(context);
+    }
 }
