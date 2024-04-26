@@ -1,6 +1,8 @@
 class BottomPanel extends HTMLElement {
     onApply = () => { }
     onCancel = () => { }
+    cancelButton = createElement('button', { classes: [''], textContent: 'Отменить' });
+    applyButton = createElement('button', { classes: [''], textContent: 'Применить' });
 
     style = `
         <style>
@@ -28,9 +30,8 @@ class BottomPanel extends HTMLElement {
     setActive() { }
     setInactive() { }
     render() {
-        const applyButton = createElement('button', { classes: [''], textContent: 'Применить' });
-        const cancelButton = createElement('button', { classes: [''], textContent: 'Отменить' });
         this.classList.add('bottom-panel__container');
+        this.append(this.cancelButton, this.applyButton)
     }
 }
 
