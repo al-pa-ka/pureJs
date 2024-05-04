@@ -14,6 +14,7 @@ class Select extends HTMLElement {
     STYLE = /*html*/ `
         <style>
             .horizontal-select__container{
+                background-color: white ;
                 display: flex;
                 flex-direction: row;
                 height: 50px;

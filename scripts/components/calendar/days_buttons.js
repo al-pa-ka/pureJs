@@ -13,14 +13,22 @@ class DaysContainer extends AbstractButtonsContainer {
                 align-items: center;
                 font-size: 20px;
                 cursor: pointer;
+                text-transform: capitalize;
+                color: #6CA3FE;
+                background-color: white;
             }
             .calendar__days-cell_selected{
-                background-color: #00B0D9;
+                background-color: #2879ff;
                 color: white;
             }
             .calendar__days-cell_in-range{
-                background-color: #CDE7ED;
-                color: #CBCBCB;
+                background-color: #D4f6ff;
+                color: #6CA3FE;
+            }
+            @media(width <= 700px) {
+                .calendar__days-cell{
+                    font-size: 16px;
+                }
             }
         </style>
     `;

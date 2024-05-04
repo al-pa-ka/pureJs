@@ -5,16 +5,14 @@ class IState {
 
 class ClosedCalendarState {
     render(dataProvider) {
-        console.log(dataProvider.getDataToClosedCalendar());
-        const { placeholder, container, initData } = dataProvider.getDataToClosedCalendar();
-        console.log(initData);
-        const builder = new ClosedCalendarBuilder(placeholder, container, initData);
-        this.closedCalendar = builder.build();
-        return this.closedCalendar;
+        const { placeholder, container, initData, eventBus } = dataProvider.getDataToClosedCalendar();
+        const builder = new ClosedCalendarBuilder(placeholder, container, initData, eventBus);
+        this.calendar = builder.build();
+        return this.calendar;
     }
 
     setup(context) {
-        this.closedCalendar.dateInput.onclick = () => {
+        this.calendar.dateInput.onclick = () => {
             context.openCalendarWithSelects();
         };
     }
@@ -22,8 +20,9 @@ class ClosedCalendarState {
 
 class CalendarWithSelectsState {
     render(dataProvider) {
-        const { placeholder, container, years, months, initData } = dataProvider.getDataToCalendarWithSelects();
-        const builder = new CalendarWithSelectsBuilder(placeholder, container, years, months, initData);
+        const { placeholder, container, years, months, initData, eventBus } =
+            dataProvider.getDataToCalendarWithSelects();
+        const builder = new CalendarWithSelectsBuilder(placeholder, container, years, months, initData, eventBus);
         this.calendar = builder.build();
         return this.calendar;
     }
@@ -63,8 +62,8 @@ class CalendarWithSelectsState {
 
 class CalendarWithYearChoiceState {
     render(dataProvider) {
-        const { placeholder, container, years, initData } = dataProvider.getDataToCalendarWithYearChoice();
-        const builder = new CalendarWithYearChoiceBuilder(placeholder, container, years, initData);
+        const { placeholder, container, years, initData, eventBus } = dataProvider.getDataToCalendarWithYearChoice();
+        const builder = new CalendarWithYearChoiceBuilder(placeholder, container, years, initData, eventBus);
         this.calendar = builder.build();
         return this.calendar;
     }
@@ -104,8 +103,9 @@ class CalendarWithYearChoiceState {
 
 class CalendarWithMonthChoiceState {
     render(dataProvider) {
-        const { placeholder, container, months, initData } = dataProvider.getDataToCalendarWithMonthChoice();
-        const builder = new CalendarWithMonthChoiceBuilder(placeholder, container, months, initData);
+        const { placeholder, container, months, years, initData, eventBus } =
+            dataProvider.getDataToCalendarWithMonthChoice();
+        const builder = new CalendarWithMonthChoiceBuilder(placeholder, container, months, years, initData, eventBus);
         this.calendar = builder.build();
         return this.calendar;
     }
@@ -128,14 +128,15 @@ class CalendarWithMonthChoiceState {
             };
         });
         this.calendar.yearSelect.onChangeCallback = value => {
-            this.calendar.dateInput.setYear(context.model.getMonthIndexByName(value.trim()));
+            context.model.setYear(value);
+            this.calendar.dateInput.setYear(value);
         };
     }
 }
 
 class CalendarWithDayChoiceState {
     render(dataProvider) {
-        const { placeholder, container, years, months, days, startsWith, initData } =
+        const { placeholder, container, years, months, days, startsWith, initData, eventBus } =
             dataProvider.getDataToCalendarWithDayChoice();
         const builder = new CalendarWithDayChoiceBuilder(
             placeholder,
@@ -144,7 +145,8 @@ class CalendarWithDayChoiceState {
             months,
             days,
             startsWith,
-            initData
+            initData,
+            eventBus
         );
         this.calendar = builder.build();
         return this.calendar;
@@ -170,7 +172,7 @@ class CalendarWithDayChoiceState {
                 calendar.days.update(daysCount, startsWith);
                 this.setupDaysButtons(context);
                 const month = context.model.getMonth() !== "" ? context.model.getMonth() + 1 : "";
-                calendar.dateInput.value = [context.model.getDay(), month, context.model.getYear()];
+                calendar.dateInput.setValue(context.model.getDay(), month, context.model.getYear());
                 context.onDaysUpdated();
             };
         })();

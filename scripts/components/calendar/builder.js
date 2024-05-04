@@ -1,19 +1,22 @@
 class ClosedCalendarBuilder {
-    constructor(placeholder, container, initialData) {
+    constructor(placeholder, container, initialData, eventBus) {
         this.placeholder = placeholder;
         this.container = container;
         this.initialData = initialData;
+        this.eventBus = eventBus;
     }
 
     createDateInput() {
-        console.log(this.initialData);
         const dateInput = new DateInput();
         dateInput.setAttribute("placeholder", this.placeholder);
         if (this.initialData) {
             const month = this.initialData.month !== "" ? this.initialData.month + 1 : "";
-            console.log(month);
-            dateInput.value = [this.initialData.day, month, this.initialData.year];
+            dateInput.setValue(this.initialData.day, month, this.initialData.year);
         }
+        console.log(this.eventBus);
+        dateInput.onFullFilled = (d, m, y) => {
+            this.eventBus.onFullFilled(d, m, y);
+        };
         return dateInput;
     }
 
@@ -26,12 +29,10 @@ class ClosedCalendarBuilder {
 }
 
 class CalendarWithSelectsBuilder extends ClosedCalendarBuilder {
-    constructor(placeholder, container, years, months, initialData) {
-        super(placeholder, container, initialData);
+    constructor(placeholder, container, years, months, initialData, eventBus) {
+        super(placeholder, container, initialData, eventBus);
         this.years = years;
         this.months = months;
-        console.log(`constructor initial data is ${initialData}`);
-        console.log(initialData);
     }
 
     createYearSelect() {
@@ -67,8 +68,8 @@ class CalendarWithSelectsBuilder extends ClosedCalendarBuilder {
 }
 
 class CalendarWithYearChoiceBuilder extends ClosedCalendarBuilder {
-    constructor(placeholder, container, years, initialData) {
-        super(placeholder, container, initialData);
+    constructor(placeholder, container, years, initialData, eventBus) {
+        super(placeholder, container, initialData, eventBus);
         this.years = years;
     }
 
@@ -95,6 +96,9 @@ class CalendarWithYearChoiceBuilder extends ClosedCalendarBuilder {
                 border: 1px solid lightgray;
                 height: 50px;
                 width: 100%;
+                display: flex;
+                align-items: center;
+                background-color: white;
             }
             .calendar__year-input{
                 width: 100%;
@@ -104,6 +108,10 @@ class CalendarWithYearChoiceBuilder extends ClosedCalendarBuilder {
                 text-align: center;
                 height: fit-content;
                 outline: none;
+                background-color: white;
+        
+                display: flex;
+                justify-content: center
             }
         </style>
     `;
@@ -143,14 +151,15 @@ class CalendarWithYearChoiceBuilder extends ClosedCalendarBuilder {
 }
 
 class CalendarWithMonthChoiceBuilder extends ClosedCalendarBuilder {
-    constructor(placeholder, container, months, initialData) {
-        super(placeholder, container, initialData);
+    constructor(placeholder, container, months, years, initialData, eventBus) {
+        super(placeholder, container, initialData, eventBus);
         this.months = months;
+        this.years = years;
     }
 
     createYearSelect() {
-        const yearSelect = new Select(this.months, "Выберите год");
-        if (this.initialData && this.initialData.isMonthSetted) {
+        const yearSelect = new Select(this.years, "Выберите год");
+        if (this.initialData && this.initialData.isYearSetted) {
             const yearIndex = yearSelect.getVariables().findIndex(year => year == this.initialData.year);
             yearSelect.setValueIndex(yearIndex);
         }
@@ -175,8 +184,8 @@ class CalendarWithMonthChoiceBuilder extends ClosedCalendarBuilder {
 }
 
 class CalendarWithDayChoiceBuilder extends CalendarWithSelectsBuilder {
-    constructor(placeholder, container, years, months, days, startsWith, initialData) {
-        super(placeholder, container, years, months, initialData);
+    constructor(placeholder, container, years, months, days, startsWith, initialData, eventBus) {
+        super(placeholder, container, years, months, initialData, eventBus);
         this.days = days;
         this.startsWith = startsWith;
     }

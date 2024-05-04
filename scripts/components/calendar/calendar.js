@@ -1,8 +1,9 @@
 class DataProvider {
-    constructor(model, container, placeholder) {
+    constructor(model, container, placeholder, eventBus) {
         this.model = model;
         this.container = container;
         this.placeholder = placeholder;
+        this.eventBus = eventBus;
     }
 
     getDataToClosedCalendar() {
@@ -10,6 +11,7 @@ class DataProvider {
             placeholder: this.placeholder,
             container: this.container,
             initData: this.model.getInitialData(),
+            eventBus: this.eventBus,
         };
     }
 
@@ -20,6 +22,7 @@ class DataProvider {
             years: this.model.getYears(),
             months: this.model.getMonths(),
             initData: this.model.getInitialData(),
+            eventBus: this.eventBus,
         };
     }
     getDataToCalendarWithYearChoice() {
@@ -28,6 +31,7 @@ class DataProvider {
             container: this.container,
             years: this.model.getYears(),
             initData: this.model.getInitialData(),
+            eventBus: this.eventBus,
         };
     }
     getDataToCalendarWithMonthChoice() {
@@ -35,7 +39,9 @@ class DataProvider {
             placeholder: this.placeholder,
             container: this.container,
             months: this.model.getMonths(),
+            years: this.model.getYears(),
             initData: this.model.getInitialData(),
+            eventBus: this.eventBus,
         };
     }
     getDataToCalendarWithDayChoice() {
@@ -47,6 +53,7 @@ class DataProvider {
             days: this.model.getDaysOfMonth(),
             startsWith: this.model.getDayweekIndexOfFirstDay(),
             initData: this.model.getInitialData(),
+            eventBus: this.eventBus,
         };
     }
 }
@@ -58,12 +65,18 @@ class Calendar extends HTMLElement {
     onClosed = () => {};
     onDateChanged = () => {};
     onDaysUpdated = () => {};
-    constructor(placeholder) {
+    onFullFilled = () => {};
+    constructor(placeholder, { model }) {
         super();
         this.currentBehaviour = { clear() {} };
-        this.model = new CalendarModel();
+        this.model = model || new CalendarModel();
         this.placeholder = placeholder;
-        this.dataProvider = new DataProvider(this.model, this, this.placeholder);
+        this.dataProvider = new DataProvider(this.model, this, this.placeholder, {
+            onFullFilled: ((dayString, monthString, yearString) => {
+                this._onFullFilled(dayString, monthString - 1, yearString);
+                this.openCalendarWithDayChoice();
+            }).bind(this),
+        });
     }
     connectedCallback() {
         this.openClosedCalendar();
@@ -72,8 +85,21 @@ class Calendar extends HTMLElement {
         };
     }
 
+    _onFullFilled(dayString, monthString, yearString) {
+        this.model.setDate(dayString);
+        this.model.setMonth(monthString);
+        this.model.setYear(yearString);
+        this.onFullFilled();
+        console.log(this.model);
+    }
+
     clear() {
         this.innerHTML = ``;
+    }
+
+    clearValues() {
+        this.model.clear();
+        this.openClosedCalendar();
     }
 
     changeState(state) {
@@ -104,7 +130,6 @@ class Calendar extends HTMLElement {
         if (this.state.constructor.name !== "CalendarWithDayChoiceState") {
             throw new Error("This state has no setRange operation");
         }
-        console.log(from, to);
         this.state.calendar.days.setRange(from, to);
     }
 }

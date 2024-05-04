@@ -2,6 +2,7 @@ class YearButtons extends AbstractButtonsContainer {
     style = /*html*/ `
         <style>
             .calendar__years-wrapper {
+                background-color: white;
                 padding: 10px;
                 display: grid; /* 1 */
                 grid-template-columns: repeat(auto-fill, 55px); /* 2 */

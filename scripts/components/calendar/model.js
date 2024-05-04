@@ -91,4 +91,11 @@ class CalendarModel {
             day: this.getDay(),
         };
     }
+    clear() {
+        this.currentDate = new Date(NULLABLE_DATE);
+        this.isDaySetted = false;
+        this.isMonthSetted = false;
+        this.isYearSetted = false;
+        this.onDateChanged();
+    }
 }

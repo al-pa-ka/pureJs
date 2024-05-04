@@ -1,56 +1,78 @@
 class DoubledCalendar extends HTMLElement {
+    threshold = 640;
+    openedDesktopVersion;
     onLeftDateLaterThenRight = () => {};
     onDateApplied = () => {};
-
+    onClose = () => {};
     model = {
-        fromDate: new Date(),
-        toDate: new Date(),
+        fromDate: new CalendarModel(),
+        toDate: new CalendarModel(),
     };
+    constructor() {
+        super();
+    }
 
     connectedCallback() {
+        window.innerWidth > this.threshold ? this.openDesktopVersion() : this.openMobileVersion();
+        window.addEventListener("resize", () => {
+            if (this.openedDesktopVersion && window.innerWidth < this.threshold) {
+                this.openMobileVersion();
+            } else if (!this.openedDesktopVersion && window.innerWidth > this.threshold) {
+                this.openDesktopVersion();
+            }
+        });
+        let lastDevicePixelRatio = 1;
+        const originalScale = window.devicePixelRatio;
+        this.style.display = "block";
+        this.style.width = window.innerWidth + "px";
+        this.style.transformOrigin = "left top";
+        this.style.setProperty("background-color", "rgba(0, 0, 0, 0.1)");
+        this.style.setProperty("z-index", "30");
+        this.style.setProperty("position", "absolute");
+        this.style.setProperty("max-width", "890px");
+        window.addEventListener("resize", () => {
+            if (lastDevicePixelRatio === window.devicePixelRatio) {
+                lastDevicePixelRatio = window.devicePixelRatio;
+                this.style.width = window.innerWidth + "px";
+                return;
+            }
+            const currentScale = window.devicePixelRatio;
+            const scaleRatio = originalScale / currentScale;
+            this.style.transform = `scale(${scaleRatio})`;
+            lastDevicePixelRatio = window.devicePixelRatio;
+        });
+    }
+
+    render() {
+        this.currentState.render();
+    }
+
+    _onClose() {
+        this.onClose(this.model.fromDate, this.model.toDate);
+    }
+
+    setup() {
+        this.currentState.setup();
+        this.currentState.onClose = () => {
+            this.style.setProperty("display", "none");
+            this._onClose();
+        };
+    }
+
+    changeState(state) {
+        this.innerHTML = ``;
+        this.currentState = state;
         this.render();
         this.setup();
     }
 
-    createBottomPanel() {
-        const bottomPanel = document.createElement("div");
-        const resetButton = document.createElement("button");
-        const applyButton = document.createElement("button");
-
-        resetButton.textContent = "Сбросить";
-        applyButton.textContent = "Применить";
-
-        bottomPanel.classList.add("doubled-calendar__bottom-panel");
-        resetButton.classList.add("doubled-calendar__button", "doubled-calendar__button-disable");
-        applyButton.classList.add("doubled-calendar__button", "doubled-calendar__button-apply");
-
-        bottomPanel.append(resetButton, applyButton);
-        return bottomPanel;
+    openDesktopVersion() {
+        this.changeState(new DoubledCalendarDesktopState(this, this.model));
+        this.openedDesktopVersion = true;
     }
-
-    render() {}
-
-    updateRange() {
-        if (!(this.leftCalendar.model.isDaySetted && this.rightCalendar.model.isDaySetted)) return;
-
-        const leftDate = this.leftCalendar.model.currentDate;
-        const rightDate = this.rightCalendar.model.currentDate;
-        const rangeCalculator = new RangeCalculator(leftDate, rightDate);
-        const result = rangeCalculator.calculate();
-        try {
-            this.leftCalendar.setRange(result[0]["from"], result[0]["to"]);
-            this.rightCalendar.setRange(result[1]["from"], result[1]["to"]);
-        } catch {
-            console.log("setRange on state without this operation");
-        }
-    }
-
-    setup() {
-        [this.leftCalendar, this.rightCalendar].forEach(el => {
-            el.onDateChanged = () => this.updateRange();
-            el.onDaysUpdated = () => this.updateRange();
-            el.onDayChoiceOpened = () => this.updateRange();
-        });
+    openMobileVersion() {
+        this.changeState(new DoubledCalendarMobileState(this, this.model));
+        this.openedDesktopVersion = false;
     }
 }
 

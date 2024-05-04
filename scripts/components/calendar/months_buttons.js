@@ -2,6 +2,7 @@ class MonthButtons extends AbstractButtonsContainer {
     style = /*html*/ `
         <style>
             .calendar__months-wrapper {
+                background-color: white;
                 box-sizing: border-box;
                 padding: 10px;
                 display: grid; /* 1 */
